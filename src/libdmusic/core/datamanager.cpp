@@ -59,9 +59,10 @@ QString pendingMetaAnalysisPath()
     return DmGlobal::cachePath() + "/meta-analysis-pending.json";
 }
 
-QHash<QString, QString> loadPendingMetaAnalysisTasks()
+QSet<QString> loadPendingMetaAnalysisTasks(bool *legacyPathFormat)
 {
-    QHash<QString, QString> tasks;
+    QSet<QString> tasks;
+    *legacyPathFormat = false;
     QFile file(pendingMetaAnalysisPath());
     if (!file.exists()) {
         return tasks;
@@ -80,9 +81,9 @@ QHash<QString, QString> loadPendingMetaAnalysisTasks()
     for (const QJsonValue &value : document.array()) {
         const QJsonObject object = value.toObject();
         const QString hash = object.value("hash").toString();
-        const QString localPath = object.value("localPath").toString();
-        if (!hash.isEmpty() && !localPath.isEmpty()) {
-            tasks.insert(hash, localPath);
+        if (!hash.isEmpty()) {
+            tasks.insert(hash);
+            *legacyPathFormat = *legacyPathFormat || object.contains("localPath");
         }
     }
     return tasks;
@@ -100,7 +101,7 @@ bool isSafePendingMetaPath(const QString &path)
     return fileInfo.canonicalFilePath() == QDir::cleanPath(fileInfo.absoluteFilePath());
 }
 
-bool savePendingMetaAnalysisTasks(const QHash<QString, QString> &tasks)
+bool savePendingMetaAnalysisTasks(const QSet<QString> &tasks)
 {
     const QString path = pendingMetaAnalysisPath();
     if (tasks.isEmpty()) {
@@ -112,13 +113,12 @@ bool savePendingMetaAnalysisTasks(const QHash<QString, QString> &tasks)
         return false;
     }
 
-    QStringList hashes = tasks.keys();
+    QStringList hashes = tasks.values();
     hashes.sort();
     QJsonArray array;
     for (const QString &hash : hashes) {
         QJsonObject object;
         object.insert("hash", hash);
-        object.insert("localPath", tasks.value(hash));
         array.append(object);
     }
 
@@ -237,7 +237,7 @@ public:
         : m_parent(parent), m_dbPath(dbPath)
     {
         qCDebug(dmMusic) << "Initializing DataManagerPrivate with supported suffixes:" << supportedSuffixs;
-        m_pendingMetaTasks = loadPendingMetaAnalysisTasks();
+        m_pendingMetaTasks = loadPendingMetaAnalysisTasks(&m_pendingMetaTasksNeedRewrite);
         m_settings = new MusicSettings(m_parent);
         m_currentHash = m_settings->value("base.play.last_playlist").toString();
         if (m_currentHash.isEmpty()) m_currentHash = "all";
@@ -312,7 +312,8 @@ private:
     QList<DMusic::MediaMeta>          m_allMetas;
     QHash<QString, int>               m_metaHashIndex;  // hash -> m_allMetas index, for O(1) metaIndexFromHash
     QList<DMusic::MediaMeta>          m_importedMetas;   // newly imported metas this batch; consumed and cleared by upsertMetasDB
-    QHash<QString, QString>            m_pendingMetaTasks;
+    QSet<QString>                      m_pendingMetaTasks;
+    bool                               m_pendingMetaTasksNeedRewrite = false;
     QSet<QString>                      m_metaAnalysisReadyHashes;
     bool                               m_dirty = false;   // true if persistent in-memory model changed and needs full saveDataToDB on exit
     QList<DMusic::AlbumInfo>          m_allAlbums;
@@ -2608,8 +2609,8 @@ void DataManager::slotEnqueueMetaTasks(const QList<DMusic::MediaMeta> &metas)
         if (meta.hash.isEmpty() || meta.localPath.isEmpty()) {
             continue;
         }
-        if (m_data->m_pendingMetaTasks.value(meta.hash) != meta.localPath) {
-            m_data->m_pendingMetaTasks.insert(meta.hash, meta.localPath);
+        if (!m_data->m_pendingMetaTasks.contains(meta.hash)) {
+            m_data->m_pendingMetaTasks.insert(meta.hash);
             changed = true;
         }
     }
@@ -2622,9 +2623,9 @@ void DataManager::slotEnqueueMetaTasks(const QList<DMusic::MediaMeta> &metas)
 void DataManager::restorePendingMetaTasks()
 {
     QList<DMusic::MediaMeta> tasks;
-    bool changed = false;
+    bool changed = m_data->m_pendingMetaTasksNeedRewrite;
     for (auto it = m_data->m_pendingMetaTasks.begin(); it != m_data->m_pendingMetaTasks.end();) {
-        const int index = metaIndexFromHash(it.key());
+        const int index = metaIndexFromHash(*it);
         if (index < 0) {
             it = m_data->m_pendingMetaTasks.erase(it);
             changed = true;
@@ -2632,20 +2633,13 @@ void DataManager::restorePendingMetaTasks()
         }
 
         const QString trustedPath = m_data->m_allMetas.at(index).localPath;
-        if (it.value() != trustedPath) {
-            // The sidecar is only a recovery hint. Never let its path override
-            // the path loaded from the media database.
-            it.value() = trustedPath;
-            changed = true;
-        }
-
         if (isSafePendingMetaPath(trustedPath)) {
             tasks.append(m_data->m_allMetas.at(index));
         }
         ++it;
     }
-    if (changed) {
-        savePendingMetaAnalysisTasks(m_data->m_pendingMetaTasks);
+    if (changed && savePendingMetaAnalysisTasks(m_data->m_pendingMetaTasks)) {
+        m_data->m_pendingMetaTasksNeedRewrite = false;
     }
     if (!tasks.isEmpty()) {
         emit signalEnqueueMetaTasks(tasks);
