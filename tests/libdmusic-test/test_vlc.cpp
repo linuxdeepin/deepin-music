@@ -58,6 +58,7 @@ TEST(VlcCommonTest, argsReturnsDefaultArgs)
     const QStringList args = VlcCommon::args();
     EXPECT_FALSE(args.isEmpty());
     EXPECT_TRUE(args.contains("--intf=dummy"));  // 默认参数
+    EXPECT_TRUE(args.contains("--no-taglib"));  // disable VLC TagLib plugin to avoid symbol conflict with dmusic TagLib 2
 }
 
 TEST(VlcEnumsTest, constructs)

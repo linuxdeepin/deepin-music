@@ -23,7 +23,11 @@ QStringList VlcCommon::args()
                   << "--no-osd"
                   << "--no-loop"
                   << "--no-video-title-show"
-                  << "--drop-late-frames";
+                  << "--drop-late-frames"
+                  // Disable VLC's TagLib metadata plugin: dmusic parses tags with
+                  // TagLib 2, while this plugin links TagLib 1, causing a
+                  // same-process symbol conflict that crashes on playback.
+                  << "--no-taglib";
     }
 
     qCDebug(dmMusic) << "VLC return args:" << args_list;
