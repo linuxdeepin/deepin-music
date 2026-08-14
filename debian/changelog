@@ -1,3 +1,9 @@
+deepin-music (7.0.64) unstable; urgency=medium
+
+  * chore(deps): remove unused Qt5 and Dtk6Widget dependencies
+
+ -- Wang Yu <wangyu@uniontech.com>  Fri, 14 Aug 2026 15:29:02 +0800
+
 deepin-music (7.0.63) unstable; urgency=medium
 
   * fix(core): store pending media task hashes only
