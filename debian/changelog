@@ -1,3 +1,30 @@
+deepin-music (7.0.63) unstable; urgency=medium
+
+  * fix(core): store pending media task hashes only
+  * fix: disable VLC taglib plugin to avoid crash
+  * fix: persist album view display mode across menu switches (#338091)
+  * fix(core): preserve pending media analysis tasks
+  * fix(core): move media analysis off import worker
+  * fix: deep-bind VLC TagLib plugin and add audioDataReady signal
+  * fix: miscellaneous C++ fixes for Windows compatibility
+  * fix: add Windows dialog flags, centering, and QML compatibility fixes
+  * fix: adapt main.cpp for Windows environment setup
+  * fix: adapt VLC player components for Windows platform
+  * fix: adapt dynamic library loading for Windows (MSYS2/MinGW)
+  * build: adapt CMakeLists for cross-platform (Windows/MSYS2) compilation
+  * fix: hide prev/next page tooltip in lyric view
+  * refactor: rewrite waveform generation with swr_convert
+  * fix(audioanalysis): reuse precomputed import hashes
+  * fix(utils): avoid regex creation in pinyin splitting
+  * chore(copyright): update CircularImg year
+  * fix: improve sidebar colors across themes
+  * refactor: replace DApplication with QGuiApplication + DGuiApplicationHelper
+  * feat: merge cover and lyrics extraction into single TagLib pass with concurrent processing
+  * [skip CI] i18n: Translate deepin-music_en_US.ts in pt_BR
+  * [skip CI] i18n: Translate desktop.ts in pt_BR
+
+ -- Wang Yu <wangyu@uniontech.com>  Fri, 14 Aug 2026 10:41:04 +0800
+
 deepin-music (7.0.62) unstable; urgency=medium
 
   * chore: Update version to 7.0.62
