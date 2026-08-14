@@ -1,5 +1,4 @@
-// Copyright (C) 2022-2026 UnionTech Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -23,10 +22,6 @@ ColumnLayout {
     id: control
     spacing: 10
     Layout.leftMargin: 10
-    SystemPalette {
-        id: systemPalette
-        colorGroup: SystemPalette.Active
-    }
 
     Rectangle {
         id: siderTitle
@@ -38,7 +33,7 @@ ColumnLayout {
             width: 42; height: 20
             anchors.left: parent.left
             anchors.leftMargin: 10
-            color: systemPalette.placeholderText
+            color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
             text: title
             font: DTK.fontManager.t6
             horizontalAlignment: Qt.AlignLeft

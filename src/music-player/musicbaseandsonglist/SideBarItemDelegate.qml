@@ -12,15 +12,15 @@ import org.deepin.dtk 1.0
 
 ItemDelegate {
     property string type: "library"
-    readonly property color foregroundColor: checked ? systemPalette.highlightedText
-                                                     : systemPalette.windowText
+    readonly property color foregroundColor: {
+        if (checked) {
+            return DTK.themeType === ApplicationHelper.DarkType ? "#FFFFFF" : "#FFFFFF"
+        }
+        return DTK.themeType === ApplicationHelper.DarkType ? "#B2F7F7F7" : "#000000"
+    }
     id: item
     checked: globalVariant !== undefined && globalVariant.curListPage === model.uuid
     palette.buttonText: foregroundColor
-    SystemPalette {
-        id: systemPalette
-        colorGroup: SystemPalette.Active
-    }
     // 屏蔽空格响应
     Keys.onSpacePressed: { event.accepted=false; }
     Keys.onReleased: { event.accepted=(event.key===Qt.Key_Space); }
