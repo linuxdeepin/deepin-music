@@ -100,7 +100,13 @@ VlcInstance::VlcInstance(const QStringList &args,
     }
 #endif
 
-    _vlcInstance = vlc_new(0, nullptr);
+    // 禁用不需要的模块（音乐播放器不需要视频、字幕等功能）
+    const char *vlcArgs[] = {
+        "--no-video",            // 禁用视频输出
+        "--no-stats",            // 禁用统计信息
+        "--no-spu",              // 禁用字幕处理单元
+    };
+    _vlcInstance = vlc_new(sizeof(vlcArgs) / sizeof(vlcArgs[0]), vlcArgs);
     if (_vlcInstance) {
         qCDebug(dmMusic) << "VLC instance created successfully";
         vlc_set_user_agent(_vlcInstance, DmGlobal::getAppName().toStdString().c_str(), "");//name
