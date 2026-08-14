@@ -10,13 +10,10 @@ find_package(Dtk6Declarative REQUIRED)
 find_package(Qt6 COMPONENTS Core Widgets Quick LinguistTools REQUIRED)
 find_package(PkgConfig REQUIRED)
 
-# pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6widget)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6core)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6gui)
 
-# Since the dtk6widget.pc file is incorrect, use cmake config file to find Dtk6Widget
 find_package(Qt6 COMPONENTS Svg REQUIRED)
-find_package(Dtk6Widget REQUIRED)
 
 qt6_add_resources(RCC_SOURCES ${RESOURCES})
 
