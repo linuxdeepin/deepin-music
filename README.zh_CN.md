@@ -15,8 +15,6 @@ _The **master** branch is current development branch, build dependencies may cha
 * libavformat-dev
 * libdtk6core-bin
 * libdtk6gui-dev
-* libdbusextended-qt5-dev
-* libgsettings-qt-dev
 * libicu-dev
 * libmpris-qt6-dev
 * libtag1-dev
