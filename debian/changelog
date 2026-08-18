@@ -1,3 +1,9 @@
+deepin-music (7.0.65) unstable; urgency=medium
+
+  * fix: pause playback before suspend to avoid noise
+
+ -- Wang Yu <wangyu@uniontech.com>  Tue, 18 Aug 2026 14:49:12 +0800
+
 deepin-music (7.0.64) unstable; urgency=medium
 
   * chore(deps): remove unused Qt5 and Dtk6Widget dependencies
