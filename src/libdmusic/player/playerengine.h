@@ -70,6 +70,10 @@ public slots:
     void stop();
     void setFadeInOutFactor(double fadeInOutFactor);
 
+private slots:
+    // System suspend/resume: pause playback before suspend, do not auto-resume on wake (user starts it)
+    void onPrepareForSleep(bool active);
+
 signals:
     void fadeInOutFactorChanged(double fadeInOutFactor);
     void metaChanged();
