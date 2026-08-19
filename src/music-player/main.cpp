@@ -9,7 +9,12 @@
 #include <QIcon>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QElapsedTimer>
 #include <QFileInfo>
+#include <QQuickWindow>
+#include <QTimer>
+
+#include <memory>
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -58,6 +63,12 @@ void sig_term_handler(int signum, siginfo_t *info, void *ptr)
 // 此文件是QML应用的启动文件，一般无需修改
 int main(int argc, char *argv[])
 {
+    QElapsedTimer startupTimer;
+    startupTimer.start();
+    const auto logStartupStage = [&startupTimer](const char *stage) {
+        qCInfo(dmMusic) << "Startup stage" << stage << startupTimer.elapsed() << "ms";
+    };
+
     qCDebug(dmMusic) << "main start";
 #ifdef Q_OS_LINUX
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
@@ -120,6 +131,7 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication *app = new QGuiApplication(argc, argv);
+    logStartupStage("gui-application-created");
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
@@ -194,6 +206,7 @@ int main(int argc, char *argv[])
 #endif
 
     DmGlobal::initPlaybackEngineType();
+    logStartupStage("playback-engine-type-initialized");
     app->setQuitOnLastWindowClosed(false);
     DGuiApplicationHelper::loadTranslator();
 
@@ -208,6 +221,7 @@ int main(int argc, char *argv[])
     // 请在此处注册需要导入到QML中的C++类型
     // 例如： engine.rootContext()->setContextProperty("Utils", new Utils);
     presenter.reset(new Presenter(QObject::tr("Unknown album"), QObject::tr("Unknown artist"), app));
+    logStartupStage("presenter-created");
 
     EventsFilter eventsFilter(presenter.data());
     Shortcut shortcut(presenter.data());
@@ -220,6 +234,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("EventsFilter", &eventsFilter);
     engine.rootContext()->setContextProperty("ShortcutDialg", &shortcut);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    logStartupStage("qml-components-created");
     engine.rootObjects()[0]->installEventFilter(&eventsFilter);
 #ifdef Q_OS_WIN
     if (auto *window = qobject_cast<QWindow*>(engine.rootObjects()[0])) {
@@ -229,6 +244,31 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty()) {
         qCDebug(dmMusic) << "engine.rootObjects().isEmpty(), return -1";
         return -1;
+    }
+    if (auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().first())) {
+        const auto deferredUiTriggered = std::make_shared<bool>(false);
+        const auto triggerDeferredUi = [&startupTimer, window, presenter = presenter.data(), deferredUiTriggered](const char *trigger) {
+            if (*deferredUiTriggered) {
+                return;
+            }
+            if (!QMetaObject::invokeMethod(window, "loadDeferredUi", Qt::QueuedConnection)) {
+                qCWarning(dmMusic) << "Failed to load deferred UI";
+                return;
+            }
+
+            *deferredUiTriggered = true;
+            qCInfo(dmMusic) << "Deferred UI triggered by" << trigger << startupTimer.elapsed() << "ms";
+            QTimer::singleShot(250, presenter, [presenter] {
+                presenter->prepareStartupAssets();
+            });
+        };
+        QObject::connect(window, &QQuickWindow::frameSwapped, app,
+                         [triggerDeferredUi] {
+            triggerDeferredUi("first-frame-swapped");
+        });
+        QTimer::singleShot(1500, app, [triggerDeferredUi] {
+            triggerDeferredUi("fallback-timeout");
+        });
     }
     // 导入自动播放
     if (!OpenFilePaths.isEmpty()) {

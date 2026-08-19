@@ -51,12 +51,27 @@ else()
     add_executable(${BIN_NAME} ${RCC_SOURCES} ${ALLSOURCE} ${QM_FILES})
 endif()
 
+file(GLOB_RECURSE APP_QML_FILES CONFIGURE_DEPENDS
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.qml)
+# AlbumSublist.qml was intentionally absent from the legacy QRC and is not loaded at runtime.
+list(REMOVE_ITEM APP_QML_FILES musicsublist/AlbumSublist.qml)
+if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
+    qt_policy(SET QTP0004 NEW)
+endif()
+qt_add_qml_module(${BIN_NAME}
+    URI org.deepin.music
+    VERSION 1.0
+    RESOURCE_PREFIX /
+    NO_RESOURCE_TARGET_PATH
+    QML_FILES ${APP_QML_FILES})
+
 # Use target_link_libraries instead of qt6_use_modules
-target_link_libraries(${BIN_NAME} Qt6::Core)
+target_link_libraries(${BIN_NAME} PRIVATE Qt6::Core)
 
 set(TARGET_LIBS Qt6::Quick PkgConfig::DTK dmusic ${Dtk6Declarative_LIBRARIES} Dtk6::Gui)
 
-target_link_libraries(${BIN_NAME} ${TARGET_LIBS})
+target_link_libraries(${BIN_NAME} PRIVATE ${TARGET_LIBS})
 
 # install dconfig meta files
 dtk_add_config_meta_files(APPID deepin-music FILES data/org.deepin.music.json)

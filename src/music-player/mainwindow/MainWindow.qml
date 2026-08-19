@@ -19,6 +19,7 @@ ApplicationWindow {
     property Item globalVariant: GlobalVariant{} //全局变量，对此之后的对象都可见
     property bool isLyricShow : false
     property bool isPlaylistShow : false
+    property bool deferredUiLoaded: false
     property int windowMiniWidth: 1070
     property int windowMiniHeight: 680
 
@@ -79,6 +80,14 @@ ApplicationWindow {
                 color: DTK.themeType === ApplicationHelper.LightType ? "#f7f7f7" : "#252525"
             }
         }
+    }
+
+    function loadDeferredUi() {
+        if (deferredUiLoaded)
+            return
+
+        deferredUiLoaded = true
+        toolbox.restorePlaybackStatus()
     }
 
     Shortcuts {
@@ -189,56 +198,63 @@ ApplicationWindow {
 
     Loader { id: playlistLoader }
 
-    SystemTrayIcon{
-        id: systemTray
-        visible: true
-        // TODO: temporar setting, wait dtk fix IconEngine. icon.name is fallback
-        icon.name: "deepin-music"
-        icon.source: "qrc:/dsg/img/deepin-music.svg"
-        tooltip: qsTr("Music")
+    Loader {
+        id: systemTrayLoader
+        active: rootWindow.deferredUiLoaded
+        sourceComponent: Component {
+            SystemTrayIcon{
+            id: systemTray
+            visible: true
+            // TODO: temporar setting, wait dtk fix IconEngine. icon.name is fallback
+            icon.name: "deepin-music"
+            icon.source: "qrc:/dsg/img/deepin-music.svg"
+            tooltip: qsTr("Music")
 
-        onActivated: {
-            if (rootWindow.visibility === Window.Minimized || !rootWindow.visible) {
-                rootWindow.show()
-                rootWindow.raise()
-                rootWindow.requestActivate()
-            } else {
-                rootWindow.showMinimized()
+            onActivated: {
+                if (rootWindow.visibility === Window.Minimized || !rootWindow.visible) {
+                    rootWindow.show()
+                    rootWindow.raise()
+                    rootWindow.requestActivate()
+                } else {
+                    rootWindow.showMinimized()
+                }
+            }
+
+            menu: Menu {
+                MenuItem {
+                    text: qsTr("Play/Pause")
+                    onTriggered: Presenter.playPause()
+                    enabled: globalVariant.playingCount > 0
+                }
+                MenuItem {
+                    text: qsTr("Previous")
+                    onTriggered: Presenter.playPre()
+                    enabled: {
+                        if ((globalVariant.playlistExist && globalVariant.playingCount <= 1) ||
+                            (!Presenter.preMetaFromPlay(globalVariant.currentMediaMeta.hash) && globalVariant.curPlayMode === DmGlobal.RepeatNull))
+                            return false
+                        else
+                            return true
+                    }
+                }
+                MenuItem {
+                    text: qsTr("Next")
+                    onTriggered: Presenter.playNext()
+                    enabled: {
+                        if ((globalVariant.playlistExist && globalVariant.playingCount <= 1) ||
+                            (!Presenter.nextMetaFromPlay(globalVariant.currentMediaMeta.hash) && globalVariant.curPlayMode === DmGlobal.RepeatNull))
+                            return false
+                        else
+                            return true
+                    }
+                }
+                MenuItem {
+                    text: qsTr("Exit")
+                    onTriggered: Presenter.forceExit();
+                }
             }
         }
 
-        menu: Menu {
-            MenuItem {
-                text: qsTr("Play/Pause")
-                onTriggered: Presenter.playPause()
-                enabled: globalVariant.playingCount > 0
-            }
-            MenuItem {
-                text: qsTr("Previous")
-                onTriggered: Presenter.playPre()
-                enabled: {
-                    if ((globalVariant.playlistExist && globalVariant.playingCount <= 1) ||
-                        (!Presenter.preMetaFromPlay(globalVariant.currentMediaMeta.hash) && globalVariant.curPlayMode === DmGlobal.RepeatNull))
-                        return false
-                    else
-                        return true
-                }
-            }
-            MenuItem {
-                text: qsTr("Next")
-                onTriggered: Presenter.playNext()
-                enabled: {
-                    if ((globalVariant.playlistExist && globalVariant.playingCount <= 1) ||
-                        (!Presenter.nextMetaFromPlay(globalVariant.currentMediaMeta.hash) && globalVariant.curPlayMode === DmGlobal.RepeatNull))
-                        return false
-                    else
-                        return true
-                }
-            }
-            MenuItem {
-                text: qsTr("Exit")
-                onTriggered: Presenter.forceExit();
-            }
         }
     }
 

@@ -25,6 +25,7 @@ public:
 
     // dbus接口
     Q_INVOKABLE void setMprisPlayer(const QString &serviceName, const QString &desktopEntry, const QString &identity);
+    void prepareStartupAssets();
 
     // 播放控制
     Q_INVOKABLE QStringList supportedSuffixList()const;

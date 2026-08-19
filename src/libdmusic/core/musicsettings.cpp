@@ -41,6 +41,21 @@ MusicSettings::~MusicSettings()
 void MusicSettings::init()
 {
     qCDebug(dmMusic) << "Initializing MusicSettings";
+    qCDebug(dmMusic) << "Loading settings from JSON file";
+    m_settings = Dtk::Core::DSettings::fromJsonFile(":/data/music-settings.json");
+    if (m_settings.isNull()) {
+        qCCritical(dmMusic) << "Failed to load settings from JSON file";
+        return;
+    }
+    auto configFilepath = DmGlobal::configPath() + "/config.ini";
+    qCDebug(dmMusic) << "Setting config backend to:" << configFilepath;
+    auto backend = new Dtk::Core::QSettingBackend(configFilepath, m_settings);
+    m_settings->setBackend(backend);
+    qCDebug(dmMusic) << "Settings backend initialized successfully";
+}
+
+void MusicSettings::ensureDefaultCover()
+{
     auto coverPath = DmGlobal::cachePath() + "/images/default_cover.png";
     if (!QFile::exists(coverPath)) {
         QDir imageDir(DmGlobal::cachePath() + "/images");
@@ -62,17 +77,6 @@ void MusicSettings::init()
             qCDebug(dmMusic) << "Successfully saved default cover image to:" << coverPath;
         }
     }
-    qCDebug(dmMusic) << "Loading settings from JSON file";
-    m_settings = Dtk::Core::DSettings::fromJsonFile(":/data/music-settings.json");
-    if (m_settings.isNull()) {
-        qCCritical(dmMusic) << "Failed to load settings from JSON file";
-        return;
-    }
-    auto configFilepath = DmGlobal::configPath() + "/config.ini";
-    qCDebug(dmMusic) << "Setting config backend to:" << configFilepath;
-    auto backend = new Dtk::Core::QSettingBackend(configFilepath, m_settings);
-    m_settings->setBackend(backend);
-    qCDebug(dmMusic) << "Settings backend initialized successfully";
 }
 
 QPointer<Dtk::Core::DSettings> MusicSettings::settings()

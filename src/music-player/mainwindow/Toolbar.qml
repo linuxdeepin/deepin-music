@@ -615,6 +615,13 @@ ToolFloatingPanel {
         }
     }
 
+    function restorePlaybackStatus() {
+        Presenter.restorePlaybackStatus()
+        if (Presenter.valueFromSettings("base.play.remember_progress")) {
+            positionChange(Presenter.getPosition())
+        }
+    }
+
     Component.onCompleted: {
         Presenter.metaChanged.connect(metaChange)
         Presenter.positionChanged.connect(positionChange)
@@ -625,11 +632,6 @@ ToolFloatingPanel {
 
         bMute = Presenter.valueFromSettings("base.play.mute")
         playMode = Presenter.getPlaybackMode()
-
-        Presenter.restorePlaybackStatus();
-        if (Presenter.valueFromSettings("base.play.remember_progress")) {
-            positionChange(Presenter.getPosition())
-        }
 
         Presenter.muteChanged.connect(function(mute){
             bMute = mute

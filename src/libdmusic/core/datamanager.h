@@ -69,6 +69,7 @@ public:
     void resetToSettings();
     QVariant valueFromSettings(const QString &key);
     void setValueToSettings(const QString &key, const QVariant &value, const bool &empty = false);
+    void prepareStartupAssets();
 
 public slots:
     void slotAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta);

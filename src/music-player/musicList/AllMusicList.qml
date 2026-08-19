@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -19,7 +19,7 @@ Rectangle {
 
     objectName: listHash
     color: "transparent"
-    height: parent.height/* - 70*/
+    height: parent ? parent.height : 0/* - 70*/
     Column{
         anchors.fill: rootRectangle
         ToolButtonItem{
@@ -37,12 +37,19 @@ Rectangle {
             pageHash: listHash
             visible: (rootRectangle.mediaModels.count === 0) ? true : false
         }
-        AllMusicListView {
-            id: musicListView
+        Loader {
+            id: musicListViewLoader
             width: rootRectangle.width
             height: rootRectangle.height - toolButtonItem.height/* - 70*/
-            mediaModel: mediaModels
-            viewListHash: listHash
+            active: rootRectangle.mediaModels.count > 0
+            sourceComponent: Component {
+                AllMusicListView {
+                    width: parent.width
+                    height: parent.height
+                    mediaModel: rootRectangle.mediaModels
+                    viewListHash: rootRectangle.listHash
+                }
+            }
         }
     }
 
@@ -117,8 +124,8 @@ Rectangle {
     }
 
     function selectAll() {
-        if (musicListView && musicListView.visible) {
-            musicListView.selectAll();
+        if (musicListViewLoader.item && musicListViewLoader.item.visible) {
+            musicListViewLoader.item.selectAll();
         }
     }
 }
