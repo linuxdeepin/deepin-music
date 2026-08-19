@@ -42,7 +42,14 @@ Item {
     signal showSearchEdit()     // 显示搜索框信号
 
     Loader { id: globalFileDlgLoader }
-    property Loader closeConfirmDlgLoader: Loader {}
+    property Loader closeConfirmDlgLoader: Loader {
+        onStatusChanged: {
+            if (status === Loader.Error) {
+                console.warn("Failed to load close confirmation dialog")
+                source = ""
+            }
+        }
+    }
     Loader { id: cdRemovedDlgLoader }
     Loader { id: musicInfoDlgLoader }
     Timer {

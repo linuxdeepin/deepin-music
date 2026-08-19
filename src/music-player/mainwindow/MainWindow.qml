@@ -320,18 +320,29 @@ ApplicationWindow {
     }
 
     onClosing: {
-        var closeAction = Presenter.valueFromSettings("base.close.close_action")
+        var closeAction = Number(Presenter.valueFromSettings("base.close.close_action"))
+        if (isNaN(closeAction))
+            closeAction = 2
         //console.log("closeAction: " + closeAction)
+
+        // Do not instantiate the confirmation dialog when the configured action is direct exit.
+        if (closeAction === 1) {
+            Presenter.forceExit()
+            return
+        }
 
         if (globalVariant.closeConfirmDlgLoader.status === Loader.Null)
             globalVariant.closeConfirmDlgLoader.setSource("../dialogs/CloseConfirmDialog.qml")
 
+        if (globalVariant.closeConfirmDlgLoader.status !== Loader.Ready) {
+            close.accepted = false
+            console.warn("Failed to load close confirmation dialog")
+            return
+        }
+
         if (globalVariant.closeConfirmDlgLoader.item.isMinimize) {
             //最小化
             globalVariant.closeConfirmDlgLoader.item.isMinimize = false
-        } else if (closeAction == 1) {
-            //退出
-            Presenter.forceExit();
         } else {
             //询问
             globalVariant.closeConfirmDlgLoader.item.isClose = Presenter.valueFromSettings("base.close.is_close")

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.0
+import QtQml 2.15
 import QtQuick.Layouts 1.11
 import QtQuick.Window 2.11
 import org.deepin.dtk 1.0
@@ -15,7 +16,10 @@ DialogWindow {
     modality: Qt.ApplicationModal
     color: Qt.rgba(247,247,247,0.80);
     icon: globalVariant.appIconName
-    flags: Qt.platform.os === "windows" ? (Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint) : undefined
+    Binding on flags {
+        when: Qt.platform.os === "windows"
+        value: Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint
+    }
 
     onVisibleChanged: {
         if (visible && Qt.platform.os === "windows") {

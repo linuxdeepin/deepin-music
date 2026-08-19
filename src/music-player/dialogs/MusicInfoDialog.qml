@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick
+import QtQml 2.15
 import QtQuick.Layouts
 import QtQuick.Window
 import QtQml.Models
@@ -14,7 +15,10 @@ DialogWindow {
 
     width: 386
     height: 468
-    flags: Qt.platform.os === "windows" ? (Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint) : undefined
+    Binding on flags {
+        when: Qt.platform.os === "windows"
+        value: Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint
+    }
 
     onVisibleChanged: {
         if (visible && Qt.platform.os === "windows") {

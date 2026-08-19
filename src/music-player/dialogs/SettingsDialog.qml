@@ -121,22 +121,20 @@ Settings.SettingsDialog {
                         }
                         onValueChanged: {
 //                            console.log("onValueChanged closeAction.........." + value)
-                            Presenter.setValueToSettings("base.close.close_action", value)
-                            if (value === 2) {
-                                Presenter.setValueToSettings("base.close.is_close", false)
-                            } else {
-                                Presenter.setValueToSettings("base.close.is_close", true)
-                            }
+                            var closeAction = Number(value)
+                            if (isNaN(closeAction))
+                                return
+                            Presenter.setValueToSettings("base.close.close_action", closeAction)
+                            Presenter.setValueToSettings("base.close.is_close", closeAction !== 2)
                         }
                         Component.onCompleted: {
 //                            console.log("closeAction Component.onCompleted.........." + Presenter.valueFromSettings("base.close.close_action") + value)
-                            value = Presenter.valueFromSettings("base.close.close_action")
+                            var closeAction = Number(Presenter.valueFromSettings("base.close.close_action"))
+                            if (isNaN(closeAction))
+                                closeAction = 2
+                            value = closeAction
 //                            console.log("Settings.SettingsOption.value:", value)
-                            if (value === 2) {
-                                Presenter.setValueToSettings("base.close.is_close", false)
-                            } else {
-                                Presenter.setValueToSettings("base.close.is_close", true)
-                            }
+                            Presenter.setValueToSettings("base.close.is_close", closeAction !== 2)
                         }
                     }
                 }

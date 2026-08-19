@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.11
+import QtQml 2.15
 import QtQuick.Layouts 1.11
 import QtQuick.Window 2.11
 import Qt5Compat.GraphicalEffects
@@ -19,7 +20,10 @@ DialogWindow {
     height: deleteSongsLabel.height + 110
     modality: Qt.ApplicationModal
     icon: globalVariant.appIconName
-    flags: Qt.platform.os === "windows" ? (Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint) : undefined
+    Binding on flags {
+        when: Qt.platform.os === "windows"
+        value: Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
+    }
 
     onVisibleChanged: {
         if (visible && Qt.platform.os === "windows") {

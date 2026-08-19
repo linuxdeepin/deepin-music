@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.11
+import QtQml 2.15
 import QtQuick.Layouts 1.11
 import QtQuick.Window 2.11
 import QtQml.Models 2.11
@@ -75,7 +76,10 @@ DialogWindow {
     minimumHeight: 426
     maximumWidth: 572
     maximumHeight: 426
-    flags: Qt.platform.os === "windows" ? (Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint) : undefined
+    Binding on flags {
+        when: Qt.platform.os === "windows"
+        value: Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint
+    }
     header: DialogTitleBar {
         enableInWindowBlendBlur: false
     }
