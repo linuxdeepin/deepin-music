@@ -347,7 +347,7 @@ ApplicationWindow {
     Connections {
         id: toolboxConnect
         target: toolbox
-        onLyricToggleClicked: {
+        function onLyricToggleClicked() {
             if (lrcWindowLoader.status === Loader.Null) {
                 lrcWindowLoader.setSource("LyricWindow.qml")
                 lrcWindowLoader.item.y = -50
@@ -363,7 +363,7 @@ ApplicationWindow {
     Connections {
         id: titleBarConnect
         target: musicTitle
-        onLrcHideBtnClicked: {
+        function onLrcHideBtnClicked() {
             if (lrcWindowLoader.status === Loader.Null) {
                 lrcWindowLoader.setSource("LyricWindow.qml")
                 lrcWindowLoader.item.y = -50
@@ -372,7 +372,7 @@ ApplicationWindow {
                  lrcWindowLoader.item.lyricWindowUp()
              }
         }
-        onSearchItemTriggered: {
+        function onSearchItemTriggered(text, type) {
             //console.log("maindow:onSearchItemTriggered:" + text)
             //searchResultDlgItemTriggered(text)
             contentWindow.onSearchResultItemChanged(text, type)
@@ -380,7 +380,7 @@ ApplicationWindow {
     }
     Connections {
         target: globalVariant.closeConfirmDlgLoader.item
-        onMinimizeToSystemTray: {
+        function onMinimizeToSystemTray() {
             //console.log("onMinimizeToSystemTray......................")
             close()
         }
