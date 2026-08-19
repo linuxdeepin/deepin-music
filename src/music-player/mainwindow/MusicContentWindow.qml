@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -68,7 +68,7 @@ Rectangle {
 
     Connections {
         target: musicBaselist;
-        onMusicBaselistChanged: {
+        function onMusicBaselistChanged(type, displayName) {
             globalVariant.globalSwitchButtonStatus = 0; //初始化切换按钮状态
             globalVariant.curListPage = type
             var item = listViewStackView.find(function(item, index) { return item.objectName === type })
@@ -94,7 +94,7 @@ Rectangle {
     }
     Connections {
         target: globalVariant
-        onUpdateCurrentPlaylistTitleName: {
+        function onUpdateCurrentPlaylistTitleName(name, curHash) {
             var item = listViewStackView.find(function(item, index) { return item.objectName === curHash }); //重命名后，更新列表标题名
             if(item !== null){
                 item.listTitle = name;

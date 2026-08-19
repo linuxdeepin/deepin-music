@@ -83,10 +83,10 @@ Rectangle {
 
         Connections {
             target: musicbaseSidebar
-            onItemClicked: {
+            function onItemClicked(key, text) {
                 musicBaselistChanged(key, text);
             }
-            onItemRightClicked: {
+            function onItemRightClicked(key, text) {
                 if (sidebarMenuLoader.status === Loader.Null) {
                     sidebarMenuLoader.setSource("../musicmousemenu/SidebarMenu.qml")
                 }
@@ -99,10 +99,10 @@ Rectangle {
         }
         Connections {
             target: musicSonglist
-            onItemClicked: {
+            function onItemClicked(key, text) {
                 musicBaselistChanged(key, text);
             }
-            onItemRightClicked:{
+            function onItemRightClicked(key, text) {
                 if (key === "cdarole")
                     return
                 if (sidebarMenuLoader.status === Loader.Null )
