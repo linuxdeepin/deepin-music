@@ -1,4 +1,4 @@
-// Copyright (C) 2022 UnionTech Technology Co., Ltd.
+// Copyright (C) 2022-2026 UnionTech Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -8,7 +8,6 @@ import QtQuick.Window 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
 import org.deepin.dtk 1.0
-import "../dialogs"
 
 ColumnLayout {
     property string title
@@ -79,8 +78,7 @@ ColumnLayout {
                 break;
             case Qt.Key_Delete:
                 if(sideModel.get(currentIndex).editable){
-                    removeSong.listHash = sideModel.get(currentIndex).uuid;
-                    removeSong.show();
+                    control.showRemoveSong(sideModel.get(currentIndex).uuid)
                 }
                 break
             default:
@@ -225,7 +223,7 @@ ColumnLayout {
             }
             Connections {
                 target: musicBaseScrollView.contentItem
-                onContentYChanged: {
+                function onContentYChanged() {
 //                    console.log("Connections........onContentYChanged   ", musicBaseScrollView.contentItem.contentY)
                     if (control.type === "playlists")
                         dropArea.updateHoverIndex()
@@ -281,9 +279,37 @@ ColumnLayout {
         }
     }
 
-    DeleteSonglistDialog{
-        id: removeSong;
-        removeMusic: false
+    property string pendingRemoveSongListHash: ""
+    Loader {
+        id: removeSongLoader
+        // The loaded dialog is a separate window; keep the Loader out of ColumnLayout sizing.
+        visible: false
+        onLoaded: {
+            if (!pendingRemoveSongListHash)
+                return
+
+            item.listHash = pendingRemoveSongListHash
+            pendingRemoveSongListHash = ""
+            item.show()
+        }
+        onStatusChanged: {
+            if (status === Loader.Error) {
+                pendingRemoveSongListHash = ""
+                console.warn("Failed to load delete playlist dialog")
+                source = ""
+            }
+        }
+    }
+
+    function showRemoveSong(listHash) {
+        pendingRemoveSongListHash = listHash
+        if (removeSongLoader.status === Loader.Null) {
+            removeSongLoader.setSource("qrc:/dialogs/DeleteSonglistDialog.qml", { "removeMusic": false })
+        } else if (removeSongLoader.status === Loader.Ready) {
+            removeSongLoader.item.listHash = pendingRemoveSongListHash
+            pendingRemoveSongListHash = ""
+            removeSongLoader.item.show()
+        }
     }
 
     Component.onCompleted: {

@@ -872,6 +872,11 @@ int Presenter::playlistMetaCount(const QString &hash)
     return m_data->m_dataManager->playlistFromHash(hash).sortMetas.size();
 }
 
+int Presenter::playQueueCount()
+{
+    return m_data->m_playerEngine->getMetas().size();
+}
+
 bool Presenter::deletePlaylist(const QString &hash)
 {
     qCDebug(dmMusic) << "Deleting playlist:" << hash;

@@ -72,6 +72,7 @@ public:
     Q_INVOKABLE QVariant playlistSortType(const QString &hash);
     Q_INVOKABLE void sortPlaylist(const int &type, const QString &hash);
     Q_INVOKABLE int playlistMetaCount(const QString &hash);
+    Q_INVOKABLE int playQueueCount();
     Q_INVOKABLE bool deletePlaylist(const QString &hash);
     Q_INVOKABLE bool renamePlaylist(const QString &name, const QString &playlistHash);
     Q_INVOKABLE void movePlaylist(const QString &hash, const QString &nextHash);

@@ -20,6 +20,7 @@ TitleBar {
     property double opat: 1.0
     property double disableOpat: 0.4
     property var searchEditRef: null
+    property string pendingSearchText: ""
 
     Loader { id: equalizerDlgLoader }
     Loader { id: settingDlgLoader }
@@ -269,7 +270,8 @@ TitleBar {
                 enabled: Presenter.isExistMeta()
                 Keys.onReturnPressed: {
                     //console.log("SearchEdit: Keys.onEnterPressed....")
-                    if (text.length <= 0 || searchResDlg.songList == null)
+                    var searchResDlg = searchResultLoader.item
+                    if (text.length <= 0 || !searchResDlg || searchResDlg.songList == null)
                         return
 
                     var type = -1
@@ -280,41 +282,11 @@ TitleBar {
                     else if (searchResDlg.albumModel.count > 0)
                         type = 2
 
-                    searchResDlg.searchItemTriggered(text, type)
-                    //searchResDlg.visible = false
+                    titleBar.searchItemTriggered(text, type)
+                    searchResDlg.visible = false
                 }
 
-                onTextChanged: {
-                    searchResDlg.songList = []
-                    searchResDlg.artistModel.clear()
-                    searchResDlg.albumModel.clear()
-                    searchResDlg.pattern = text
-
-                    var result = Presenter.quickSearchText(text)
-                    var albums = result["albums"]
-                    var artists = result["artists"]
-
-                    searchResDlg.songList = result["metas"]
-                    if (artists != null) {
-                        for (var i = 0; i < artists.length; i++) {
-                            artists[i].type = "artist"
-                            searchResDlg.artistModel.append(artists[i])
-                        }
-                    }
-                    if (albums != null) {
-                        for (var j = 0; j < albums.length; j++) {
-                            albums[j].type = "album"
-                            searchResDlg.albumModel.append(albums[j])
-                        }
-                    }
-
-                    if ((searchResDlg.songList == null || searchResDlg.songList.length == 0)
-                            && searchResDlg.artistModel.count <= 0 && searchResDlg.albumModel.count <= 0) {
-                        searchResDlg.visible = false
-                    } else {
-                        searchResDlg.visible = true
-                    }
-                }
+                onTextChanged: titleRowLayout.updateSearchResults(text)
                 onActiveFocusChanged: {
                     EventsFilter.setEnabled(!activeFocus)
                 }
@@ -340,20 +312,87 @@ TitleBar {
                     searchEditRef = searchEdit
                 }
             }
-            SearchResultDialog {
-                id: searchResDlg
-                width: 360
-                x: searchEdit.x - (width - searchEdit.width) / 2
-                y: 50
+            Loader {
+                id: searchResultLoader
+                onLoaded: {
+                    if (titleBar.pendingSearchText.length <= 0)
+                        return
 
-                visible: false
-                onSearchItemTriggered: {
-                    titleBar.searchItemTriggered(value, type)
-                    searchEdit.text = value
-                    visible = false
-                    //searchEdit.updateSearchText(value)
+                    var text = titleBar.pendingSearchText
+                    titleBar.pendingSearchText = ""
+                    titleRowLayout.updateSearchResults(text)
+                }
+                onStatusChanged: {
+                    if (status === Loader.Error) {
+                        titleBar.pendingSearchText = ""
+                        console.warn("Failed to load search result dialog")
+                        sourceComponent = undefined
+                    }
                 }
             }
+            Component {
+                id: searchResultComponent
+                SearchResultDialog {
+                    width: 360
+                    x: searchEdit.x - (width - searchEdit.width) / 2
+                    y: 50
+
+                    visible: false
+                    function onSearchItemTriggered(value, type) {
+                        titleBar.searchItemTriggered(value, type)
+                        searchEdit.text = value
+                        visible = false
+                        //searchEdit.updateSearchText(value)
+                    }
+                }
+            }
+
+    function updateSearchResults(text) {
+        if (text.length <= 0) {
+            titleBar.pendingSearchText = ""
+            if (searchResultLoader.item)
+                searchResultLoader.item.visible = false
+            return
+        }
+
+        if (searchResultLoader.status === Loader.Null) {
+            titleBar.pendingSearchText = text
+            searchResultLoader.sourceComponent = searchResultComponent
+            return
+        }
+        if (searchResultLoader.status !== Loader.Ready) {
+            titleBar.pendingSearchText = text
+            return
+        }
+
+        var searchResDlg = searchResultLoader.item
+        searchResDlg.songList = []
+        searchResDlg.artistModel.clear()
+        searchResDlg.albumModel.clear()
+        searchResDlg.pattern = text
+
+        var result = Presenter.quickSearchText(text)
+        var albums = result["albums"]
+        var artists = result["artists"]
+
+        searchResDlg.songList = result["metas"]
+        if (artists != null) {
+            for (var i = 0; i < artists.length; i++) {
+                artists[i].type = "artist"
+                searchResDlg.artistModel.append(artists[i])
+            }
+        }
+        if (albums != null) {
+            for (var j = 0; j < albums.length; j++) {
+                albums[j].type = "album"
+                searchResDlg.albumModel.append(albums[j])
+            }
+        }
+
+        searchResDlg.visible = !((searchResDlg.songList == null || searchResDlg.songList.length == 0)
+                                 && searchResDlg.artistModel.count <= 0
+                                 && searchResDlg.albumModel.count <= 0)
+    }
 
             IconButton {
                 id: addBtn

@@ -22,7 +22,8 @@ Item {
     property string curPlayingArtist: ""
     property string curListPage: "all"
     property string playingIconName: "music_play1" //播放中动效图标
-    property bool playlistExist: false
+    // Playback queue state belongs to PlayerEngine and must not depend on the lazily created queue panel.
+    property bool playlistExist: true
     property int playingCount: 0
     property ListModel globalCustomPlaylistModel: CustomPlaylistModel {} //全局的自定义歌单model
     property var currentSelectMediaMeta: null //当前选择歌曲
@@ -116,8 +117,24 @@ Item {
 
     Component.onCompleted: {
         currentMediaMeta = Presenter.getActivateMeta();
+        refreshPlayingCount()
         Presenter.metaChanged.connect(onMetaChanged);
         Presenter.playbackStatusChanged.connect(onPlaybackStatusChanged);
         Presenter.updatePlayingIcon.connect(onUpdatePlayingIcon);
+        Presenter.addOneMeta.connect(function(playlistHashs) {
+            refreshPlayingCountIfNeeded(playlistHashs)
+        })
+        Presenter.addMetaFinished.connect(function(playlistHashs) {
+            refreshPlayingCountIfNeeded(playlistHashs)
+        })
+        Presenter.importFinished.connect(function(playlistHashs) {
+            refreshPlayingCountIfNeeded(playlistHashs)
+        })
+        Presenter.deleteOneMeta.connect(function(playlistHashs) {
+            refreshPlayingCountIfNeeded(playlistHashs)
+        })
+        Presenter.deleteFinished.connect(function(playlistHashs) {
+            refreshPlayingCountIfNeeded(playlistHashs)
+        })
     }
 }
