@@ -49,8 +49,8 @@
         <file>dsg/img/music_play4.svg</file>
         <file>dsg/img/album_default.png</file>
         <file>dsg/img/artist_default.png</file>
-        <file>dsg/img/allMusic_default.png</file>
-        <file>dsg/img/favourite_default.png</file>
+        <file>dsg/img/allMusic_default_256.png</file>
+        <file>dsg/img/favourite_default_256.png</file>
         <file>dsg/icons/toolbar_like_check.dci</file>
         <file>dsg/icons/toolbar_like.dci</file>
         <file>dsg/icons/toolbar_music_repeatcycle.dci</file>

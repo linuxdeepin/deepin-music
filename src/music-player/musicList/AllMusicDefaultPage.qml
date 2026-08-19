@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,12 +7,37 @@ import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
 import Qt.labs.platform 1.0
 import org.deepin.dtk 1.0
-import "../dialogs"
 
 Rectangle {
     property string pageHash: ""
+    property bool folderDialogOpenRequested: false
+    Loader {
+        id: folderDlgLoader
+        onLoaded: {
+            if (folderDialogOpenRequested) {
+                folderDialogOpenRequested = false
+                item.open()
+            }
+        }
+        onStatusChanged: {
+            if (status === Loader.Error) {
+                folderDialogOpenRequested = false
+                console.warn("Failed to load folder dialog")
+                source = ""
+            }
+        }
+    }
+
+    function openFolderDialog() {
+        folderDialogOpenRequested = true
+        if (folderDlgLoader.status === Loader.Null) {
+            folderDlgLoader.setSource("qrc:/dialogs/FolderDialog.qml")
+        } else if (folderDlgLoader.status === Loader.Ready) {
+            folderDialogOpenRequested = false
+            folderDlgLoader.item.open()
+        }
+    }
 //    property FileDialog fileDlg: FileDialog{}
-    property FolderDialog folderDlg: FolderDialog{}
     color: "transparent"
     StackView {
         id: defaultStackview
@@ -31,7 +56,7 @@ Rectangle {
         Image {
             id: albumImage
             anchors.horizontalCenter: allmusicDefault.horizontalCenter;
-            source: "qrc:/dsg/img/allMusic_default.png"
+            source: "qrc:/dsg/img/allMusic_default_256.png"
             sourceSize: Qt.size(126, 126);
             cache: false
         }
@@ -52,7 +77,7 @@ Rectangle {
                 text: qsTr("Open Folders");
                 width: 178; height: 36
                 onClicked: {
-                    folderDlg.open()
+                    openFolderDialog()
                 }
             }
         }
@@ -83,117 +108,124 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        id: favmusicDefault
-        color: "transparent"
-        width: 376; height: 242
-        visible: false;
-        Image {
-            id: favouriteImage
-            anchors.horizontalCenter: favmusicDefault.horizontalCenter;
-            source: "qrc:/dsg/img/favourite_default.png"
-            sourceSize: Qt.size(126, 126);
-            cache: false
-        }
-        Label {
-            id: favouriteLable
-            anchors.top: favouriteImage.bottom; anchors.topMargin: 40
-            anchors.horizontalCenter: favmusicDefault.horizontalCenter;
-            color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
-                                                                : Qt.rgba(0, 0, 0, 0.4)
-            text: qsTr("Your favorite songs will be displayed here");
-            horizontalAlignment: Qt.AlignHCenter
-        }
+    Component {
+        id: favmusicDefaultComponent
         Rectangle {
-            width: childrenRect.width
-            height: childrenRect.height
-            anchors.top: favouriteLable.bottom; anchors.topMargin: 13
-            anchors.horizontalCenter: parent.horizontalCenter
+            id: favmusicDefault
             color: "transparent"
+            width: 376; height: 242
+            visible: false;
+            Image {
+                id: favouriteImage
+                anchors.horizontalCenter: favmusicDefault.horizontalCenter;
+                source: "qrc:/dsg/img/favourite_default_256.png"
+                sourceSize: Qt.size(126, 126);
+                cache: false
+            }
+            Label {
+                id: favouriteLable
+                anchors.top: favouriteImage.bottom; anchors.topMargin: 40
+                anchors.horizontalCenter: favmusicDefault.horizontalCenter;
+                color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                    : Qt.rgba(0, 0, 0, 0.4)
+                text: qsTr("Your favorite songs will be displayed here");
+                horizontalAlignment: Qt.AlignHCenter
+            }
+            Rectangle {
+                width: childrenRect.width
+                height: childrenRect.height
+                anchors.top: favouriteLable.bottom; anchors.topMargin: 13
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "transparent"
 
-            Row {
-                Text {
-                    text: qsTr("Click “")
-                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
-                                                                        : Qt.rgba(0, 0, 0, 0.4)
-                }
-                DciIcon {
-                    name: "default_heart"
-                    sourceSize: Qt.size(20, 20)
-                    anchors.verticalCenter: parent.verticalCenter
-                    theme: DTK.themeType
-                }
-                Text {
-                    text: qsTr("” to add a song to My Favorites")
-                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
-                                                                        : Qt.rgba(0, 0, 0, 0.4)
+                Row {
+                    Text {
+                        text: qsTr("Click “")
+                        color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                            : Qt.rgba(0, 0, 0, 0.4)
+                    }
+                    DciIcon {
+                        name: "default_heart"
+                        sourceSize: Qt.size(20, 20)
+                        anchors.verticalCenter: parent.verticalCenter
+                        theme: DTK.themeType
+                    }
+                    Text {
+                        text: qsTr("” to add a song to My Favorites")
+                        color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                            : Qt.rgba(0, 0, 0, 0.4)
+                    }
                 }
             }
-        }
 
-//        Label {
-//            anchors.top: favouriteLable.bottom; anchors.topMargin: 13
-//            anchors.horizontalCenter: favmusicDefault.horizontalCenter;
-//            color: Qt.rgba(0, 0, 0, 0.4)
-//            text: qsTr("Click “ ♥ ” to add a song to My Favorites");
-//            horizontalAlignment: Qt.AlignHCenter
-//        }
+    //        Label {
+    //            anchors.top: favouriteLable.bottom; anchors.topMargin: 13
+    //            anchors.horizontalCenter: favmusicDefault.horizontalCenter;
+    //            color: Qt.rgba(0, 0, 0, 0.4)
+    //            text: qsTr("Click “ ♥ ” to add a song to My Favorites");
+    //            horizontalAlignment: Qt.AlignHCenter
+    //        }
+        }
     }
 
-    Rectangle {
-        id: songListDefault
-        color: "transparent"
-        width: 376; height: 242
-        visible: false;
-        Image {
-            id: songListImage
-            anchors.horizontalCenter: songListDefault.horizontalCenter;
-            source: "qrc:/dsg/img/favourite_default.png"
-            sourceSize: Qt.size(126, 126);
-            cache: false
-        }
+    Component {
+        id: songListDefaultComponent
         Rectangle {
-            width: childrenRect.width
-            height: childrenRect.height
-            anchors.top: songListImage.bottom; anchors.topMargin: 40
-            anchors.horizontalCenter: songListDefault.horizontalCenter
-            color: Qt.rgba(0, 0, 0, 0)
-            Row {
-                Text {
-                    text: qsTr("No songs yet. Click “")
-                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
-                                                                        : Qt.rgba(0, 0, 0, 0.4)
-                }
-                DciIcon {
-                    name: "default_add"
-                    sourceSize: Qt.size(20, 20)
-                    anchors.verticalCenter: parent.verticalCenter
-                    theme: DTK.themeType
-                }
-                Text {
-                    text: qsTr("” to add songs to the playlist")
-                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
-                                                                        : Qt.rgba(0, 0, 0, 0.4)
+            id: songListDefault
+            color: "transparent"
+            width: 376; height: 242
+            visible: false;
+            Image {
+                id: songListImage
+                anchors.horizontalCenter: songListDefault.horizontalCenter;
+                source: "qrc:/dsg/img/favourite_default_256.png"
+                sourceSize: Qt.size(126, 126);
+                cache: false
+            }
+            Rectangle {
+                width: childrenRect.width
+                height: childrenRect.height
+                anchors.top: songListImage.bottom; anchors.topMargin: 40
+                anchors.horizontalCenter: songListDefault.horizontalCenter
+                color: Qt.rgba(0, 0, 0, 0)
+                Row {
+                    Text {
+                        text: qsTr("No songs yet. Click “")
+                        color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                            : Qt.rgba(0, 0, 0, 0.4)
+                    }
+                    DciIcon {
+                        name: "default_add"
+                        sourceSize: Qt.size(20, 20)
+                        anchors.verticalCenter: parent.verticalCenter
+                        theme: DTK.themeType
+                    }
+                    Text {
+                        text: qsTr("” to add songs to the playlist")
+                        color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7)
+                                                                            : Qt.rgba(0, 0, 0, 0.4)
+                    }
                 }
             }
-        }
 
-//        Label {
-//            id: songListLable
-//            anchors.top: songListImage.bottom; anchors.topMargin: 40
-//            anchors.horizontalCenter: songListDefault.horizontalCenter;
-//            color: Qt.rgba(0, 0, 0, 0.4)
-//            text: qsTr("No songs yet. Click “ ➕ ” to add songs to the playlist.")
-//            horizontalAlignment: Qt.AlignHCenter
-//        }
+    //        Label {
+    //            id: songListLable
+    //            anchors.top: songListImage.bottom; anchors.topMargin: 40
+    //            anchors.horizontalCenter: songListDefault.horizontalCenter;
+    //            color: Qt.rgba(0, 0, 0, 0.4)
+    //            text: qsTr("No songs yet. Click “ ➕ ” to add songs to the playlist.")
+    //            horizontalAlignment: Qt.AlignHCenter
+    //        }
+        }
     }
+
     onPageHashChanged: {
         if(pageHash === "all"){
             defaultStackview.push(allmusicDefault);
         }else if(pageHash === "fav"){
-            defaultStackview.push(favmusicDefault);
+            defaultStackview.push(favmusicDefaultComponent);
         }else{
-            defaultStackview.push(songListDefault);
+            defaultStackview.push(songListDefaultComponent);
         }
     }
 

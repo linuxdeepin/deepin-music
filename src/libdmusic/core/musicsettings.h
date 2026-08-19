@@ -16,6 +16,7 @@ public:
     ~MusicSettings();
 
     void init();
+    void ensureDefaultCover();
     QPointer<Dtk::Core::DSettings> settings();
 
     void sync();

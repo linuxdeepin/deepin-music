@@ -244,14 +244,27 @@ public:
         m_dbOperate = new DBOperate(supportedSuffixs);
         m_workerThread = new QThread(m_parent);
         m_dbOperate->moveToThread(m_workerThread);
-        m_mediaMetaWorker = new MediaMetaWorker;
-        m_mediaMetaThread = new QThread(m_parent);
-        m_mediaMetaWorker->moveToThread(m_mediaMetaThread);
         m_metaUpsertTimer = new QTimer(m_parent);
         m_metaUpsertTimer->setSingleShot(true);
         m_metaUpsertTimer->setInterval(1000);
         qCDebug(dmMusic) << "DataManagerPrivate initialized with current playlist:" << m_currentHash;
     }
+    void ensureMediaMetaWorker()
+    {
+        if (m_mediaMetaWorker) {
+            return;
+        }
+
+        m_mediaMetaWorker = new MediaMetaWorker;
+        m_mediaMetaThread = new QThread(m_parent);
+        m_mediaMetaWorker->moveToThread(m_mediaMetaThread);
+        QObject::connect(m_parent, &DataManager::signalEnqueueMetaTasks,
+                         m_mediaMetaWorker, &MediaMetaWorker::enqueueMetas, Qt::QueuedConnection);
+        QObject::connect(m_mediaMetaWorker, &MediaMetaWorker::signalMetaAnalysisReady,
+                         m_parent, &DataManager::slotMetaAnalysisReady, Qt::QueuedConnection);
+        m_mediaMetaThread->start();
+    }
+
     ~DataManagerPrivate()
     {
         qCDebug(dmMusic) << "Destroying DataManagerPrivate";
@@ -306,6 +319,7 @@ private:
     QTimer                           *m_metaUpsertTimer = nullptr;
     MusicSettings                    *m_settings         = nullptr;
     bool                               m_workerStopped    = false;
+    bool                               m_startupAssetsPrepared = false;
     QSqlDatabase                      m_database;
     QString                           m_dbPath;           // 可注入的 DB 路径，空=默认 cachePath/mediameta.sqlite
     QString                           m_currentHash;
@@ -339,13 +353,10 @@ DataManager::DataManager(QStringList supportedSuffixs, QObject *parent, const QS
     connect(m_data->m_dbOperate, &DBOperate::signalImportFinished, this, &DataManager::signalImportFinished, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalMetaBatchFinished, this, &DataManager::slotMetaBatchFinished, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalEnqueueMetaTasks, this, &DataManager::slotEnqueueMetaTasks, Qt::QueuedConnection);
-    connect(this, &DataManager::signalEnqueueMetaTasks, m_data->m_mediaMetaWorker, &MediaMetaWorker::enqueueMetas, Qt::QueuedConnection);
-    connect(m_data->m_mediaMetaWorker, &MediaMetaWorker::signalMetaAnalysisReady, this, &DataManager::slotMetaAnalysisReady, Qt::QueuedConnection);
     connect(m_data->m_metaUpsertTimer, &QTimer::timeout, this, &DataManager::slotMetaBatchFinished);
     connect(this, &DataManager::signalClearImportingHash, m_data->m_dbOperate, &DBOperate::slotClearImportingHash, Qt::QueuedConnection);
 
     m_data->m_workerThread->start();
-    m_data->m_mediaMetaThread->start();
     restorePendingMetaTasks();
     qCDebug(dmMusic) << "DataManager initialized with worker thread";
 }
@@ -2545,6 +2556,17 @@ QVariant DataManager::valueFromSettings(const QString &key)
     return m_data->m_settings->value(key);
 }
 
+void DataManager::prepareStartupAssets()
+{
+    if (m_data->m_startupAssetsPrepared) {
+        return;
+    }
+
+    m_data->m_settings->ensureDefaultCover();
+    m_data->m_startupAssetsPrepared = true;
+    restorePendingMetaTasks();
+}
+
 void DataManager::setValueToSettings(const QString &key, const QVariant &value, const bool &empty)
 {
     if (empty || (!empty && !value.isNull()))
@@ -2605,10 +2627,12 @@ void DataManager::slotEnqueueMetaTasks(const QList<DMusic::MediaMeta> &metas)
     }
 
     bool changed = false;
+    bool hasTask = false;
     for (const DMusic::MediaMeta &meta : metas) {
         if (meta.hash.isEmpty() || meta.localPath.isEmpty()) {
             continue;
         }
+        hasTask = true;
         if (!m_data->m_pendingMetaTasks.contains(meta.hash)) {
             m_data->m_pendingMetaTasks.insert(meta.hash);
             changed = true;
@@ -2617,7 +2641,10 @@ void DataManager::slotEnqueueMetaTasks(const QList<DMusic::MediaMeta> &metas)
     if (changed) {
         savePendingMetaAnalysisTasks(m_data->m_pendingMetaTasks);
     }
-    emit signalEnqueueMetaTasks(metas);
+    if (hasTask && m_data->m_startupAssetsPrepared) {
+        m_data->ensureMediaMetaWorker();
+        emit signalEnqueueMetaTasks(metas);
+    }
 }
 
 void DataManager::restorePendingMetaTasks()
@@ -2641,7 +2668,8 @@ void DataManager::restorePendingMetaTasks()
     if (changed && savePendingMetaAnalysisTasks(m_data->m_pendingMetaTasks)) {
         m_data->m_pendingMetaTasksNeedRewrite = false;
     }
-    if (!tasks.isEmpty()) {
+    if (!tasks.isEmpty() && m_data->m_startupAssetsPrepared) {
+        m_data->ensureMediaMetaWorker();
         emit signalEnqueueMetaTasks(tasks);
     }
 }

@@ -30,14 +30,42 @@ public:
         m_playerEngine = new PlayerEngine(m_parent);
         m_dataManager = new DataManager(m_playerEngine->supportedSuffixList(), m_parent);
         m_playerEngine->setPlaybackMode((DmGlobal::PlaybackMode)m_dataManager->valueFromSettings("base.play.playmode").toInt());
-        m_pkmeans = new CKMeans;
         m_playerEngine->addMetasToPlayList(m_dataManager->getPlaylistMetas("play"));
-        m_audioAnalysis = new AudioAnalysis(m_parent);
     }
+    CKMeans *kmeans()
+    {
+        if (!m_pkmeans) {
+            m_pkmeans = new CKMeans;
+        }
+        return m_pkmeans;
+    }
+
+    AudioAnalysis *audioAnalysis()
+    {
+        if (m_audioAnalysis) {
+            return m_audioAnalysis;
+        }
+
+        m_audioAnalysis = new AudioAnalysis(m_parent);
+        QObject::connect(m_audioAnalysis, &AudioAnalysis::audioSpectrumData,
+                         m_parent, &Presenter::audioSpectrumData);
+        QObject::connect(m_audioAnalysis, &AudioAnalysis::audioBuffer, m_parent,
+                         [this](const QVector<float> &buffer, const QString &hash) {
+            QVariantList list;
+            for (const float value : buffer) {
+                list.append(value);
+            }
+            emit m_parent->audioBuffer(list, hash);
+        });
+        return m_audioAnalysis;
+    }
+
     ~PresenterPrivate()
     {
         qCDebug(dmMusic) << "PresenterPrivate destructor";
-        m_audioAnalysis->stopRecorder();
+        if (m_audioAnalysis) {
+            m_audioAnalysis->stopRecorder();
+        }
         // 颜色聚类
         if (m_pkmeans) {
             qCDebug(dmMusic) << "PresenterPrivate destructor delete m_pkmeans";
@@ -76,7 +104,7 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
     connect(m_data->m_playerEngine, &PlayerEngine::muteChanged, this, &Presenter::muteChanged);
     connect(m_data->m_playerEngine, &PlayerEngine::metaChanged, this, [ = ]() {
         qCDebug(dmMusic) << "Meta changed, updating audio buffer and settings";
-        m_data->m_audioAnalysis->parseAudioBuffer(m_data->m_playerEngine->getMediaMeta());
+        m_data->audioAnalysis()->parseAudioBuffer(m_data->m_playerEngine->getMediaMeta());
         m_data->m_dataManager->setValueToSettings("base.play.last_meta", m_data->m_playerEngine->getMediaMeta().hash, true);
         emit metaChanged();
     });
@@ -86,10 +114,10 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
         qCDebug(dmMusic) << "Playback status changed to:" << status;
         if (status == DmGlobal::Playing) {
             qCDebug(dmMusic) << "Starting audio recorder";
-            m_data->m_audioAnalysis->startRecorder();
+            m_data->audioAnalysis()->startRecorder();
         } else {
             qCDebug(dmMusic) << "Suspending audio recorder";
-            m_data->m_audioAnalysis->suspendRecorder();
+            m_data->audioAnalysis()->suspendRecorder();
         }
         emit playbackStatusChanged(status);
     });
@@ -118,15 +146,6 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
     });
     connect(m_data->m_playerEngine, &PlayerEngine::quitRequested, this, &Presenter::quitRequested);
     connect(m_data->m_playerEngine, &PlayerEngine::raiseRequested, this, &Presenter::raiseRequested);
-
-    connect(m_data->m_audioAnalysis, &AudioAnalysis::audioSpectrumData, this, &Presenter::audioSpectrumData);
-    connect(m_data->m_audioAnalysis, &AudioAnalysis::audioBuffer, this, [ = ](const QVector<float> &buffer, const QString & hash) {
-        QVariantList list;
-        for (int i = 0; i < buffer.size(); i++) {
-            list.append(buffer[i]);
-        }
-        emit audioBuffer(list, hash);
-    });
 
     connect(m_data->m_dataManager, &DataManager::signalCurrentPlaylistSChanged, this, &Presenter::currentPlaylistSChanged);
     connect(m_data->m_dataManager, &DataManager::signalPlaylistSortChanged, this, &Presenter::playlistSortChanged);
@@ -241,6 +260,12 @@ void Presenter::setMprisPlayer(const QString &serviceName, const QString &deskto
     m_data->m_playerEngine->setMprisPlayer(serviceName, desktopEntry, identity);
 }
 
+void Presenter::prepareStartupAssets()
+{
+    m_data->m_dataManager->prepareStartupAssets();
+}
+
+
 QStringList Presenter::supportedSuffixList() const
 {
     qCDebug(dmMusic) << "Getting supported file suffixes";
@@ -255,25 +280,25 @@ QStringList Presenter::supportedSuffixList() const
 QColor Presenter::getMainColorByKmeans()
 {
     qCDebug(dmMusic) << "Getting main color from KMeans clustering";
-    return m_data->m_pkmeans->getCommColorMain();
+    return m_data->kmeans()->getCommColorMain();
 }
 
 QColor Presenter::getSecondColorByKmeans()
 {
     qCDebug(dmMusic) << "Getting second color from KMeans clustering";
-    return m_data->m_pkmeans->getCommColorSecond();
+    return m_data->kmeans()->getCommColorSecond();
 }
 
 QImage Presenter::getEffectImage()
 {
     qCDebug(dmMusic) << "Getting effect image from KMeans clustering";
-    return m_data->m_pkmeans->getShowImage();
+    return m_data->kmeans()->getShowImage();
 }
 
 void Presenter::setEffectImage(const QImage &img)
 {
     qCDebug(dmMusic) << "Setting effect image in KMeans clustering";
-    m_data->m_pkmeans->setShowImage(img);
+    m_data->kmeans()->setShowImage(img);
 }
 
 void Presenter::forceExit()
@@ -1113,14 +1138,14 @@ QStringList Presenter::detectEncodings(const QString &metaHash)
 {
     qCDebug(dmMusic) << "Detecting encodings for meta:" << metaHash;
     DMusic::MediaMeta meta = m_data->m_dataManager->metaFromHash(metaHash);
-    return m_data->m_audioAnalysis->detectEncodings(meta);
+    return AudioAnalysis::detectEncodings(meta);
 }
 
 void Presenter::updateMetaCodec(const QString &metaHash, const QString &codecStr)
 {
     qCInfo(dmMusic) << "Updating meta codec - Hash:" << metaHash << "Codec:" << codecStr;
     DMusic::MediaMeta meta = m_data->m_dataManager->metaFromHash(metaHash);
-    m_data->m_audioAnalysis->convertMetaCodec(meta, codecStr);
+    AudioAnalysis::convertMetaCodec(meta, codecStr);
     m_data->m_dataManager->updateMetaCodec(meta);
 }
 
