@@ -2933,25 +2933,31 @@ void DataManager::initPlaylist()
                          "orititle VARCHAR(256), oriartist VARCHAR(256), orialbum VARCHAR(256) )"
                         );
 
-    // 添加列
-    isExec &= query.exec("ALTER TABLE musicNew ADD orititle VARCHAR(256)");
-    isExec &= query.exec("ALTER TABLE musicNew ADD oriartist VARCHAR(256)");
-    isExec &= query.exec("ALTER TABLE musicNew ADD orialbum VARCHAR(256)");
+    const auto hasMusicNewColumn = [&query](const QString &column) {
+        if (!query.exec("PRAGMA table_info(musicNew)")) {
+            qCCritical(dmMusic) << "Failed to inspect musicNew columns:" << query.lastError();
+            return false;
+        }
+        while (query.next()) {
+            if (query.value(1).toString() == column) {
+                return true;
+            }
+        }
+        return false;
+    };
+    const auto addMusicNewColumnIfMissing = [&query, &hasMusicNewColumn](const QString &column,
+                                                                            const QString &definition) {
+        if (hasMusicNewColumn(column)) {
+            return true;
+        }
+        qCDebug(dmMusic) << "Adding missing musicNew column:" << column;
+        return query.exec(QString("ALTER TABLE musicNew ADD COLUMN %1 %2").arg(column, definition));
+    };
 
-//    isExec &= query.exec("ALTER TABLE musicNew ADD (orititle VARCHAR(256), "
-//                         "oriartist VARCHAR(256), orialbum VARCHAR(256) )"
-//                         "alter table musicNew add oriartist VARCHAR(256),"
-//                         "alter table musicNew add orialbum VARCHAR(256) )"
-//    );
-//    isExec &= query.exec("ALTER TABLE musicNew ADD orititle VARCHAR(256)");
-
-    // 判断musicNew中是否有isCoverLoaded字段
-    isExec &= query.exec("select sql from sqlite_master where name = \"musicNew\" and sql like \"%hasimage%\"");
-    if (!query.next()) {
-        qCDebug(dmMusic) << "Adding hasimage column with default value 1";
-        isExec &= query.exec(QString("ALTER TABLE \"musicNew\" ADD COLUMN \"hasimage\" INTEGER default \"%1\"")
-                             .arg("1"));
-    }
+    isExec &= addMusicNewColumnIfMissing("orititle", "VARCHAR(256)");
+    isExec &= addMusicNewColumnIfMissing("oriartist", "VARCHAR(256)");
+    isExec &= addMusicNewColumnIfMissing("orialbum", "VARCHAR(256)");
+    isExec &= addMusicNewColumnIfMissing("hasimage", "INTEGER DEFAULT 1");
 
     // Create other tables
     qCDebug(dmMusic) << "Creating additional tables";
