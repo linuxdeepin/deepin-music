@@ -19,6 +19,7 @@ ApplicationWindow {
     property Item globalVariant: GlobalVariant{} //全局变量，对此之后的对象都可见
     property bool isLyricShow : false
     property bool isPlaylistShow : false
+    property bool playlistShowRequested: false
     property bool deferredUiLoaded: false
     property int windowMiniWidth: 1070
     property int windowMiniHeight: 680
@@ -196,7 +197,25 @@ ApplicationWindow {
         }
     }
 
-    Loader { id: playlistLoader }
+    Loader {
+        id: playlistLoader
+        onLoaded: {
+            rootWindow.configurePlaylist()
+            if (rootWindow.playlistShowRequested) {
+                item.playlistRaise()
+                rootWindow.isPlaylistShow = true
+            }
+        }
+        onStatusChanged: {
+            if (status === Loader.Error) {
+                rootWindow.playlistShowRequested = false
+                rootWindow.isPlaylistShow = false
+                toolbox.updatePlaylistBtnStatus(false)
+                console.warn("Failed to load play queue")
+                source = ""
+            }
+        }
+    }
 
     Loader {
         id: systemTrayLoader
@@ -260,30 +279,44 @@ ApplicationWindow {
 
     Loader { id: importFailedDlgLoader }
 
-    onActiveChanged: {
-        //窗口显示完成后加载播放列表
-        //console.log("onActiveChanged................", active, "  visibility:", visibility)
-        if (active && playlistLoader.status === Loader.Null) {
+    function configurePlaylist() {
+        if (!playlistLoader.item)
+            return
+
+        playlistLoader.item.width = 320
+        playlistLoader.item.height = rootWindow.height - 90 - 50
+        playlistLoader.item.y = height - playlistLoader.item.height - 80 - 50
+        playlistLoader.item.playlistHided.connect(function(){
+            playlistShowRequested = false
+            isPlaylistShow = false
+            toolbox.updatePlaylistBtnStatus(false)
+        })
+        playlistLoader.item.playlistEmpty.connect(function(){
+            if (isLyricShow)
+                lrcWindowLoader.item.lyricWindowUp()
+        })
+        toolbox.updatePlayControlBtnStatus()
+    }
+
+    function showPlaylist() {
+        playlistShowRequested = true
+        if (playlistLoader.status === Loader.Null) {
             playlistLoader.setSource("qrc:/playlist/CurrentPlayList.qml")
-            playlistLoader.item.width = 320
-            playlistLoader.item.height = rootWindow.height - 90 - 50
-            playlistLoader.item.y = height - playlistLoader.item.height - 80 - 50
-            playlistLoader.item.playlistHided.connect(function(){
-                toolbox.updatePlaylistBtnStatus(false)
-            })
-            playlistLoader.item.playlistEmpty.connect(function(){
-                if (isLyricShow)
-                    lrcWindowLoader.item.lyricWindowUp()
-            })
-            toolbox.updatePlayControlBtnStatus()
+            return
+        }
+        if (playlistLoader.status === Loader.Ready) {
+            playlistLoader.item.playlistRaise()
+            isPlaylistShow = true
         }
     }
     onWidthChanged: {
-        playlistLoader.item.x = width - playlistLoader.item.width - 10
+        if (playlistLoader.item)
+            playlistLoader.item.x = width - playlistLoader.item.width - 10
     }
     onHeightChanged: {
 //        playlistLoader.item.y = height - playlistLoader.item.height - 80 - 50
-        playlistLoader.item.height = rootWindow.height - 90 - 50
+        if (playlistLoader.item)
+            playlistLoader.item.height = rootWindow.height - 90 - 50
     }
 
     onClosing: {
@@ -323,11 +356,8 @@ ApplicationWindow {
                  lrcWindowLoader.item.lyricWindowUp()
              }
         }
-        onPlaylistBtnClicked: {
-            if (playlistLoader.status === Loader.Ready) {
-                playlistLoader.item.playlistRaise()
-                isPlaylistShow = true
-            }
+        function onPlaylistBtnClicked() {
+            rootWindow.showPlaylist()
         }
     }
     Connections {

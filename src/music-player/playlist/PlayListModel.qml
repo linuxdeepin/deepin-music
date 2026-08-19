@@ -88,7 +88,5 @@ ListModel {
                 Presenter.clearPlayList("play")
             }
         })
-
-        globalVariant.playingCount = Qt.binding(function(){return playlistModel.count})
     }
 }
