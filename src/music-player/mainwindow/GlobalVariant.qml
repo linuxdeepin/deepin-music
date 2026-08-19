@@ -45,7 +45,25 @@ Item {
     property Loader closeConfirmDlgLoader: Loader {}
     Loader { id: cdRemovedDlgLoader }
     Loader { id: musicInfoDlgLoader }
+    Timer {
+        id: playingCountRefreshTimer
+        interval: 0
+        repeat: false
+        onTriggered: refreshPlayingCount()
+    }
 
+    function refreshPlayingCount() {
+        playingCount = Presenter.playQueueCount()
+    }
+    function refreshPlayingCountIfNeeded(playlistHashs) {
+        for (var i = 0; i < playlistHashs.length; i++) {
+            if (playlistHashs[i] === "play") {
+                if (!playingCountRefreshTimer.running)
+                    playingCountRefreshTimer.start()
+                return
+            }
+        }
+    }
     function onMetaChanged(){
         currentMediaMeta = Presenter.getActivateMeta();
         curPlayingHash = currentMediaMeta.hash
