@@ -1,0 +1,2111 @@
+metadata:
+  generated_at: '2026-08-19T10:00:00'
+  source: 音乐V25-用例.xlsx
+cases:
+- id: '2003951'
+  name: 主菜单-关于
+  module: 主菜单
+  status: active
+  annotation: &id001
+    测试界面: 主窗口-右上角主菜单
+    测试功能: 主菜单选项（关于/添加新歌单/菜单项检查）
+    前置条件: 应用已启动
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 1. 点击主菜单中关于菜单
+  - step_type: assert
+    description: 2. 查看关于窗口内容
+  - step_type: assert
+    description: 1. 弹出关于窗口
+  - step_type: assert
+    description: 2. 显示应用名字、版本，添加开源信息等相关信息
+- id: '1678879'
+  name: '[371]窗口-初始界面主菜单检查'
+  module: 主菜单
+  status: active
+  annotation: *id001
+  steps:
+  - step_type: action
+    description: 1. 启动音乐
+  - step_type: assert
+    description: 2. 点击右上角【主菜单】按钮，检查UI展示
+  - step_type: assert
+    description: '1.'
+  - step_type: assert
+    description: 2. 添加新歌单选项置灰，其余选项均高亮
+- id: '1677053'
+  name: '[005][smoke][acp1]主菜单-添加新歌单选项'
+  module: 主菜单
+  status: active
+  annotation: *id001
+  steps:
+  - step_type: action
+    description: 1. 点击右上角【主菜单】按钮
+  - step_type: action
+    description: 2. 点击【添加新歌单】选项
+  - step_type: assert
+    description: 1. 展开主菜单列表
+  - step_type: assert
+    description: 2. 在我的歌单中增加一个新歌单，名称根据顺序默认增加
+- id: '1677051'
+  name: '[006][smoke][acp1]主菜单-主菜单选项检查'
+  module: 主菜单
+  status: active
+  annotation: *id001
+  steps:
+  - step_type: action
+    description: 点击右上角主菜单按钮
+  - step_type: assert
+    description: 检查主菜单展开，从上至下为：添加新歌单、添加音乐、均衡器、设置、主题、帮助、关于、退出
+- id: '1678727'
+  name: '[192][core][acp1]所有音乐-删除所有歌曲'
+  module: 删除确认
+  status: active
+  annotation: &id002
+    测试界面: 删除/移除确认弹窗
+    测试功能: 全选删除歌曲后确认弹窗交互
+    前置条件: 应用已启动且歌曲列表非空
+    AT元素引用:
+    - 删除
+    - 取消
+  steps:
+  - step_type: action
+    description: 1. 使用快捷键【Ctrl+A】
+  - step_type: action
+    description: 2. 使用快捷键【Delete】
+  - step_type: assert
+    description: 3. 点击【确认】删除按钮
+  - step_type: assert
+    description: 1. 选中所有歌曲
+  - step_type: assert
+    description: 2. 弹出确认删除弹窗
+  - step_type: assert
+    description: 3. 删除过程会有音乐从下至上滚动的动画效果，删除所有歌曲后音乐返回初始界面
+- id: '1678285'
+  name: '[095]我的收藏-删除所有歌曲'
+  module: 删除确认
+  status: active
+  annotation: *id002
+  steps:
+  - step_type: action
+    description: 1. 使用快捷键【Ctrl+A】
+  - step_type: action
+    description: 2. 使用快捷键【Delete】
+  - step_type: assert
+    description: 3. 点击【确认】删除按钮
+  - step_type: assert
+    description: 1. 选中所有歌曲
+  - step_type: assert
+    description: 2. 弹出确认删除弹窗
+  - step_type: assert
+    description: 3. 删除过程会有音乐从下至上滚动的动画效果，删除所有歌曲后仍在我的收藏页面
+- id: '1677617'
+  name: '[004][smoke][acp1]歌曲导入-初始界面添加歌曲路径'
+  module: 歌曲导入
+  status: active
+  annotation: &id003
+    测试界面: 主窗口-空状态占位区
+    测试功能: 添加歌曲文件/添加歌曲目录
+    前置条件: 应用已启动且歌曲库为空
+    AT元素引用:
+    - 添加歌曲
+    - 添加歌曲目录
+  steps:
+  - step_type: action
+    description: 1. 点击【添加歌曲路径】按钮
+  - step_type: action
+    description: 2. 在文管弹窗中选择任意含有音乐文件的目录
+  - step_type: assert
+    description: 3. 点击【确认】按钮
+  - step_type: assert
+    description: 1. 弹出文管添加窗口，只有音乐文件可以选择，其他文件为置灰状
+  - step_type: assert
+    description: 2. 选中的文件高亮展示
+  - step_type: assert
+    description: 3. 添加歌曲成功，音乐跳转到所有音乐页面并展示添加的歌曲（若文件较多，添加过程会有百分比展示）
+- id: '1677613'
+  name: '[300][smoke][acp1]歌曲导入-初始界面添加歌曲多个文件'
+  module: 歌曲导入
+  status: active
+  annotation: *id003
+  steps:
+  - step_type: action
+    description: 1. 点击【添加歌曲文件】按钮
+  - step_type: action
+    description: 2. 在文管弹窗中选择任意多个音乐文件
+  - step_type: assert
+    description: 3. 点击【确认】按钮
+  - step_type: assert
+    description: 1. 弹出文管添加窗口，只有音乐文件可以选择，其他文件为置灰状
+  - step_type: assert
+    description: 2. 选中的文件高亮展示
+  - step_type: assert
+    description: 3. 添加歌曲成功，音乐跳转到所有音乐页面并展示添加的歌曲（若文件较多，添加过程会有百分比展示）
+- id: '1676923'
+  name: '[166]快捷键-添加音乐Ctrl+O'
+  module: 快捷键
+  status: active
+  annotation: &id004
+    测试界面: 主窗口-键盘快捷键
+    测试功能: 快捷键触发（Delete删除/Ctrl+O添加/F1帮助/Ctrl+Shift+/快捷键预览）
+    前置条件: 应用已启动
+    AT元素引用:
+    - 删除
+    - 取消
+  steps:
+  - step_type: action
+    description: 1. 使用快捷键【Ctrl+O】
+  - step_type: assert
+    description: 1. 弹出添加音乐的文管窗口
+- id: '1676919'
+  name: '[164]快捷键-删除歌曲/歌单Delet'
+  module: 快捷键
+  status: active
+  annotation: *id004
+  steps:
+  - step_type: action
+    description: 1. 选中任意歌曲，使用快捷键【Delete】
+  - step_type: assert
+    description: 1. 弹出确认删除弹窗
+- id: '1676901'
+  name: '[154]快捷键-帮助F1'
+  module: 快捷键
+  status: active
+  annotation: *id004
+  steps:
+  - step_type: action
+    description: 1. 使用快捷键【F1】
+  - step_type: assert
+    description: 1. 调起音乐的帮助手册
+- id: '1676897'
+  name: '[152]快捷键-显示快捷键预览Ctrl+Shift+/'
+  module: 快捷键
+  status: active
+  annotation: *id004
+  steps:
+  - step_type: action
+    description: 1. 使用快捷键【Ctrl+Shift+/】
+  - step_type: assert
+    description: 1. 显示出快捷键预览界面
+- id: '1992957'
+  name: 音乐_窗口菜单hover状态检查
+  status: unsupported
+  reason: 窗口 hover 状态纯视觉验证，无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1695449'
+  name: 详情图/列表模式切换
+  status: unsupported
+  reason: 视图模式切换，工具栏按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1695447'
+  name: 专辑/艺人打开二级页面
+  status: unsupported
+  reason: 二级页面打开，列表项无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1695445'
+  name: 专辑详情页鼠标移出
+  status: unsupported
+  reason: 鼠标悬浮纯视觉验证，无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1695443'
+  name: 专辑详情页悬浮
+  status: unsupported
+  reason: 鼠标悬浮纯视觉验证，无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1695441'
+  name: 歌词展开收起
+  status: unsupported
+  reason: 歌词展开收起，控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678991'
+  name: 【入口】通过UOS AI能够成功打开音乐
+  status: unsupported
+  reason: UOS AI 外部应用调起，非音乐应用自身 GUI
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678983'
+  name: 【UOS AI调起音乐】验证本地存在适配文件，录入完整的歌手名通过UOS AI能打开音乐并播放歌曲
+  status: unsupported
+  reason: UOS AI 外部应用控制，非音乐应用自身 GUI
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678955'
+  name: 【UOS AI控制音乐】验证通过UOS AI录入“暂停”控制音乐中歌曲的暂停操作
+  status: unsupported
+  reason: UOS AI 外部应用控制，非音乐应用自身 GUI
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678953'
+  name: 【UOS AI控制音乐】验证播放列表存在上一首歌曲，通过UOS AI录入“上一首”控制音乐中歌曲的播放
+  status: unsupported
+  reason: UOS AI 外部应用控制，非音乐应用自身 GUI
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678949'
+  name: 【UOS AI控制音乐】验证播放列表存在下一首歌曲，通过UOS AI录入“下一首”控制音乐中歌曲的播放
+  status: unsupported
+  reason: UOS AI 外部应用控制，非音乐应用自身 GUI
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678937'
+  name: 【UOS AI控制音乐】验证通过UOS AI录入“随机播放”设置歌曲的播放模式
+  status: unsupported
+  reason: UOS AI 外部应用控制，非音乐应用自身 GUI
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678917'
+  name: 【bug转用例】双击U盘中的音乐文件冷启动音乐播放器
+  status: unsupported
+  reason: U 盘文件冷启动，需物理 U 盘设备
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678913'
+  name: 卸载-启动器卸载
+  status: unsupported
+  reason: 启动器卸载，需桌面环境启动器交互
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678889'
+  name: '[020][core][acp1]窗口-歌曲信息详情检查'
+  status: unsupported
+  reason: 歌曲信息详情纯视觉内容检查，无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678883'
+  name: 窗口-移动歌曲信息弹窗
+  status: unsupported
+  reason: 歌曲信息弹窗移动，弹窗内控件无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678881'
+  name: '[285][core][acp1]窗口-关闭歌曲信息弹窗'
+  status: unsupported
+  reason: 歌曲信息弹窗关闭，弹窗控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678819'
+  name: '[372]搜索结果-清除搜索关键词'
+  status: unsupported
+  reason: 搜索清除，搜索框无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678815'
+  name: '[150]搜索结果-歌曲页面播放所有'
+  status: unsupported
+  reason: 搜索结果播放所有，播放按钮无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678781'
+  name: '[219][smoke][acp1]搜索结果-歌曲页面展示'
+  status: unsupported
+  reason: 搜索结果展示，搜索框无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678775'
+  name: 搜索-搜索列表结果长度限制
+  status: unsupported
+  reason: 搜索结果长度限制，搜索框无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678773'
+  name: 搜索-撤销搜索内容
+  status: unsupported
+  reason: 搜索撤销，搜索框无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678771'
+  name: '[220]搜索-模糊名称搜索'
+  status: unsupported
+  reason: 模糊搜索，搜索框无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678769'
+  name: '[111][core][acp1]搜索-专辑名搜索'
+  status: unsupported
+  reason: 专辑名搜索，搜索框无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678767'
+  name: '[109][core][acp1]搜索-演唱者名搜索'
+  status: unsupported
+  reason: 演唱者名搜索，搜索框无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678765'
+  name: '[110][smoke][acp1]搜索-歌曲名搜索'
+  status: unsupported
+  reason: 歌曲名搜索，搜索框无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678763'
+  name: 播放队列同步-所有音乐-播放歌曲时从本地删除歌曲，播放队列同步减少歌曲
+  status: unsupported
+  reason: 播放队列同步，播放队列控件无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678761'
+  name: '[321][smoke]播放队列同步-所有音乐-播放歌曲时从歌单中删除歌曲，播放队列同步减少歌曲'
+  status: unsupported
+  reason: 播放队列同步，播放队列控件无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678759'
+  name: 播放队列同步-所有音乐-播放歌曲时从文管拖拽歌曲增加歌曲，播放队列同步增加歌曲
+  status: unsupported
+  reason: 拖拽添加歌曲，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678757'
+  name: 播放队列同步-所有音乐-播放歌曲时从主菜单添加选项增加歌曲，播放队列同步增加歌曲
+  status: unsupported
+  reason: 主菜单添加后队列同步，播放队列控件无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678755'
+  name: '[322][core]播放队列同步-所有音乐-播放歌曲时从标题栏添加按钮增加歌曲，播放队列同步增加歌曲'
+  status: unsupported
+  reason: 标题栏添加按钮队列同步，播放队列控件无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678753'
+  name: 播放队列同步-所有音乐-播放歌曲时从歌单右键菜单增加歌曲，播放队列同步增加歌曲
+  status: unsupported
+  reason: 歌单右键菜单队列同步，列表项无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678733'
+  name: '[191][smoke][acp1]所有音乐-歌曲数量展示情况'
+  status: unsupported
+  reason: 歌曲数量展示，计数标签无 accessible_name 不可断言
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678731'
+  name: '[374]所有音乐-翻页查看所有歌曲'
+  status: unsupported
+  reason: 翻页查看，滚动操作无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678717'
+  name: 所有音乐-歌曲名称反向排序
+  status: unsupported
+  reason: 歌曲名称排序，排序按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678711'
+  name: '[296]所有音乐-添加时间排序'
+  status: unsupported
+  reason: 添加时间排序，排序按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678703'
+  name: '[373]所有音乐-Enter键播放歌曲'
+  status: unsupported
+  reason: Enter 键播放，播放状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678701'
+  name: '[190][core][acp1]所有音乐-平铺视图下双击播放歌曲'
+  status: unsupported
+  reason: 平铺视图双击播放，播放状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678697'
+  name: 新建歌单时，输入html标签能正常显示
+  status: unsupported
+  reason: 新建歌单输入 html 标签，歌单项无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678653'
+  name: 排序-我的歌单-拖拽歌单至音乐库列表
+  status: unsupported
+  reason: 拖拽歌单排序，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678617'
+  name: 排序-我的歌单-首位歌单移动至其他位置
+  status: unsupported
+  reason: 拖拽歌单排序，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678563'
+  name: '[207][smoke][acp1]我的歌单-播放所有按钮播放'
+  status: unsupported
+  reason: 播放所有按钮，按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678543'
+  name: '[209][core][acp1]我的歌单-连续新建歌单'
+  status: unsupported
+  reason: 连续新建歌单，歌单项无 accessible_name 不可断言
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678541'
+  name: '[205][smoke][acp1]我的歌单-新建按钮增加歌单'
+  status: unsupported
+  reason: 新建歌单按钮，按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678497'
+  name: 排序-我的收藏-列表模式使用shift从文管多选歌曲拖拽排序，歌曲按照所选顺序排序
+  status: unsupported
+  reason: 拖拽多选排序，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678367'
+  name: '[329][smoke]排序-我的收藏-列表模式下拖拽多首歌排序'
+  status: unsupported
+  reason: 拖拽多选排序，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678231'
+  name: '[200][core][acp1]我的收藏-演唱者多首歌收藏'
+  status: unsupported
+  reason: 多首歌收藏，收藏按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678215'
+  name: '[197]我的收藏-专辑单首歌收藏'
+  status: unsupported
+  reason: 单首歌收藏，收藏按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678209'
+  name: '[195][core][acp1]我的收藏-所有音乐多首歌收藏'
+  status: unsupported
+  reason: 多首歌收藏，收藏按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678093'
+  name: '[124]演唱者-暂停时删除当前演唱者的所有歌曲'
+  status: unsupported
+  reason: 播放所有/暂停按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678065'
+  name: 演唱者-演唱者名称排序
+  status: unsupported
+  reason: 演唱者名称排序，排序控件无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678051'
+  name: '[180][smoke][acp1]演唱者-详情页面返回按钮'
+  status: unsupported
+  reason: 返回按钮，按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678035'
+  name: '[074][smoke][acp1]演唱者-详情页面播放所有按钮检查'
+  status: unsupported
+  reason: 播放所有按钮，按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1678009'
+  name: '[002]演唱者-列表模式下演唱者名称展示'
+  status: unsupported
+  reason: 演唱者名称展示，列表项无 accessible_name 不可断言
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677873'
+  name: '[186][smoke][acp1]专辑-详情页面返回按钮'
+  status: unsupported
+  reason: 返回按钮，按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677849'
+  name: '[179][smoke][acp1]专辑-播放所有按钮检查'
+  status: unsupported
+  reason: 播放所有按钮，按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677785'
+  name: '[174][smoke][acp1]打开-右键菜单打开'
+  status: unsupported
+  reason: 桌面右键菜单打开，需桌面环境交互
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677781'
+  name: 打开-应用商店启动
+  status: unsupported
+  reason: 应用商店启动，需应用商店外部应用
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677709'
+  name: '[314][core][acp1]歌曲导入-自定义歌单页面拖拽添加音乐目录'
+  status: unsupported
+  reason: 拖拽添加音乐目录，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677697'
+  name: '[311][core][acp1]歌曲导入-我的收藏页面拖拽添加音乐文件'
+  status: unsupported
+  reason: 拖拽添加音乐文件，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677691'
+  name: '[309][core][acp1]歌曲导入-专辑页面拖拽添加音乐目录'
+  status: unsupported
+  reason: 拖拽添加音乐目录，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677685'
+  name: '[308][core][acp1]歌曲导入-专辑页面拖拽添加音乐文件'
+  status: unsupported
+  reason: 拖拽添加音乐文件，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677673'
+  name: '[362]歌曲导入-拖拽包含音乐文件的多文件目录'
+  status: unsupported
+  reason: 拖拽多文件目录，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677667'
+  name: 歌曲导入-拖拽非音乐文件
+  status: unsupported
+  reason: 拖拽非音乐文件，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677663'
+  name: '[363]歌曲导入-拖拽多层级目录'
+  status: unsupported
+  reason: 拖拽多层级目录，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677475'
+  name: 排序-播放队列-使用shift多选歌曲拖拽排序，歌曲按照所选顺序排序
+  status: unsupported
+  reason: 拖拽排序，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677473'
+  name: 排序-播放队列-使用ctrl逐个选择多首歌曲拖拽排序，歌曲按照所选顺序排序
+  status: unsupported
+  reason: 拖拽排序，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677461'
+  name: 排序-播放队列-拖动歌曲至播放队列上滚动区域向上翻页功能
+  status: unsupported
+  reason: 拖拽翻页，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677423'
+  name: 排序-播放队列-播放我的歌单中的歌曲时拖拽排序播放队列
+  status: unsupported
+  reason: 拖拽排序，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677413'
+  name: '[351][core]工具栏-歌词与切换歌曲交互'
+  status: unsupported
+  reason: 歌词与歌曲交互，控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677389'
+  name: '[032][core][acp1]工具栏-播放歌曲时从播放队列移除当前歌曲'
+  status: unsupported
+  reason: 播放队列移除，播放队列控件无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677377'
+  name: '[227][smoke][acp1]工具栏-展开播放队列'
+  status: unsupported
+  reason: 展开播放队列，播放队列控件无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677369'
+  name: '[238][core][acp1]工具栏-点击音量条静音按钮解除静'
+  status: unsupported
+  reason: 音量条静音，音量控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677363'
+  name: '[235][core][acp1]工具栏-拖拽放大音量条声'
+  status: unsupported
+  reason: 音量条拖拽，AT-SPI 不支持拖拽操作
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677357'
+  name: '[smoke]工具栏-播放模式检查'
+  status: unsupported
+  reason: 播放模式检查，播放模式按钮无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677355'
+  name: '[231][core][acp1]工具栏-切换列表播放'
+  status: unsupported
+  reason: 切换列表播放，播放按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677349'
+  name: '[244][core][acp1]工具栏-LRC与歌曲封面交互'
+  status: unsupported
+  reason: LRC 与封面交互，控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677347'
+  name: '[021]工具栏-播放时多次与歌词界面交互'
+  status: unsupported
+  reason: 歌词界面交互，控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677345'
+  name: '[377]工具栏-播放队列非空时点击LRC按钮'
+  status: unsupported
+  reason: LRC 按钮，按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677339'
+  name: '[026][smoke][acp1]工具栏-收藏按钮收藏歌曲'
+  status: unsupported
+  reason: 收藏按钮，按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677323'
+  name: 工具栏-播放歌曲时点击快进歌曲进度条
+  status: unsupported
+  reason: 快进进度条，进度条无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677321'
+  name: '[smoke]工具栏-进度条状态检查'
+  status: unsupported
+  reason: 进度条状态检查，进度条无 accessible_name 不可断言
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677309'
+  name: '[229][smoke][acp1]工具栏-播放音乐时点击上一首按钮'
+  status: unsupported
+  reason: 上一首按钮，按钮无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677191'
+  name: '[262]右键菜单-自定义歌单右键菜单检查'
+  status: unsupported
+  reason: 自定义歌单右键菜单，列表项无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677163'
+  name: '[356]右键菜单-播放队列从播放队列删除'
+  status: unsupported
+  reason: 播放队列右键删除，播放队列控件无 accessible_name
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677133'
+  name: '[352]右键菜单-多选文件右键菜单检查'
+  status: unsupported
+  reason: 多选右键菜单，列表项无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677111'
+  name: '[261]右键菜单-单首歌曲右键菜单检查'
+  status: unsupported
+  reason: 单首歌曲右键菜单，列表项无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677101'
+  name: 设置-修改为重复快捷键
+  status: unsupported
+  reason: 设置修改快捷键，设置项控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677097'
+  name: '[129][core][acp1]设置-每次询问'
+  status: unsupported
+  reason: 设置每次询问，设置项控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677087'
+  name: 设置-打开开启淡入淡出
+  status: unsupported
+  reason: 设置淡入淡出，设置项控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677085'
+  name: '[core]设置-打开启动时记住上次播放进度'
+  status: unsupported
+  reason: 设置记住播放进度，设置项控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677083'
+  name: '[102][smoke][acp1]设置-打开启动时自动播放'
+  status: unsupported
+  reason: 设置自动播放，设置项控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677079'
+  name: '[136]均衡器-调整数值后恢复默认'
+  status: unsupported
+  reason: 均衡器恢复默认，均衡器控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677077'
+  name: '[135][core][acp1]均衡器-自定义调整数值'
+  status: unsupported
+  reason: 均衡器自定义调整，均衡器控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677075'
+  name: '[013][core][acp1]均衡器-选择任意模式'
+  status: unsupported
+  reason: 均衡器选择模式，均衡器控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1677041'
+  name: 适配-1.25缩放比下音乐界面UI检查
+  status: unsupported
+  reason: 1.25 缩放 UI 检查，纯视觉验证无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676985'
+  name: '[core]适配-断开外设音频输出暂停播放'
+  status: unsupported
+  reason: 外设音频输出，需物理音频设备
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676971'
+  name: 触摸板-播放队列
+  status: unsupported
+  reason: 触摸板手势操作，AT-SPI 无触摸板 API 支持
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676965'
+  name: 触摸板—歌词控件检查
+  status: unsupported
+  reason: 触摸板手势操作，AT-SPI 无触摸板 API 支持
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676961'
+  name: 触摸板—一指拖拽添加音乐文件
+  status: unsupported
+  reason: 触摸板手势操作，AT-SPI 无触摸板 API 支持
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676951'
+  name: 触摸屏-dock栏音乐插件
+  status: unsupported
+  reason: 触摸屏交互，AT-SPI 无触摸输入 API 支持
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676939'
+  name: 触摸屏-音量调节
+  status: unsupported
+  reason: 触摸屏交互，AT-SPI 无触摸输入 API 支持
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676937'
+  name: 触摸屏-歌词界面与进度条交互
+  status: unsupported
+  reason: 触摸屏交互，AT-SPI 无触摸输入 API 支持
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676931'
+  name: 触摸屏-拖拽添加音乐文件
+  status: unsupported
+  reason: 触摸屏交互，AT-SPI 无触摸输入 API 支持
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676927'
+  name: 快捷键-下一首Ctrl+Right
+  status: unsupported
+  reason: 下一首快捷键，播放状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676925'
+  name: 快捷键-上一首Ctrl+Left
+  status: unsupported
+  reason: 上一首快捷键，播放状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676921'
+  name: '[165]快捷键-歌曲信息Ctrl+I'
+  status: unsupported
+  reason: 歌曲信息弹窗，弹窗控件无 accessible_name 不可断言
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676917'
+  name: '[163]快捷键-重命名歌单F2'
+  status: unsupported
+  reason: 重命名歌单，歌单项无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676915'
+  name: '[162]快捷键-新建歌单Ctrl+Shift+'
+  status: unsupported
+  reason: 新建歌单快捷键，歌单项无 accessible_name 不可断言
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676913'
+  name: '[160]快捷键-收藏/取消收藏.'
+  status: unsupported
+  reason: 收藏快捷键，收藏状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676911'
+  name: '[159]快捷键-静音M'
+  status: unsupported
+  reason: 静音快捷键，音量状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676909'
+  name: '[158]捷键-音量减小Ctrl+Alt+Dow'
+  status: unsupported
+  reason: 音量减小快捷键，音量状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676907'
+  name: '[157]快捷键-音量增大Ctrl+Alt+Up'
+  status: unsupported
+  reason: 音量增大快捷键，音量状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676905'
+  name: '[156]快捷键-播放/暂停Spac'
+  status: unsupported
+  reason: 播放/暂停快捷键，播放状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676903'
+  name: '[155]快捷键-搜索Ctrl+F'
+  status: unsupported
+  reason: 搜索快捷键，搜索框无 accessible_name 不可断言
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676659'
+  name: 托盘-删除所有歌曲后检查托盘右键菜单选项状态
+  status: unsupported
+  reason: 托盘右键菜单状态，托盘图标不在 AT-SPI 树中
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676641'
+  name: '[023][core]托盘-与空播放列表交互-播放'
+  status: unsupported
+  reason: 托盘空列表交互，托盘图标不在 AT-SPI 树中
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676639'
+  name: '[302][smoke][acp1]托盘-调起'
+  status: unsupported
+  reason: 托盘调起，托盘图标不在 AT-SPI 树中
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676629'
+  name: '[core]锁屏-切换上一首歌曲'
+  status: unsupported
+  reason: 锁屏场景，需系统级锁屏环境
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676619'
+  name: 锁屏-音乐控件检查
+  status: unsupported
+  reason: 锁屏场景，需系统级锁屏环境
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676617'
+  name: '[core]锁屏-播放歌曲时待机后唤醒'
+  status: unsupported
+  reason: 锁屏/休眠场景，需系统级电源管理环境
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676615'
+  name: '[core]锁屏-播放歌曲时休眠后唤醒'
+  status: unsupported
+  reason: 锁屏/休眠场景，需系统级电源管理环境
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676611'
+  name: 格式支持-CD歌单与所有音乐交互
+  status: unsupported
+  reason: CD 光盘物理介质，需硬件设备
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676607'
+  name: '[core]格式支持-CD歌单播放'
+  status: unsupported
+  reason: CD 光盘物理介质，需硬件设备
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676601'
+  name: '[318][core][acp1]格式支持-ac3'
+  status: unsupported
+  reason: ac3 格式播放，播放状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676599'
+  name: '[318][core][acp1]格式支持-ap'
+  status: unsupported
+  reason: ape 格式播放，播放状态无 AT-SPI 可断言元素
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676597'
+  name: '[acp2][音乐]检查音乐播放功能'
+  status: unsupported
+  reason: 播放功能检查，播放控件无 accessible_name 不可寻址
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤
+- id: '1676593'
+  name: '[acp2][音乐]检查外设输出音频功能'
+  status: unsupported
+  reason: 外设音频输出，需物理音频设备
+  annotation:
+    测试界面: N/A
+    测试功能: N/A
+    前置条件: N/A
+    AT元素引用:
+    - 取消
+  steps:
+  - step_type: action
+    description: 不可自动化用例，无操作步骤
+  - step_type: assert
+    description: 不可自动化用例，无断言步骤

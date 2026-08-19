@@ -1,0 +1,139 @@
+elements:
+  添加歌曲:
+    name: 添加歌曲
+    role: push button
+  添加歌曲目录:
+    name: 添加歌曲目录
+    role: push button
+  删除:
+    name: 删除
+    role: push button
+  取消:
+    name: 取消
+    role: push button
+  n0:
+    name: 音乐
+    role: frame
+  n11:
+    name: ''
+    role: panel
+  n13:
+    name: ''
+    role: list item
+  n16:
+    name: ''
+    role: list item
+  n19:
+    name: ''
+    role: list item
+  n25:
+    name: ''
+    role: list item
+  n29:
+    name: ''
+    role: layered pane
+  n36:
+    name: ''
+    role: layered pane
+  n37:
+    name: 添加歌曲
+    role: button
+  n38:
+    name: 添加歌曲目录
+    role: button
+  n47:
+    name: ''
+    role: frame
+  n51:
+    name: 删除
+    role: button
+  n52:
+    name: 取消
+    role: button
+  n53:
+    name: ''
+    role: frame
+  n57:
+    name: 删除
+    role: button
+  n58:
+    name: 取消
+    role: button
+  n59:
+    name: ''
+    role: frame
+  n62:
+    name: ''
+    role: frame
+  n66:
+    name: 移除
+    role: button
+  n67:
+    name: 取消
+    role: button
+  n68:
+    name: ''
+    role: popup menu
+  n69:
+    name: 播放/暂停
+    role: menu item
+  n70:
+    name: 上一曲
+    role: menu item
+  n71:
+    name: 下一曲
+    role: menu item
+  n72:
+    name: 退出
+    role: menu item
+  n73:
+    name: ''
+    role: frame
+  n76:
+    name: ''
+    role: frame
+  n80:
+    name: 移除
+    role: button
+  n81:
+    name: 取消
+    role: button
+  n82:
+    name: ''
+    role: frame
+  n87:
+    name: 删除
+    role: button
+  n88:
+    name: 取消
+    role: button
+  n89:
+    name: ''
+    role: frame
+  n93:
+    name: 移除
+    role: button
+  n94:
+    name: 取消
+    role: button
+  n95:
+    name: ''
+    role: frame
+  n100:
+    name: 删除
+    role: button
+  n101:
+    name: 取消
+    role: button
+  n102:
+    name: ''
+    role: frame
+  n105:
+    name: ''
+    role: frame
+  n109:
+    name: 移除
+    role: button
+  n110:
+    name: 取消
+    role: button

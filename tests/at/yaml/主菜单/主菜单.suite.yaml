@@ -1,0 +1,56 @@
+name: 主菜单_suite
+app: deepin-music
+description: ''
+module: 主菜单
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: 2003951_s1
+  name: 主菜单-关于
+  description: ''
+  tags: []
+  steps:
+  - action: dtk_main_menu
+    items:
+    - 关于
+  assert_steps:
+  - action: assert_window
+  - action: assert_window_count
+    expected: 1
+- id: 1678879_s1
+  name: 窗口-初始界面主菜单检查
+  description: ''
+  tags: []
+  steps:
+  - action: dtk_main_menu
+    items:
+    - 添加新歌单
+  assert_steps:
+  - action: assert_window
+- id: 1677053_s1
+  name: 主菜单-添加新歌单选项
+  description: ''
+  tags: []
+  steps:
+  - action: dtk_main_menu
+    items:
+    - 添加新歌单
+  assert_steps:
+  - action: assert_window
+- id: 1677051_s1
+  name: 主菜单-主菜单选项检查
+  description: ''
+  tags: []
+  steps:
+  - action: dtk_main_menu
+    items:
+    - 添加新歌单
+  assert_steps:
+  - action: assert_window
+teardown:
+- action: session_stop

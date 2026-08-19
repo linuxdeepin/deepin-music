@@ -1,0 +1,60 @@
+name: 删除确认_suite
+app: deepin-music
+description: ''
+module: 删除确认
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: 1678727_s1
+  name: 所有音乐-删除所有歌曲
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+a
+  - action: keyboard_press
+    key: delete
+  - action: element_action
+    selector:
+      name: 删除
+      role: push button
+    do: click
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: 删除
+      role: push button
+  - action: assert_element
+    selector:
+      name: 删除
+      role: push button
+- id: 1678285_s1
+  name: 我的收藏-删除所有歌曲
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+a
+  - action: keyboard_press
+    key: delete
+  - action: element_action
+    selector:
+      name: 取消
+      role: push button
+    do: click
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: 删除
+      role: push button
+  - action: assert_element
+    selector:
+      name: 取消
+      role: push button
+teardown:
+- action: session_stop

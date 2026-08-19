@@ -1,0 +1,137 @@
+version: '1.0'
+app: deepin-music
+summary:
+  total_interactive: 26
+  with_accessible_id: 0
+  missing_accessible_id: 26
+gaps:
+- id: n13
+  name: ''
+  role: list item
+  class_name: ''
+  suggestion: Add setAccessibleName("") in source code
+- id: n16
+  name: ''
+  role: list item
+  class_name: ''
+  suggestion: Add setAccessibleName("") in source code
+- id: n19
+  name: ''
+  role: list item
+  class_name: ''
+  suggestion: Add setAccessibleName("") in source code
+- id: n25
+  name: ''
+  role: list item
+  class_name: ''
+  suggestion: Add setAccessibleName("") in source code
+- id: n37
+  name: 添加歌曲
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("添加歌曲") in source code
+- id: n38
+  name: 添加歌曲目录
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("添加歌曲目录") in source code
+- id: n51
+  name: 删除
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("删除") in source code
+- id: n52
+  name: 取消
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("取消") in source code
+- id: n57
+  name: 删除
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("删除") in source code
+- id: n58
+  name: 取消
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("取消") in source code
+- id: n66
+  name: 移除
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("移除") in source code
+- id: n67
+  name: 取消
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("取消") in source code
+- id: n69
+  name: 播放/暂停
+  role: menu item
+  class_name: ''
+  suggestion: Add setAccessibleName("播放/暂停") in source code
+- id: n70
+  name: 上一曲
+  role: menu item
+  class_name: ''
+  suggestion: Add setAccessibleName("上一曲") in source code
+- id: n71
+  name: 下一曲
+  role: menu item
+  class_name: ''
+  suggestion: Add setAccessibleName("下一曲") in source code
+- id: n72
+  name: 退出
+  role: menu item
+  class_name: ''
+  suggestion: Add setAccessibleName("退出") in source code
+- id: n80
+  name: 移除
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("移除") in source code
+- id: n81
+  name: 取消
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("取消") in source code
+- id: n87
+  name: 删除
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("删除") in source code
+- id: n88
+  name: 取消
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("取消") in source code
+- id: n93
+  name: 移除
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("移除") in source code
+- id: n94
+  name: 取消
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("取消") in source code
+- id: n100
+  name: 删除
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("删除") in source code
+- id: n101
+  name: 取消
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("取消") in source code
+- id: n109
+  name: 移除
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("移除") in source code
+- id: n110
+  name: 取消
+  role: button
+  class_name: ''
+  suggestion: Add setAccessibleName("取消") in source code
