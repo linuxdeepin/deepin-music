@@ -59,6 +59,8 @@ Rectangle {
             }
             AlbumDefaultPage {
                 id: defaultPage
+                // Keep empty-state controls above the full-page DropArea below.
+                z: 1
                 width: toolButtonItem.width; height: contenWindow.height - toolButtonItem.height
                 anchors.left: toolButtonItem.left
                 anchors.top: toolButtonItem.bottom;
