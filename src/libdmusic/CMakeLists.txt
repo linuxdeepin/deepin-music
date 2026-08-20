@@ -27,8 +27,10 @@ if(VLC_INCLUDE_DIR)
     include_directories(${VLC_INCLUDE_DIR}/vlc)
   endif()
 endif()
-# VLC headers use poll() without including poll.h; force-include it
-add_definitions(-include poll.h)
+# Windows: force-include poll() shim (select-based) so VLC headers compile
+if(WIN32)
+  add_compile_options(-include poll.h)
+endif()
 if(EXISTS "/runtime/include/vlc")
   include_directories(/runtime/include/vlc)
   include_directories(/runtime/include/vlc/plugins)
@@ -56,6 +58,11 @@ qt_add_resources(QRC_FILES ${QRC_SOURCE_FILES})
 
 add_library(${CMD_NAME} SHARED ${ALL_SOURCES} ${QRC_FILES})
 
+# Windows: add compat include directory after target creation
+if(WIN32)
+  target_include_directories(${CMD_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src/compat")
+endif()
+
 # On MinGW, export all symbols since VLC wrapper classes lack export macros
 if(WIN32 AND NOT MSVC)
     target_link_options(${CMD_NAME} PRIVATE -Wl,--export-all-symbols)
@@ -78,6 +85,11 @@ endif()
 target_link_libraries(${CMD_NAME} Qt6::Core Qt6::Multimedia Qt6::DBus Qt6::Sql Qt6::Core5Compat)
 
 # qt5_use_modules(${CMD_NAME} )
+
+# Windows: always link ws2_32 for Winsock APIs (poll shim, networking)
+if(WIN32)
+    target_link_libraries(${CMD_NAME} ws2_32)
+endif()
 
 include(GNUInstallDirs)
 install(TARGETS ${CMD_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
