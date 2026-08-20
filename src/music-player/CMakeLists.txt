@@ -7,7 +7,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Find the Qt6Quick library
 find_package(Dtk6Declarative REQUIRED)
-find_package(Qt6 COMPONENTS Core Widgets Quick LinguistTools REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets Quick LinguistTools DBus REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6core)
