@@ -1,0 +1,351 @@
+version: '1.0'
+tree:
+- id: n0
+  role: frame
+  name: 音乐
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: n11
+    role: panel
+    name: ''
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: n13
+      role: list item
+      name: ''
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: 'GUI位置: 主窗口左侧导航栏资料库分组 | 功能: 切换到专辑视图'
+      annotation_status: draft
+    - id: n16
+      role: list item
+      name: ''
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: 'GUI位置: 主窗口左侧导航栏资料库分组 | 功能: 切换到艺人视图'
+      annotation_status: draft
+    - id: n19
+      role: list item
+      name: ''
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: 'GUI位置: 主窗口左侧导航栏资料库分组 | 功能: 切换到所有歌曲视图'
+      annotation_status: draft
+    - id: n25
+      role: list item
+      name: ''
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: 'GUI位置: 主窗口左侧导航栏歌单分组 | 功能: 切换到我喜欢的歌曲'
+      annotation_status: draft
+  - id: n29
+    role: layered pane
+    name: ''
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: n36
+      role: layered pane
+      name: ''
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+      children:
+      - id: n37
+        role: button
+        name: 添加歌曲
+        object_name: ''
+        accessible_id: ''
+        classification: interactive
+        comment: 'GUI位置: 主窗口内容区空状态 | 功能: 添加歌曲文件'
+        annotation_status: draft
+      - id: n38
+        role: button
+        name: 添加歌曲目录
+        object_name: ''
+        accessible_id: ''
+        classification: interactive
+        comment: 'GUI位置: 主窗口内容区空状态 | 功能: 添加歌曲目录'
+        annotation_status: draft
+- id: n47
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: n51
+    role: button
+    name: 删除
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 删除歌单确认对话框 | 功能: 确认删除歌单'
+    annotation_status: draft
+  - id: n52
+    role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 删除歌单确认对话框 | 功能: 取消删除歌单'
+    annotation_status: draft
+- id: n53
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: n57
+    role: button
+    name: 删除
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 删除歌单确认对话框 | 功能: 确认删除歌单'
+    annotation_status: draft
+  - id: n58
+    role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 删除歌单确认对话框 | 功能: 取消删除歌单'
+    annotation_status: draft
+- id: n59
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+- id: n62
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: n66
+    role: button
+    name: 移除
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 移除歌曲确认对话框 | 功能: 确认移除歌曲'
+    annotation_status: draft
+  - id: n67
+    role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 移除歌曲确认对话框 | 功能: 取消移除歌曲'
+    annotation_status: draft
+- id: n68
+  role: popup menu
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: n69
+    role: menu item
+    name: 播放/暂停
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 系统托盘右键菜单 | 功能: 播放或暂停当前歌曲'
+    annotation_status: draft
+  - id: n70
+    role: menu item
+    name: 上一曲
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 系统托盘右键菜单 | 功能: 播放上一曲'
+    annotation_status: draft
+  - id: n71
+    role: menu item
+    name: 下一曲
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 系统托盘右键菜单 | 功能: 播放下一曲'
+    annotation_status: draft
+  - id: n72
+    role: menu item
+    name: 退出
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 系统托盘右键菜单 | 功能: 退出应用'
+    annotation_status: draft
+- id: n73
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+- id: n76
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: n80
+    role: button
+    name: 移除
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 移除歌曲确认对话框 | 功能: 确认移除歌曲'
+    annotation_status: draft
+  - id: n81
+    role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 移除歌曲确认对话框 | 功能: 取消移除歌曲'
+    annotation_status: draft
+- id: n82
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: n87
+    role: button
+    name: 删除
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 删除歌曲确认对话框 | 功能: 确认删除歌曲文件'
+    annotation_status: draft
+  - id: n88
+    role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 删除歌曲确认对话框 | 功能: 取消删除歌曲'
+    annotation_status: draft
+- id: n89
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: n93
+    role: button
+    name: 移除
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 移除歌曲确认对话框 | 功能: 确认移除歌曲'
+    annotation_status: draft
+  - id: n94
+    role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 移除歌曲确认对话框 | 功能: 取消移除歌曲'
+    annotation_status: draft
+- id: n95
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: n100
+    role: button
+    name: 删除
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 删除歌曲确认对话框 | 功能: 确认删除歌曲文件'
+    annotation_status: draft
+  - id: n101
+    role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 删除歌曲确认对话框 | 功能: 取消删除歌曲'
+    annotation_status: draft
+- id: n102
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+- id: n105
+  role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: n109
+    role: button
+    name: 移除
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 移除歌曲确认对话框 | 功能: 确认移除歌曲'
+    annotation_status: draft
+  - id: n110
+    role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    classification: interactive
+    comment: 'GUI位置: 移除歌曲确认对话框 | 功能: 取消移除歌曲'
+    annotation_status: draft

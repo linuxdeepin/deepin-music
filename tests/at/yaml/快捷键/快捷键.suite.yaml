@@ -1,0 +1,58 @@
+name: 快捷键_suite
+app: deepin-music
+description: ''
+module: 快捷键
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: 1676919_s1
+  name: 快捷键-删除歌曲Delete
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+a
+  - action: keyboard_press
+    key: delete
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: 删除
+      role: push button
+- id: 1676923_s1
+  name: 快捷键-添加音乐Ctrl+O
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+o
+  assert_steps:
+  - action: assert_window_count
+    expected: 1
+- id: 1676901_s1
+  name: 快捷键-帮助F1
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_press
+    key: f1
+  assert_steps:
+  - action: assert_window_count
+    expected: 1
+- id: 1676897_s1
+  name: 快捷键-显示快捷键预览Ctrl+Shift+/
+  description: ''
+  tags: []
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+shift+slash
+  assert_steps:
+  - action: assert_window_count
+    expected: 1
+teardown:
+- action: session_stop

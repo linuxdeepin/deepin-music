@@ -1,0 +1,48 @@
+name: 歌曲导入_suite
+app: deepin-music
+description: ''
+module: 歌曲导入
+tags: []
+fast_fail: false
+env_check: []
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: 1677613_s1
+  name: 歌曲导入-初始界面添加歌曲多个文件
+  description: ''
+  tags: []
+  steps:
+  - action: element_action
+    selector:
+      name: 添加歌曲
+      role: push button
+    do: click
+  - action: wait
+    wait: 1.0
+  assert_steps:
+  - action: assert_window_count
+    expected: 1
+  - action: assert_window_count
+    expected: 1
+- id: 1677617_s1
+  name: 歌曲导入-初始界面添加歌曲路径
+  description: ''
+  tags: []
+  steps:
+  - action: element_action
+    selector:
+      name: 添加歌曲目录
+      role: push button
+    do: click
+  - action: wait
+    wait: 1.0
+  assert_steps:
+  - action: assert_window_count
+    expected: 1
+  - action: assert_window_count
+    expected: 1
+teardown:
+- action: session_stop

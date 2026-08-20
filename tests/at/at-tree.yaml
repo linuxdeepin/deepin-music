@@ -1,0 +1,818 @@
+version: '1.0'
+app: deepin-music
+tree:
+- role: frame
+  name: 音乐
+  object_name: ''
+  accessible_id: ''
+  description: 音乐
+  actions: []
+  index_in_parent: 0
+  states:
+  - enabled
+  - sensitive
+  - showing
+  - visible
+  source: runtime
+  children:
+  - role: panel
+    name: ''
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions: []
+    index_in_parent: 10
+    states:
+    - enabled
+    - sensitive
+    - showing
+    - visible
+    source: runtime
+    children:
+    - role: list item
+      name: ''
+      object_name: ''
+      accessible_id: ''
+      description: ''
+      actions: []
+      index_in_parent: 1
+      states:
+      - checkable
+      - enabled
+      - sensitive
+      - showing
+      - transient
+      - visible
+      source: runtime
+      children: []
+      id: n13
+      classification: interactive
+      state_labels: &id001 []
+      class_name: ''
+      comment: ''
+      annotation_status: draft
+    - role: list item
+      name: ''
+      object_name: ''
+      accessible_id: ''
+      description: ''
+      actions: []
+      index_in_parent: 2
+      states:
+      - checkable
+      - enabled
+      - sensitive
+      - showing
+      - transient
+      - visible
+      source: runtime
+      children: []
+      id: n16
+      classification: interactive
+      state_labels: *id001
+      class_name: ''
+      comment: ''
+      annotation_status: draft
+    - role: list item
+      name: ''
+      object_name: ''
+      accessible_id: ''
+      description: ''
+      actions: []
+      index_in_parent: 3
+      states:
+      - checkable
+      - enabled
+      - sensitive
+      - showing
+      - transient
+      - visible
+      source: runtime
+      children: []
+      id: n19
+      classification: interactive
+      state_labels: *id001
+      class_name: ''
+      comment: ''
+      annotation_status: draft
+    - role: list item
+      name: ''
+      object_name: ''
+      accessible_id: ''
+      description: ''
+      actions: []
+      index_in_parent: 7
+      states:
+      - checkable
+      - enabled
+      - sensitive
+      - showing
+      - transient
+      - visible
+      source: runtime
+      children: []
+      id: n25
+      classification: interactive
+      state_labels: *id001
+      class_name: ''
+      comment: ''
+      annotation_status: draft
+    id: n11
+    classification: container
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: layered pane
+    name: ''
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions: []
+    index_in_parent: 11
+    states:
+    - enabled
+    - sensitive
+    - showing
+    - visible
+    source: runtime
+    children:
+    - role: layered pane
+      name: ''
+      object_name: ''
+      accessible_id: ''
+      description: ''
+      actions: []
+      index_in_parent: 6
+      states:
+      - enabled
+      - sensitive
+      - showing
+      - visible
+      source: runtime
+      children:
+      - role: button
+        name: 添加歌曲
+        object_name: ''
+        accessible_id: ''
+        description: ''
+        actions:
+        - Press
+        - SetFocus
+        index_in_parent: 0
+        states:
+        - enabled
+        - focusable
+        - sensitive
+        - showing
+        - visible
+        source: runtime
+        id: n37
+        classification: interactive
+        state_labels: *id001
+        class_name: ''
+        comment: ''
+        annotation_status: draft
+      - role: button
+        name: 添加歌曲目录
+        object_name: ''
+        accessible_id: ''
+        description: ''
+        actions:
+        - Press
+        - SetFocus
+        index_in_parent: 1
+        states:
+        - enabled
+        - focusable
+        - sensitive
+        - showing
+        - visible
+        source: runtime
+        id: n38
+        classification: interactive
+        state_labels: *id001
+        class_name: ''
+        comment: ''
+        annotation_status: draft
+      id: n36
+      classification: container
+      state_labels: *id001
+      class_name: ''
+      comment: ''
+      annotation_status: draft
+    id: n29
+    classification: container
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  id: n0
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 1
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children:
+  - role: button
+    name: 删除
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 4
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n51
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 5
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n52
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  id: n47
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 2
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children:
+  - role: button
+    name: 删除
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 4
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n57
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 5
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n58
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  id: n53
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 3
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children: []
+  id: n59
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 4
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children:
+  - role: button
+    name: 移除
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 4
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n66
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 5
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n67
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  id: n62
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: popup menu
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 5
+  states:
+  - enabled
+  - resizable
+  - sensitive
+  source: runtime
+  children:
+  - role: menu item
+    name: 播放/暂停
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    index_in_parent: 0
+    states: []
+    source: runtime
+    id: n69
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: menu item
+    name: 上一曲
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    index_in_parent: 1
+    states: []
+    source: runtime
+    id: n70
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: menu item
+    name: 下一曲
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    index_in_parent: 2
+    states: []
+    source: runtime
+    id: n71
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: menu item
+    name: 退出
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    index_in_parent: 3
+    states:
+    - enabled
+    - sensitive
+    source: runtime
+    id: n72
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  id: n68
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 6
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children: []
+  id: n73
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 7
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children:
+  - role: button
+    name: 移除
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 4
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n80
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 5
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n81
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  id: n76
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 8
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children:
+  - role: button
+    name: 删除
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 5
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n87
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 6
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n88
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  id: n82
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 9
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children:
+  - role: button
+    name: 移除
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 4
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n93
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 5
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n94
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  id: n89
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 10
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children:
+  - role: button
+    name: 删除
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 5
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n100
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 6
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n101
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  id: n95
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 11
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children: []
+  id: n102
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
+- role: frame
+  name: ''
+  object_name: ''
+  accessible_id: ''
+  description: ''
+  actions: []
+  index_in_parent: 12
+  states:
+  - enabled
+  - sensitive
+  source: runtime
+  children:
+  - role: button
+    name: 移除
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 4
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n109
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  - role: button
+    name: 取消
+    object_name: ''
+    accessible_id: ''
+    description: ''
+    actions:
+    - Press
+    - SetFocus
+    index_in_parent: 5
+    states:
+    - enabled
+    - focusable
+    - sensitive
+    source: runtime
+    id: n110
+    classification: interactive
+    state_labels: *id001
+    class_name: ''
+    comment: ''
+    annotation_status: draft
+  id: n105
+  classification: container
+  state_labels: *id001
+  class_name: ''
+  comment: ''
+  annotation_status: draft
