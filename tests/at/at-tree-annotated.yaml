@@ -1,0 +1,2454 @@
+version: '1.0'
+tree:
+- id: ''
+  role: panel
+  name: albumlist
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: AlbumDefaultPage.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: Add Songs
+      object_name: importMusicFile
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Open Folders
+      object_name: importMusicDir
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: AlbumGridDelegate.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: image
+      name: BackgroundImage
+      object_name: backgroundImage
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: RoundedImage_CircularButton
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Morebutton
+      object_name: morebutton
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: AlbumGridView.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list
+      name: AlbumGridView
+      object_name: albumGridView
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: GridView_ScrollBar
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: ItemDelegate
+      object_name: itemDelegate
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: AlbumListDelegate.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list item
+      name: Imagecell
+      object_name: imagecell
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: AlbumListView.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list
+      name: Listview_2
+      object_name: listview
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: ListView_ScrollBar
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: ListView_AlbumListDelegate
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: AlbumView.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list
+      name: Component_AlbumSublistView
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Albums
+      object_name: toolButtonItem
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: panel
+      name: DefaultPage
+      object_name: defaultPage
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Listview
+      object_name: listview
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Gridview
+      object_name: gridview
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: allItems
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: CircularButton.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: CircularButton_Button
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: SortMenu.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: SortBtn
+      object_name: sortBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu
+      name: Menu
+      object_name: menu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: title
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: SublistTitleButton.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: image
+      name: Image
+      object_name: image
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Play All
+      object_name: palyall
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: ToolButtonItem.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: menu
+      name: DataSort
+      object_name: dataSort
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: GridViewButton
+      object_name: gridViewButton
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: ListViewButton
+      object_name: listViewButton
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: dialogs
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: CDRemovedDialog.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: Cancel
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: CloseConfirmDialog.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: radio button
+      name: Minimize to system tray
+      object_name: minimizeBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: radio button
+      name: Exit
+      object_name: closeBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: check box
+      name: Do not ask again
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Cancel
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Confirm
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: DeleteLocalDialog.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: Cancel
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: DeleteSonglistDialog.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: Cancel
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: EqualizerDialog.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: toggle button
+      name: SwitchBtn
+      object_name: switchBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: combo box
+      name: SelectComBox
+      object_name: selectComBox
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Save
+      object_name: saveBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Reset
+      object_name: resetBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: slider
+      name: PreamplifierSlider
+      object_name: preamplifierSlider
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: RightSliderListView
+      object_name: rightSliderListView
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: slider
+      name: DelegateSlider
+      object_name: delegateSlider
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: FileDialog.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: dialog
+      name: FileDialog
+      object_name: fileDialog
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: FolderDialog.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: dialog
+      name: FolderDialog
+      object_name: folderDialog
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: ImportFailedDialog.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: OK
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: MusicInfoDialog.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list item
+      name: Title
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: Artist
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: Album
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: Type
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: Size
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: Duration
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: Path
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: PropertyItem.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: title
+      object_name: titleBar
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Info
+      object_name: info
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: SettingsDialog.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: dialog
+      name: Dialog
+      object_name: dialog
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: check box
+      name: SettingsDialog_CheckBox
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: check box
+      name: SettingsDialog_CheckBox_2
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: check box
+      name: SettingsDialog_CheckBox_3
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: radio button
+      name: Minimize to system tray
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: radio button
+      name: Exit
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: radio button
+      name: Ask me always
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Cancel
+      object_name: cancelBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Replace
+      object_name: replaceBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Restore Defaults
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: lyric
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: EffectLightWave.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: canvas
+      name: R_4
+      object_name: r
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: EffectLine.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: canvas
+      name: R_3
+      object_name: r
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: EffectParticle.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: canvas
+      name: R_5
+      object_name: r
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: EffectRing.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: canvas
+      name: R
+      object_name: r
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: EffectSun.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: canvas
+      name: R_2
+      object_name: r
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: EffectWaterWave.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: canvas
+      name: R_6
+      object_name: r
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: LyricPage.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: canvas
+      name: ShaderView
+      object_name: shaderView
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: canvas
+      name: LyricRect
+      object_name: lyricRect
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: LyricRect.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list
+      name: ListViewLyric
+      object_name: listViewLyric
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: ListView_ScrollBar_3
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: ShaderView.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: canvas
+      name: Around
+      object_name: around
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: image
+      name: CircularImg_2
+      object_name: circular_img
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: canvas
+      name: Around_2
+      object_name: around
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: image
+      name: CircularImg_3
+      object_name: circular_img
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: canvas
+      name: Around_3
+      object_name: around
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: image
+      name: CircularImg_4
+      object_name: circular_img
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: canvas
+      name: Around_4
+      object_name: around
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: image
+      name: CircularImg_5
+      object_name: circular_img
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: canvas
+      name: Around_5
+      object_name: around
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: image
+      name: CircularImg_6
+      object_name: circular_img
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: image
+      name: CircularImg_7
+      object_name: circular_img
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: main.qml
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: main.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: frame
+      name: Root
+      object_name: root
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: mainwindow
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: LyricWindow.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: panel
+      name: LyricPage
+      object_name: lyricPage
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: MainWindow.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: panel
+      name: MusicTitle
+      object_name: musicTitle
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: panel
+      name: Shortcuts
+      object_name: shortcuts
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: panel
+      name: ContentWindow
+      object_name: contentWindow
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: panel
+      name: Toolbox
+      object_name: toolbox
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu
+      name: Component_Menu
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Play/Pause
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Previous
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Next
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Exit
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: MusicContentWindow.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list
+      name: Component_AllMusicList
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Component_AlbumView
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Component_ArtistView
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Component_AllMusicList_2
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: MusicBaselist
+      object_name: musicBaselist
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: MusicContentWindow_AllMusicList
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: SearchResultWindow.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list
+      name: Component_ArtistSublistView
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Component_AlbumSublistView_2
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: page tab list
+      name: TabArea
+      object_name: tabArea
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: page tab
+      name: Music
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: page tab
+      name: Album
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: page tab
+      name: Artist
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu
+      name: AllMusicSortMenu
+      object_name: allMusicSortMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu
+      name: AlbumMusicSortMenu
+      object_name: albumMusicSortMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu
+      name: ArtistMusicSortMenu
+      object_name: artistMusicSortMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: AllMusicList
+      object_name: allMusicList
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: ArtistView
+      object_name: artistView
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: GridView_ScrollBar_2
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: MusicSingerGridItem
+      object_name: musicSingerGridItem
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: AlbumGridView_2
+      object_name: albumGridView
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: GridView_ScrollBar_3
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: ItemDelegate_2
+      object_name: itemDelegate
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: Toolbar.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: panel
+      name: ToolbarRoot
+      object_name: toolbarRoot
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: canvas
+      name: Waveform
+      object_name: waveform
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: LrcBtn
+      object_name: lrcBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: VolumeBtn
+      object_name: volumeBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: ListBtn
+      object_name: listBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: WindowTitlebar.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: menu
+      name: WindowTitlebar_Menu
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Add playlist
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Add music
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Settings
+      object_name: settingsControl
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: Component_SearchResultDialog
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: musicList
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: AllMusicDefaultPage.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: Add Songs
+      object_name: importMusicFile
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Open Folders
+      object_name: importMusicDir
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: AllMusicList.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: listTitle
+      object_name: toolButtonItem
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: panel
+      name: DefaultPage_3
+      object_name: defaultPage
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Component_AllMusicListView
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: AllMusicListDelegate.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list item
+      name: Imagecell_4
+      object_name: imagecell
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: AllMusicListView.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list
+      name: Listview_6
+      object_name: listview
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: ListView_ScrollBar_5
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: ItemD
+      object_name: itemD
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: RemoveSong_7
+      object_name: removeSong
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: musicbaseandsonglist
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: MusicBaselistview.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: panel
+      name: Library
+      object_name: musicbaseSidebar
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: panel
+      name: Playlists
+      object_name: musicSonglist
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: SideBarItem.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list
+      name: SideListView
+      object_name: sideListView
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: SidebarItem
+      object_name: sidebarItem
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: SideBarItemDelegate.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: Item
+      object_name: item
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: musicmousemenu
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: AlbumMoreMenu.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: menu
+      name: MoreMenu
+      object_name: moreMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: View details
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Play all
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu
+      name: Add to
+      object_name: imporAlbumtMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArtistMoreMenu.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: menu
+      name: MoreMenu_3
+      object_name: moreMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: View details
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Play all
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu
+      name: Add to
+      object_name: importArtistMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: ImportMenu.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: menu
+      name: ImportMenu
+      object_name: importMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Play queue
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: My favorites
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Create new playlist
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: '&lt;'
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: MulitSelectMenu.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: menu
+      name: MulitSelectMenu
+      object_name: mulitSelectMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu
+      name: Add to
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: RemoveSong_6
+      object_name: removeSong
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: play
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: DeleteLocal_2
+      object_name: deleteLocal
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Delete from local disk
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: MusicMoreMenu.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: menu
+      name: MoreMenu_2
+      object_name: moreMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Pause
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu
+      name: Add to
+      object_name: musicMoreImportMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Open in file manager
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: RemoveSong_5
+      object_name: removeSong
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: play
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: DeleteLocal
+      object_name: deleteLocal
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Delete from local disk
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu
+      name: Encoding
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: encodings
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: InfoDialog
+      object_name: infoDialog
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Song info
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: SidebarMenu.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: menu
+      name: PlaylistMenu
+      object_name: playlistMenu
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Play
+      object_name: playMenuItem
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Add songs
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Rename
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: RemoveSong_4
+      object_name: removeSong
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: menu item
+      name: Delete
+      object_name: deletePlaylist
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: musicsublist
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: AlbumSublist.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: label
+      name: MusicSublistTitle_3
+      object_name: musicSublistTitle
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Listview_5
+      object_name: listview
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: ListView_ScrollBar_2
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: ListView_AlbumSublistDelegate_2
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: AlbumSublistView.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: label
+      name: MusicSublistTitle
+      object_name: musicSublistTitle
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Listview_3
+      object_name: listview
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: AlbumSublistScrollBar
+      object_name: albumSublistScrollBar
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: ListView_AlbumSublistDelegate
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: RemoveSong
+      object_name: removeSong
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArtistSublistDelegate.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: SublistDelegate
+      object_name: sublistDelegate
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: Imagecell_2
+      object_name: imagecell
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArtistSublistView.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: label
+      name: MusicSublistTitle_2
+      object_name: musicSublistTitle
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Listview_4
+      object_name: listview
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: ArtistSublistScrollBar
+      object_name: artistSublistScrollBar
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: ListView_ArtistSublistDelegate
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: RemoveSong_2
+      object_name: removeSong
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: MusicSublistTitle.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: panel
+      name: TitleBackground
+      object_name: titleBackground
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: TitleButton1
+      object_name: titleButton1
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: playlist
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: CurrentPlayList.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: panel
+      name: PlaylistRoot
+      object_name: playlistRoot
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Empty
+      object_name: deleteBtn
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: PlaylistView
+      object_name: playlistView
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: ListView_ScrollBar_4
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: PlaylistDelegate
+      object_name: playlistDelegate
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: dialog
+      name: RemoveSong_3
+      object_name: removeSong
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: CurrentPlayListDelegate.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list item
+      name: Imagecell_3
+      object_name: imagecell
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: singerlist
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: ArtistDefaultPage.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: push button
+      name: Add Songs
+      object_name: importMusicFile
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Open Folders
+      object_name: importMusicDir
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArtistGridDelegate.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: image
+      name: CircularImg
+      object_name: circular_img
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: CircularImg_CircularButton
+      object_name: ''
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Morebutton_2
+      object_name: morebutton
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: ArtistView.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: list
+      name: Component_ArtistSublistView_2
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: push button
+      name: Artists
+      object_name: toolButtonItem
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: panel
+      name: DefaultPage_2
+      object_name: defaultPage
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list
+      name: Singergridview
+      object_name: singergridview
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: scroll bar
+      name: GridView_ScrollBar_4
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: list item
+      name: MusicSingerGridItem_2
+      object_name: musicSingerGridItem
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+- id: ''
+  role: panel
+  name: toolbar
+  object_name: ''
+  accessible_id: ''
+  classification: container
+  comment: ''
+  annotation_status: draft
+  children:
+  - id: ''
+    role: panel
+    name: VolumeSlider.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: slider
+      name: ContentSlider
+      object_name: contentSlider
+      accessible_id: ''
+      classification: interactive
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: WaveformItem.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: canvas
+      name: WaveformItem_StripedRectangle
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: canvas
+      name: WaveformItem_StripedRectangle_2
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+  - id: ''
+    role: panel
+    name: WaveformRect.qml
+    object_name: ''
+    accessible_id: ''
+    classification: container
+    comment: ''
+    annotation_status: draft
+    children:
+    - id: ''
+      role: canvas
+      name: WaveItem
+      object_name: waveItem
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: canvas
+      name: TimeLabel
+      object_name: timeLabel
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft
+    - id: ''
+      role: canvas
+      name: WaveformRect_Triangle
+      object_name: ''
+      accessible_id: ''
+      classification: container
+      comment: ''
+      annotation_status: draft

@@ -1,0 +1,105 @@
+name: 音乐_界面操作_右键菜单_suite
+app: deepin-music
+module: 音乐_界面操作_右键菜单
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_界面操作_右键菜单_001_s1
+  name: '[262]右键菜单-自定义歌单右键菜单检查'
+  description: ''
+  steps:
+  - action: mouse_right_click
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: PlaylistDelegate
+    items:
+    - Play
+    - Add songs
+    - Rename
+    - Delete
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistMenu
+      role: menu
+  annotation:
+    测试界面: 音乐-右键菜单
+    测试功能: '[262]右键菜单-自定义歌单右键菜单检查'
+    case_id: case_1677191
+    case_name: '[262]右键菜单-自定义歌单右键菜单检查'
+    AT元素引用:
+    - PlaylistDelegate
+    - PlaylistMenu
+- id: suite_音乐_界面操作_右键菜单_002_s1
+  name: '[356]右键菜单-播放队列从播放队列删除'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: push button
+  - action: mouse_right_click
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: PlaylistDelegate
+    items:
+    - Delete
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistMenu
+      role: menu
+  annotation:
+    测试界面: 音乐-右键菜单
+    测试功能: '[356]右键菜单-播放队列从播放队列删除'
+    case_id: case_1677163
+    case_name: '[356]右键菜单-播放队列从播放队列删除'
+    AT元素引用:
+    - ListBtn
+    - PlaylistDelegate
+    - PlaylistMenu
+- id: suite_音乐_界面操作_右键菜单_003_s1
+  name: '[352]右键菜单-多选文件右键菜单检查'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_right_click
+    selector:
+      name: ItemD
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: ItemD
+    items:
+    - play
+    - Add to
+    - Delete from local disk
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MulitSelectMenu
+      role: menu
+  annotation:
+    测试界面: 音乐-右键菜单
+    测试功能: '[352]右键菜单-多选文件右键菜单检查'
+    case_id: case_1677133
+    case_name: '[352]右键菜单-多选文件右键菜单检查'
+    AT元素引用:
+    - Add Songs
+    - ItemD
+    - MulitSelectMenu
+teardown:
+- action: session_stop

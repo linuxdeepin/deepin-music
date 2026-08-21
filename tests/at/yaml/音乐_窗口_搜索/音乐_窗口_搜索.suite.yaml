@@ -1,0 +1,127 @@
+name: 音乐_窗口_搜索_suite
+app: deepin-music
+module: 音乐_窗口_搜索
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_窗口_搜索_001_s1
+  name: '[372]搜索结果-清除搜索关键词'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+f
+  - action: keyboard_type
+    text: test
+  - action: keyboard_press
+    key: Enter
+  - action: keyboard_press
+    key: Escape
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: TabArea
+      role: page tab list
+  annotation:
+    测试界面: 音乐-搜索
+    测试功能: '[372]搜索结果-清除搜索关键词'
+    case_id: case_1678819
+    case_name: '[372]搜索结果-清除搜索关键词'
+    AT元素引用:
+    - TabArea
+- id: suite_音乐_窗口_搜索_002_s1
+  name: '[150]搜索结果-歌曲页面播放所有'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+f
+  - action: keyboard_type
+    text: test
+  - action: keyboard_press
+    key: Enter
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-搜索
+    测试功能: '[150]搜索结果-歌曲页面播放所有'
+    case_id: case_1678815
+    case_name: '[150]搜索结果-歌曲页面播放所有'
+    AT元素引用:
+    - Play All
+    - PlaylistDelegate
+- id: suite_音乐_窗口_搜索_003_s1
+  name: '[219][smoke][acp1]搜索结果-歌曲页面展示'
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+f
+  - action: keyboard_type
+    text: test
+  - action: keyboard_press
+    key: Enter
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: Play All
+      role: push button
+  annotation:
+    测试界面: 音乐-搜索
+    测试功能: '[219][smoke][acp1]搜索结果-歌曲页面展示'
+    case_id: case_1678781
+    case_name: '[219][smoke][acp1]搜索结果-歌曲页面展示'
+    AT元素引用:
+    - Play All
+- id: suite_音乐_窗口_搜索_004_s1
+  name: 搜索-搜索列表结果长度限制
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+f
+  - action: keyboard_type
+    text: test
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ItemDelegate_2
+      role: list item
+  annotation:
+    测试界面: 音乐-搜索
+    测试功能: 搜索-搜索列表结果长度限制
+    case_id: case_1678775
+    case_name: 搜索-搜索列表结果长度限制
+    AT元素引用:
+    - ItemDelegate_2
+- id: suite_音乐_窗口_搜索_005_s1
+  name: 搜索-撤销搜索内容
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+f
+  - action: keyboard_type
+    text: test
+  - action: mouse_right_click
+    selector:
+      name: ItemDelegate_2
+      role: list item
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ItemDelegate_2
+      role: list item
+  annotation:
+    测试界面: 音乐-搜索
+    测试功能: 搜索-撤销搜索内容
+    case_id: case_1678773
+    case_name: 搜索-撤销搜索内容
+    AT元素引用:
+    - ItemDelegate_2
+teardown:
+- action: session_stop

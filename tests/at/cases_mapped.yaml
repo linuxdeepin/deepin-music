@@ -1,0 +1,2113 @@
+# === 格式范例 ===
+# version: '1.0'
+# cases:
+#   - id: suite_<module>_<NNN>_s<M>            # 用例唯一 ID
+#     name: <用例标题>                           # 用例名称（≤60 字符）
+#     module: <模块名>                            # 所属模块
+#     status: unsupported                         # 可选：不可自动化时标记
+#     reason: <不可自动化原因>                      # 可选：status=unsupported 时必填
+#     steps:                                      # 步骤列表
+#       - action: <动作类型>                        # session_start/mouse_click/...
+#         selector:                                # 元素选择器
+#           name: <accessibleName>                 # AT-SPI 元素名称
+#           role: <AT-SPI 角色>                     # 角色
+#       - action: assert_element                   # 断言步骤
+#         selector:
+#           name: <元素名称>
+#           role: <角色>
+# === 格式范例 ===
+version: '1.0'
+cases:
+- id: suite_音乐_001_s1
+  name: 主菜单-关于
+  module: 音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Settings
+  - action: assert_element
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 主菜单-关于
+    case_id: case_2003951
+    case_name: 主菜单-关于
+    AT元素引用:
+    - WindowTitlebar_Menu
+- id: suite_音乐_002_s1
+  name: 音乐_窗口菜单hover状态检查
+  module: 音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: assert_element
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 音乐_窗口菜单hover状态检查
+    case_id: case_1992957
+    case_name: 音乐_窗口菜单hover状态检查
+    AT元素引用:
+    - WindowTitlebar_Menu
+- id: suite_音乐_外部交互_任务栏_001_s1
+  name: 托盘-删除所有歌曲后检查托盘右键菜单选项状态
+  module: 音乐_外部交互_任务栏
+  steps:
+  - action: mouse_right_click
+    selector:
+      name: Component_Menu
+      role: menu
+  - action: dtk_context_menu
+    selector:
+      name: Component_Menu
+    items:
+    - Play/Pause
+    - Previous
+    - Next
+    - Exit
+  - action: assert_element
+    selector:
+      name: Component_Menu
+      role: menu
+  annotation:
+    测试界面: 音乐-任务栏
+    测试功能: 托盘-删除所有歌曲后检查托盘右键菜单选项状态
+    case_id: case_1676659
+    case_name: 托盘-删除所有歌曲后检查托盘右键菜单选项状态
+    AT元素引用:
+    - Component_Menu
+- id: suite_音乐_外部交互_任务栏_003_s1
+  name: '[302][smoke][acp1]托盘-调起'
+  module: 音乐_外部交互_任务栏
+  steps:
+  - action: mouse_click
+    selector:
+      name: Component_Menu
+      role: menu
+  - action: assert_element
+    selector:
+      name: Component_Menu
+      role: menu
+  annotation:
+    测试界面: 音乐-任务栏
+    测试功能: '[302][smoke][acp1]托盘-调起'
+    case_id: case_1676639
+    case_name: '[302][smoke][acp1]托盘-调起'
+    AT元素引用:
+    - Component_Menu
+- id: suite_音乐_打开_关闭_002_s1
+  name: '[174][smoke][acp1]打开-右键菜单打开'
+  module: 音乐_打开_关闭
+  steps:
+  - action: assert_element
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  annotation:
+    测试界面: 音乐-关闭
+    测试功能: '[174][smoke][acp1]打开-右键菜单打开'
+    case_id: case_1677785
+    case_name: '[174][smoke][acp1]打开-右键菜单打开'
+    AT元素引用:
+    - WindowTitlebar_Menu
+- id: suite_音乐_用户场景_001_s1
+  name: '[acp2][音乐]检查音乐播放功能'
+  module: 音乐_用户场景
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-用户场景
+    测试功能: '[acp2][音乐]检查音乐播放功能'
+    case_id: case_1676597
+    case_name: '[acp2][音乐]检查音乐播放功能'
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - PlaylistDelegate
+- id: suite_音乐_界面操作_主菜单_001_s1
+  name: 设置-修改为重复快捷键
+  module: 音乐_界面操作_主菜单
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Settings
+  - action: mouse_click
+    selector:
+      name: Replace
+      role: push button
+  - action: assert_element
+    selector:
+      name: Replace
+      role: push button
+  annotation:
+    测试界面: 音乐-主菜单
+    测试功能: 设置-修改为重复快捷键
+    case_id: case_1677101
+    case_name: 设置-修改为重复快捷键
+    AT元素引用:
+    - Replace
+- id: suite_音乐_界面操作_主菜单_002_s1
+  name: '[129][core][acp1]设置-每次询问'
+  module: 音乐_界面操作_主菜单
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Settings
+  - action: mouse_click
+    selector:
+      name: Ask me always
+      role: radio button
+  - action: mouse_click
+    selector:
+      name: Cancel
+      role: push button
+  - action: assert_element
+    selector:
+      name: Ask me always
+      role: radio button
+  annotation:
+    测试界面: 音乐-主菜单
+    测试功能: '[129][core][acp1]设置-每次询问'
+    case_id: case_1677097
+    case_name: '[129][core][acp1]设置-每次询问'
+    AT元素引用:
+    - Ask me always
+    - Cancel
+- id: suite_音乐_界面操作_主菜单_006_s1
+  name: '[136]均衡器-调整数值后恢复默认'
+  module: 音乐_界面操作_主菜单
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Settings
+  - action: mouse_click
+    selector:
+      name: SwitchBtn
+      role: toggle button
+  - action: element_set_value
+    selector:
+      name: PreamplifierSlider
+      role: slider
+    value: '50'
+  - action: mouse_click
+    selector:
+      name: Reset
+      role: push button
+  - action: assert_element
+    selector:
+      name: PreamplifierSlider
+      role: slider
+  annotation:
+    测试界面: 音乐-主菜单
+    测试功能: '[136]均衡器-调整数值后恢复默认'
+    case_id: case_1677079
+    case_name: '[136]均衡器-调整数值后恢复默认'
+    AT元素引用:
+    - SwitchBtn
+    - PreamplifierSlider
+    - Reset
+- id: suite_音乐_界面操作_主菜单_007_s1
+  name: '[135][core][acp1]均衡器-自定义调整数值'
+  module: 音乐_界面操作_主菜单
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Settings
+  - action: mouse_click
+    selector:
+      name: SwitchBtn
+      role: toggle button
+  - action: element_set_value
+    selector:
+      name: PreamplifierSlider
+      role: slider
+    value: '50'
+  - action: assert_element
+    selector:
+      name: PreamplifierSlider
+      role: slider
+  annotation:
+    测试界面: 音乐-主菜单
+    测试功能: '[135][core][acp1]均衡器-自定义调整数值'
+    case_id: case_1677077
+    case_name: '[135][core][acp1]均衡器-自定义调整数值'
+    AT元素引用:
+    - SwitchBtn
+    - PreamplifierSlider
+- id: suite_音乐_界面操作_主菜单_009_s1
+  name: '[005][smoke][acp1]主菜单-添加新歌单选项'
+  module: 音乐_界面操作_主菜单
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Add playlist
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-主菜单
+    测试功能: '[005][smoke][acp1]主菜单-添加新歌单选项'
+    case_id: case_1677053
+    case_name: '[005][smoke][acp1]主菜单-添加新歌单选项'
+    AT元素引用:
+    - WindowTitlebar_Menu
+    - Add playlist
+    - PlaylistDelegate
+- id: suite_音乐_界面操作_右键菜单_001_s1
+  name: '[262]右键菜单-自定义歌单右键菜单检查'
+  module: 音乐_界面操作_右键菜单
+  steps:
+  - action: mouse_right_click
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: PlaylistDelegate
+    items:
+    - Play
+    - Add songs
+    - Rename
+    - Delete
+  - action: assert_element
+    selector:
+      name: PlaylistMenu
+      role: menu
+  annotation:
+    测试界面: 音乐-右键菜单
+    测试功能: '[262]右键菜单-自定义歌单右键菜单检查'
+    case_id: case_1677191
+    case_name: '[262]右键菜单-自定义歌单右键菜单检查'
+    AT元素引用:
+    - PlaylistDelegate
+    - PlaylistMenu
+- id: suite_音乐_界面操作_右键菜单_002_s1
+  name: '[356]右键菜单-播放队列从播放队列删除'
+  module: 音乐_界面操作_右键菜单
+  steps:
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: push button
+  - action: mouse_right_click
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: PlaylistDelegate
+    items:
+    - Delete
+  - action: assert_element
+    selector:
+      name: PlaylistMenu
+      role: menu
+  annotation:
+    测试界面: 音乐-右键菜单
+    测试功能: '[356]右键菜单-播放队列从播放队列删除'
+    case_id: case_1677163
+    case_name: '[356]右键菜单-播放队列从播放队列删除'
+    AT元素引用:
+    - ListBtn
+    - PlaylistDelegate
+    - PlaylistMenu
+- id: suite_音乐_界面操作_右键菜单_003_s1
+  name: '[352]右键菜单-多选文件右键菜单检查'
+  module: 音乐_界面操作_右键菜单
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_right_click
+    selector:
+      name: ItemD
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: ItemD
+    items:
+    - play
+    - Add to
+    - Delete from local disk
+  - action: assert_element
+    selector:
+      name: MulitSelectMenu
+      role: menu
+  annotation:
+    测试界面: 音乐-右键菜单
+    测试功能: '[352]右键菜单-多选文件右键菜单检查'
+    case_id: case_1677133
+    case_name: '[352]右键菜单-多选文件右键菜单检查'
+    AT元素引用:
+    - Add Songs
+    - ItemD
+    - MulitSelectMenu
+- id: suite_音乐_界面操作_工具栏_001_s1
+  name: 排序-播放队列-使用shift多选歌曲拖拽排序，歌曲按照所选顺序排序
+  module: 音乐_界面操作_工具栏
+  steps:
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: push button
+  - action: mouse_drag
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: 排序-播放队列-使用shift多选歌曲拖拽排序，歌曲按照所选顺序排序
+    case_id: case_1677475
+    case_name: 排序-播放队列-使用shift多选歌曲拖拽排序，歌曲按照所选顺序排序
+    AT元素引用:
+    - ListBtn
+    - PlaylistDelegate
+- id: suite_音乐_界面操作_工具栏_003_s1
+  name: 排序-播放队列-拖动歌曲至播放队列上滚动区域向上翻页功能
+  module: 音乐_界面操作_工具栏
+  steps:
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: push button
+  - action: mouse_scroll
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: 排序-播放队列-拖动歌曲至播放队列上滚动区域向上翻页功能
+    case_id: case_1677461
+    case_name: 排序-播放队列-拖动歌曲至播放队列上滚动区域向上翻页功能
+    AT元素引用:
+    - ListBtn
+    - PlaylistDelegate
+- id: suite_音乐_界面操作_工具栏_005_s1
+  name: '[351][core]工具栏-歌词与切换歌曲交互'
+  module: 音乐_界面操作_工具栏
+  steps:
+  - action: mouse_click
+    selector:
+      name: LrcBtn
+      role: push button
+  - action: assert_element
+    selector:
+      name: LrcBtn
+      role: push button
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[351][core]工具栏-歌词与切换歌曲交互'
+    case_id: case_1677413
+    case_name: '[351][core]工具栏-歌词与切换歌曲交互'
+    AT元素引用:
+    - LrcBtn
+- id: suite_音乐_界面操作_工具栏_006_s1
+  name: '[032][core][acp1]工具栏-播放歌曲时从播放队列移除当前歌曲'
+  module: 音乐_界面操作_工具栏
+  steps:
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: push button
+  - action: mouse_right_click
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: PlaylistDelegate
+    items:
+    - Delete
+  - action: assert_element
+    selector:
+      name: PlaylistMenu
+      role: menu
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[032][core][acp1]工具栏-播放歌曲时从播放队列移除当前歌曲'
+    case_id: case_1677389
+    case_name: '[032][core][acp1]工具栏-播放歌曲时从播放队列移除当前歌曲'
+    AT元素引用:
+    - ListBtn
+    - PlaylistDelegate
+    - PlaylistMenu
+- id: suite_音乐_界面操作_工具栏_008_s1
+  name: '[238][core][acp1]工具栏-点击音量条静音按钮解除静'
+  module: 音乐_界面操作_工具栏
+  steps:
+  - action: mouse_click
+    selector:
+      name: VolumeBtn
+      role: push button
+  - action: mouse_click
+    selector:
+      name: ContentSlider
+      role: slider
+  - action: assert_element
+    selector:
+      name: ContentSlider
+      role: slider
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[238][core][acp1]工具栏-点击音量条静音按钮解除静'
+    case_id: case_1677369
+    case_name: '[238][core][acp1]工具栏-点击音量条静音按钮解除静'
+    AT元素引用:
+    - VolumeBtn
+    - ContentSlider
+- id: suite_音乐_界面操作_工具栏_009_s1
+  name: '[235][core][acp1]工具栏-拖拽放大音量条声'
+  module: 音乐_界面操作_工具栏
+  steps:
+  - action: mouse_click
+    selector:
+      name: VolumeBtn
+      role: push button
+  - action: element_set_value
+    selector:
+      name: ContentSlider
+      role: slider
+    value: '50'
+  - action: assert_element
+    selector:
+      name: ContentSlider
+      role: slider
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[235][core][acp1]工具栏-拖拽放大音量条声'
+    case_id: case_1677363
+    case_name: '[235][core][acp1]工具栏-拖拽放大音量条声'
+    AT元素引用:
+    - VolumeBtn
+    - ContentSlider
+- id: suite_音乐_界面操作_歌曲导入_001_s1
+  name: '[314][core][acp1]歌曲导入-自定义歌单页面拖拽添加音乐目录'
+  module: 音乐_界面操作_歌曲导入
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-歌曲导入
+    测试功能: '[314][core][acp1]歌曲导入-自定义歌单页面拖拽添加音乐目录'
+    case_id: case_1677709
+    case_name: '[314][core][acp1]歌曲导入-自定义歌单页面拖拽添加音乐目录'
+    AT元素引用:
+    - Add Songs
+    - PlaylistDelegate
+- id: suite_音乐_窗口_专辑_001_s1
+  name: '[186][smoke][acp1]专辑-详情页面返回按钮'
+  module: 音乐_窗口_专辑
+  steps:
+  - action: mouse_click
+    selector:
+      name: SublistDelegate
+      role: push button
+  - action: assert_element
+    selector:
+      name: Albums
+      role: push button
+  annotation:
+    测试界面: 音乐-专辑
+    测试功能: '[186][smoke][acp1]专辑-详情页面返回按钮'
+    case_id: case_1677873
+    case_name: '[186][smoke][acp1]专辑-详情页面返回按钮'
+    AT元素引用:
+    - SublistDelegate
+    - Albums
+- id: suite_音乐_窗口_我的收藏_001_s1
+  name: 排序-我的收藏-列表模式使用shift从文管多选歌曲拖拽排序，歌曲按照所选顺序排序
+  module: 音乐_窗口_我的收藏
+  steps:
+  - action: mouse_click
+    selector:
+      name: SidebarItem
+      role: list item
+  - action: mouse_drag
+    selector:
+      name: ItemD
+      role: list item
+  - action: assert_element
+    selector:
+      name: SidebarItem
+      role: list item
+  annotation:
+    测试界面: 音乐-我的收藏
+    测试功能: 排序-我的收藏-列表模式使用shift从文管多选歌曲拖拽排序，歌曲按照所选顺序排序
+    case_id: case_1678497
+    case_name: 排序-我的收藏-列表模式使用shift从文管多选歌曲拖拽排序，歌曲按照所选顺序排序
+    AT元素引用:
+    - SidebarItem
+    - ItemD
+- id: suite_音乐_窗口_我的收藏_002_s1
+  name: '[329][smoke]排序-我的收藏-列表模式下拖拽多首歌排序'
+  module: 音乐_窗口_我的收藏
+  steps:
+  - action: mouse_right_click
+    selector:
+      name: ItemD
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: ItemD
+    items:
+    - Add to
+    - My favorites
+  - action: assert_element
+    selector:
+      name: ImportMenu
+      role: menu
+  annotation:
+    测试界面: 音乐-我的收藏
+    测试功能: '[329][smoke]排序-我的收藏-列表模式下拖拽多首歌排序'
+    case_id: case_1678367
+    case_name: '[329][smoke]排序-我的收藏-列表模式下拖拽多首歌排序'
+    AT元素引用:
+    - ItemD
+    - ImportMenu
+    - My favorites
+- id: suite_音乐_窗口_我的收藏_003_s1
+  name: '[095]我的收藏-删除所有歌曲'
+  module: 音乐_窗口_我的收藏
+  steps:
+  - action: mouse_click
+    selector:
+      name: SidebarItem
+      role: list item
+  - action: keyboard_hot_key
+    key: ctrl+a
+  - action: keyboard_press
+    key: Delete
+  - action: assert_element
+    selector:
+      name: SidebarItem
+      role: list item
+  annotation:
+    测试界面: 音乐-我的收藏
+    测试功能: '[095]我的收藏-删除所有歌曲'
+    case_id: case_1678285
+    case_name: '[095]我的收藏-删除所有歌曲'
+    AT元素引用:
+    - SidebarItem
+- id: suite_音乐_窗口_我的歌单_001_s1
+  name: 新建歌单时，输入html标签能正常显示
+  module: 音乐_窗口_我的歌单
+  steps:
+  - action: mouse_click
+    selector:
+      name: Empty
+      role: push button
+  - action: keyboard_type
+    text: test
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-我的歌单
+    测试功能: 新建歌单时，输入html标签能正常显示
+    case_id: case_1678697
+    case_name: 新建歌单时，输入html标签能正常显示
+    AT元素引用:
+    - Empty
+    - PlaylistDelegate
+- id: suite_音乐_窗口_我的歌单_002_s1
+  name: 排序-我的歌单-拖拽歌单至音乐库列表
+  module: 音乐_窗口_我的歌单
+  steps:
+  - action: mouse_click
+    selector:
+      name: Empty
+      role: push button
+  - action: mouse_drag
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-我的歌单
+    测试功能: 排序-我的歌单-拖拽歌单至音乐库列表
+    case_id: case_1678653
+    case_name: 排序-我的歌单-拖拽歌单至音乐库列表
+    AT元素引用:
+    - Empty
+    - PlaylistDelegate
+- id: suite_音乐_窗口_我的歌单_004_s1
+  name: '[207][smoke][acp1]我的歌单-播放所有按钮播放'
+  module: 音乐_窗口_我的歌单
+  steps:
+  - action: mouse_click
+    selector:
+      name: SidebarItem
+      role: list item
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-我的歌单
+    测试功能: '[207][smoke][acp1]我的歌单-播放所有按钮播放'
+    case_id: case_1678563
+    case_name: '[207][smoke][acp1]我的歌单-播放所有按钮播放'
+    AT元素引用:
+    - SidebarItem
+    - Play All
+    - PlaylistDelegate
+- id: suite_音乐_窗口_我的歌单_006_s1
+  name: '[205][smoke][acp1]我的歌单-新建按钮增加歌单'
+  module: 音乐_窗口_我的歌单
+  steps:
+  - action: mouse_click
+    selector:
+      name: Empty
+      role: push button
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-我的歌单
+    测试功能: '[205][smoke][acp1]我的歌单-新建按钮增加歌单'
+    case_id: case_1678541
+    case_name: '[205][smoke][acp1]我的歌单-新建按钮增加歌单'
+    AT元素引用:
+    - Empty
+    - PlaylistDelegate
+- id: suite_音乐_窗口_所有音乐_001_s1
+  name: 播放队列同步-所有音乐-播放歌曲时从本地删除歌曲，播放队列同步减少歌曲
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: mouse_right_click
+    selector:
+      name: ItemD
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: ItemD
+    items:
+    - Delete from local disk
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: 播放队列同步-所有音乐-播放歌曲时从本地删除歌曲，播放队列同步减少歌曲
+    case_id: case_1678763
+    case_name: 播放队列同步-所有音乐-播放歌曲时从本地删除歌曲，播放队列同步减少歌曲
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - ItemD
+    - MoreMenu_2
+- id: suite_音乐_窗口_所有音乐_003_s1
+  name: 播放队列同步-所有音乐-播放歌曲时从文管拖拽歌曲增加歌曲，播放队列同步增加歌曲
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: push button
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: 播放队列同步-所有音乐-播放歌曲时从文管拖拽歌曲增加歌曲，播放队列同步增加歌曲
+    case_id: case_1678759
+    case_name: 播放队列同步-所有音乐-播放歌曲时从文管拖拽歌曲增加歌曲，播放队列同步增加歌曲
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - ListBtn
+    - PlaylistDelegate
+- id: suite_音乐_窗口_所有音乐_004_s1
+  name: 播放队列同步-所有音乐-播放歌曲时从主菜单添加选项增加歌曲，播放队列同步增加歌曲
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Add music
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test2.mp3
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: 播放队列同步-所有音乐-播放歌曲时从主菜单添加选项增加歌曲，播放队列同步增加歌曲
+    case_id: case_1678757
+    case_name: 播放队列同步-所有音乐-播放歌曲时从主菜单添加选项增加歌曲，播放队列同步增加歌曲
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - WindowTitlebar_Menu
+    - Add music
+    - ItemD
+- id: suite_音乐_窗口_所有音乐_005_s1
+  name: '[322][core]播放队列同步-所有音乐-播放歌曲时从标题栏添加按钮增加歌曲，播放队列同步增加歌曲'
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test2.mp3
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[322][core]播放队列同步-所有音乐-播放歌曲时从标题栏添加按钮增加歌曲，播放队列同步增加歌曲'
+    case_id: case_1678755
+    case_name: '[322][core]播放队列同步-所有音乐-播放歌曲时从标题栏添加按钮增加歌曲，播放队列同步增加歌曲'
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - ItemD
+- id: suite_音乐_窗口_所有音乐_006_s1
+  name: 播放队列同步-所有音乐-播放歌曲时从歌单右键菜单增加歌曲，播放队列同步增加歌曲
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: mouse_right_click
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: PlaylistDelegate
+    items:
+    - Add songs
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test2.mp3
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: 播放队列同步-所有音乐-播放歌曲时从歌单右键菜单增加歌曲，播放队列同步增加歌曲
+    case_id: case_1678753
+    case_name: 播放队列同步-所有音乐-播放歌曲时从歌单右键菜单增加歌曲，播放队列同步增加歌曲
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - PlaylistDelegate
+    - PlaylistMenu
+- id: suite_音乐_窗口_所有音乐_007_s1
+  name: '[191][smoke][acp1]所有音乐-歌曲数量展示情况'
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: assert_element
+    selector:
+      name: listTitle
+      role: push button
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[191][smoke][acp1]所有音乐-歌曲数量展示情况'
+    case_id: case_1678733
+    case_name: '[191][smoke][acp1]所有音乐-歌曲数量展示情况'
+    AT元素引用:
+    - Add Songs
+    - listTitle
+- id: suite_音乐_窗口_所有音乐_008_s1
+  name: '[374]所有音乐-翻页查看所有歌曲'
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_scroll
+    selector:
+      name: ItemD
+      role: list item
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[374]所有音乐-翻页查看所有歌曲'
+    case_id: case_1678731
+    case_name: '[374]所有音乐-翻页查看所有歌曲'
+    AT元素引用:
+    - Add Songs
+    - ItemD
+- id: suite_音乐_窗口_所有音乐_009_s1
+  name: '[192][core][acp1]所有音乐-删除所有歌曲'
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: keyboard_hot_key
+    key: ctrl+a
+  - action: keyboard_press
+    key: Delete
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[192][core][acp1]所有音乐-删除所有歌曲'
+    case_id: case_1678727
+    case_name: '[192][core][acp1]所有音乐-删除所有歌曲'
+    AT元素引用:
+    - Add Songs
+    - ItemD
+- id: suite_音乐_窗口_所有音乐_010_s1
+  name: 所有音乐-歌曲名称反向排序
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: SortBtn
+      role: push button
+  - action: dtk_context_menu
+    selector:
+      name: SortBtn
+    items:
+    - title
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: 所有音乐-歌曲名称反向排序
+    case_id: case_1678717
+    case_name: 所有音乐-歌曲名称反向排序
+    AT元素引用:
+    - SortBtn
+    - ItemD
+- id: suite_音乐_窗口_所有音乐_012_s1
+  name: '[373]所有音乐-Enter键播放歌曲'
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: ItemD
+      role: list item
+  - action: keyboard_press
+    key: Enter
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[373]所有音乐-Enter键播放歌曲'
+    case_id: case_1678703
+    case_name: '[373]所有音乐-Enter键播放歌曲'
+    AT元素引用:
+    - Add Songs
+    - ItemD
+    - PlaylistDelegate
+- id: suite_音乐_窗口_所有音乐_013_s1
+  name: '[190][core][acp1]所有音乐-平铺视图下双击播放歌曲'
+  module: 音乐_窗口_所有音乐
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: ItemD
+      role: list item
+    do: dblclick
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[190][core][acp1]所有音乐-平铺视图下双击播放歌曲'
+    case_id: case_1678701
+    case_name: '[190][core][acp1]所有音乐-平铺视图下双击播放歌曲'
+    AT元素引用:
+    - Add Songs
+    - ItemD
+    - PlaylistDelegate
+- id: suite_音乐_窗口_搜索_001_s1
+  name: '[372]搜索结果-清除搜索关键词'
+  module: 音乐_窗口_搜索
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+f
+  - action: keyboard_type
+    text: test
+  - action: keyboard_press
+    key: Enter
+  - action: keyboard_press
+    key: Escape
+  - action: assert_element
+    selector:
+      name: TabArea
+      role: page tab list
+  annotation:
+    测试界面: 音乐-搜索
+    测试功能: '[372]搜索结果-清除搜索关键词'
+    case_id: case_1678819
+    case_name: '[372]搜索结果-清除搜索关键词'
+    AT元素引用:
+    - TabArea
+- id: suite_音乐_窗口_搜索_002_s1
+  name: '[150]搜索结果-歌曲页面播放所有'
+  module: 音乐_窗口_搜索
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+f
+  - action: keyboard_type
+    text: test
+  - action: keyboard_press
+    key: Enter
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-搜索
+    测试功能: '[150]搜索结果-歌曲页面播放所有'
+    case_id: case_1678815
+    case_name: '[150]搜索结果-歌曲页面播放所有'
+    AT元素引用:
+    - Play All
+    - PlaylistDelegate
+- id: suite_音乐_窗口_搜索_003_s1
+  name: '[219][smoke][acp1]搜索结果-歌曲页面展示'
+  module: 音乐_窗口_搜索
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+f
+  - action: keyboard_type
+    text: test
+  - action: keyboard_press
+    key: Enter
+  - action: assert_element
+    selector:
+      name: Play All
+      role: push button
+  annotation:
+    测试界面: 音乐-搜索
+    测试功能: '[219][smoke][acp1]搜索结果-歌曲页面展示'
+    case_id: case_1678781
+    case_name: '[219][smoke][acp1]搜索结果-歌曲页面展示'
+    AT元素引用:
+    - Play All
+- id: suite_音乐_窗口_搜索_004_s1
+  name: 搜索-搜索列表结果长度限制
+  module: 音乐_窗口_搜索
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+f
+  - action: keyboard_type
+    text: test
+  - action: assert_element
+    selector:
+      name: ItemDelegate_2
+      role: list item
+  annotation:
+    测试界面: 音乐-搜索
+    测试功能: 搜索-搜索列表结果长度限制
+    case_id: case_1678775
+    case_name: 搜索-搜索列表结果长度限制
+    AT元素引用:
+    - ItemDelegate_2
+- id: suite_音乐_窗口_搜索_005_s1
+  name: 搜索-撤销搜索内容
+  module: 音乐_窗口_搜索
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+f
+  - action: keyboard_type
+    text: test
+  - action: mouse_right_click
+    selector:
+      name: ItemDelegate_2
+      role: list item
+  - action: assert_element
+    selector:
+      name: ItemDelegate_2
+      role: list item
+  annotation:
+    测试界面: 音乐-搜索
+    测试功能: 搜索-撤销搜索内容
+    case_id: case_1678773
+    case_name: 搜索-撤销搜索内容
+    AT元素引用:
+    - ItemDelegate_2
+- id: suite_音乐_窗口_演唱者_001_s1
+  name: '[124]演唱者-暂停时删除当前演唱者的所有歌曲'
+  module: 音乐_窗口_演唱者
+  steps:
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: keyboard_hot_key
+    key: ctrl+a
+  - action: keyboard_press
+    key: Delete
+  - action: assert_element
+    selector:
+      name: MusicSingerGridItem_2
+      role: list item
+  annotation:
+    测试界面: 音乐-演唱者
+    测试功能: '[124]演唱者-暂停时删除当前演唱者的所有歌曲'
+    case_id: case_1678093
+    case_name: '[124]演唱者-暂停时删除当前演唱者的所有歌曲'
+    AT元素引用:
+    - Play All
+    - MusicSingerGridItem_2
+- id: suite_音乐_窗口_演唱者_002_s1
+  name: 演唱者-演唱者名称排序
+  module: 音乐_窗口_演唱者
+  steps:
+  - action: mouse_click
+    selector:
+      name: SortBtn
+      role: push button
+  - action: dtk_context_menu
+    selector:
+      name: SortBtn
+    items:
+    - title
+  - action: assert_element
+    selector:
+      name: MusicSingerGridItem_2
+      role: list item
+  annotation:
+    测试界面: 音乐-演唱者
+    测试功能: 演唱者-演唱者名称排序
+    case_id: case_1678065
+    case_name: 演唱者-演唱者名称排序
+    AT元素引用:
+    - SortBtn
+    - MusicSingerGridItem_2
+- id: suite_音乐_窗口_演唱者_003_s1
+  name: '[180][smoke][acp1]演唱者-详情页面返回按钮'
+  module: 音乐_窗口_演唱者
+  steps:
+  - action: mouse_click
+    selector:
+      name: SublistDelegate
+      role: push button
+  - action: assert_element
+    selector:
+      name: Artists
+      role: push button
+  annotation:
+    测试界面: 音乐-演唱者
+    测试功能: '[180][smoke][acp1]演唱者-详情页面返回按钮'
+    case_id: case_1678051
+    case_name: '[180][smoke][acp1]演唱者-详情页面返回按钮'
+    AT元素引用:
+    - SublistDelegate
+    - Artists
+- id: suite_音乐_适配_键盘交互_001_s1
+  name: 快捷键-下一首Ctrl+Right
+  module: 音乐_适配_键盘交互
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+right
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-键盘交互
+    测试功能: 快捷键-下一首Ctrl+Right
+    case_id: case_1676927
+    case_name: 快捷键-下一首Ctrl+Right
+    AT元素引用:
+    - ItemD
+- id: suite_音乐_适配_键盘交互_006_s1
+  name: '[163]快捷键-重命名歌单F2'
+  module: 音乐_适配_键盘交互
+  steps:
+  - action: keyboard_press
+    key: F2
+  - action: assert_element
+    selector:
+      name: SidebarItem
+      role: list item
+  annotation:
+    测试界面: 音乐-键盘交互
+    测试功能: '[163]快捷键-重命名歌单F2'
+    case_id: case_1676917
+    case_name: '[163]快捷键-重命名歌单F2'
+    AT元素引用:
+    - SidebarItem
+- id: suite_音乐_音乐格式_003_s1
+  name: '[318][core][acp1]格式支持-ac3'
+  module: 音乐_音乐格式
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.ac3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-音乐格式
+    测试功能: '[318][core][acp1]格式支持-ac3'
+    case_id: case_1676601
+    case_name: '[318][core][acp1]格式支持-ac3'
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - ItemD
+- id: suite_音乐_003
+  name: 【玲珑】【音乐】卸载指定版本的玲珑应用
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】卸载指定版本的玲珑应用
+    case_id: case_1798249
+    case_name: 【玲珑】【音乐】卸载指定版本的玲珑应用
+    AT元素引用: []
+- id: suite_音乐_004
+  name: 【玲珑】【音乐】卸载玲珑应用
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】卸载玲珑应用
+    case_id: case_1798247
+    case_name: 【玲珑】【音乐】卸载玲珑应用
+    AT元素引用: []
+- id: suite_音乐_005
+  name: 【玲珑】【音乐】杀掉玲珑应用运行进程
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】杀掉玲珑应用运行进程
+    case_id: case_1798243
+    case_name: 【玲珑】【音乐】杀掉玲珑应用运行进程
+    AT元素引用: []
+- id: suite_音乐_006
+  name: 【玲珑】【音乐】检查玲珑应用运行情况
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】检查玲珑应用运行情况
+    case_id: case_1798241
+    case_name: 【玲珑】【音乐】检查玲珑应用运行情况
+    AT元素引用: []
+- id: suite_音乐_007
+  name: 【玲珑】【音乐】进入容器内部
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】进入容器内部
+    case_id: case_1798239
+    case_name: 【玲珑】【音乐】进入容器内部
+    AT元素引用: []
+- id: suite_音乐_008
+  name: 【玲珑】【音乐】更新玲珑应用指定版本
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】更新玲珑应用指定版本
+    case_id: case_1798237
+    case_name: 【玲珑】【音乐】更新玲珑应用指定版本
+    AT元素引用: []
+- id: suite_音乐_009
+  name: 【玲珑】【音乐】更新玲珑应用
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】更新玲珑应用
+    case_id: case_1798235
+    case_name: 【玲珑】【音乐】更新玲珑应用
+    AT元素引用: []
+- id: suite_音乐_010
+  name: 【玲珑】【音乐】音乐基本功能验证
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】音乐基本功能验证
+    case_id: case_1798233
+    case_name: 【玲珑】【音乐】音乐基本功能验证
+    AT元素引用: []
+- id: suite_音乐_011
+  name: 【玲珑】【音乐】运行玲珑应用
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】运行玲珑应用
+    case_id: case_1798229
+    case_name: 【玲珑】【音乐】运行玲珑应用
+    AT元素引用: []
+- id: suite_音乐_012
+  name: 【玲珑】【音乐】安装玲珑应用
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】安装玲珑应用
+    case_id: case_1798225
+    case_name: 【玲珑】【音乐】安装玲珑应用
+    AT元素引用: []
+- id: suite_音乐_013
+  name: 【玲珑】【音乐】仓库玲珑应用信息
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】仓库玲珑应用信息
+    case_id: case_1798223
+    case_name: 【玲珑】【音乐】仓库玲珑应用信息
+    AT元素引用: []
+- id: suite_音乐_014
+  name: 【玲珑】【音乐】查看玲珑应用信息
+  module: 音乐
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 【玲珑】【音乐】查看玲珑应用信息
+    case_id: case_1798221
+    case_name: 【玲珑】【音乐】查看玲珑应用信息
+    AT元素引用: []
+- id: suite_音乐_ai自然语言支持_001
+  name: 【入口】通过UOS AI能够成功打开音乐
+  module: 音乐_ai自然语言支持
+  status: unsupported
+  reason: 依赖UOS AI外部应用，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-ai自然语言支持
+    测试功能: 【入口】通过UOS AI能够成功打开音乐
+    case_id: case_1678991
+    case_name: 【入口】通过UOS AI能够成功打开音乐
+    AT元素引用: []
+- id: suite_音乐_ai自然语言支持_002
+  name: 【UOS AI调起音乐】验证本地存在适配文件，录入完整的歌手名通过UOS AI能打开音乐并播放歌曲
+  module: 音乐_ai自然语言支持
+  status: unsupported
+  reason: 依赖UOS AI外部应用，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-ai自然语言支持
+    测试功能: 【UOS AI调起音乐】验证本地存在适配文件，录入完整的歌手名通过UOS AI能打开音乐并播放歌曲
+    case_id: case_1678983
+    case_name: 【UOS AI调起音乐】验证本地存在适配文件，录入完整的歌手名通过UOS AI能打开音乐并播放歌曲
+    AT元素引用: []
+- id: suite_音乐_ai自然语言支持_003
+  name: 【UOS AI控制音乐】验证通过UOS AI录入“暂停”控制音乐中歌曲的暂停操作
+  module: 音乐_ai自然语言支持
+  status: unsupported
+  reason: 依赖UOS AI外部应用，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-ai自然语言支持
+    测试功能: 【UOS AI控制音乐】验证通过UOS AI录入“暂停”控制音乐中歌曲的暂停操作
+    case_id: case_1678955
+    case_name: 【UOS AI控制音乐】验证通过UOS AI录入“暂停”控制音乐中歌曲的暂停操作
+    AT元素引用: []
+- id: suite_音乐_ai自然语言支持_004
+  name: 【UOS AI控制音乐】验证播放列表存在上一首歌曲，通过UOS AI录入“上一首”控制音乐中歌曲的播放
+  module: 音乐_ai自然语言支持
+  status: unsupported
+  reason: 依赖UOS AI外部应用，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-ai自然语言支持
+    测试功能: 【UOS AI控制音乐】验证播放列表存在上一首歌曲，通过UOS AI录入“上一首”控制音乐中歌曲的播放
+    case_id: case_1678953
+    case_name: 【UOS AI控制音乐】验证播放列表存在上一首歌曲，通过UOS AI录入“上一首”控制音乐中歌曲的播放
+    AT元素引用: []
+- id: suite_音乐_ai自然语言支持_005
+  name: 【UOS AI控制音乐】验证播放列表存在下一首歌曲，通过UOS AI录入“下一首”控制音乐中歌曲的播放
+  module: 音乐_ai自然语言支持
+  status: unsupported
+  reason: 依赖UOS AI外部应用，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-ai自然语言支持
+    测试功能: 【UOS AI控制音乐】验证播放列表存在下一首歌曲，通过UOS AI录入“下一首”控制音乐中歌曲的播放
+    case_id: case_1678949
+    case_name: 【UOS AI控制音乐】验证播放列表存在下一首歌曲，通过UOS AI录入“下一首”控制音乐中歌曲的播放
+    AT元素引用: []
+- id: suite_音乐_ai自然语言支持_006
+  name: 【UOS AI控制音乐】验证通过UOS AI录入“随机播放”设置歌曲的播放模式
+  module: 音乐_ai自然语言支持
+  status: unsupported
+  reason: 依赖UOS AI外部应用，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-ai自然语言支持
+    测试功能: 【UOS AI控制音乐】验证通过UOS AI录入“随机播放”设置歌曲的播放模式
+    case_id: case_1678937
+    case_name: 【UOS AI控制音乐】验证通过UOS AI录入“随机播放”设置歌曲的播放模式
+    AT元素引用: []
+- id: suite_音乐_bug转用例_001
+  name: 【bug转用例】双击U盘中的音乐文件冷启动音乐播放器
+  module: 音乐_bug转用例
+  status: unsupported
+  reason: 性能基准测试，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-bug转用例
+    测试功能: 【bug转用例】双击U盘中的音乐文件冷启动音乐播放器
+    case_id: case_1678917
+    case_name: 【bug转用例】双击U盘中的音乐文件冷启动音乐播放器
+    AT元素引用: []
+- id: suite_音乐_商业定制_中孚定制xwininfo_001
+  name: 中孚-检查音乐xwininfo展示路径情况
+  module: 音乐_商业定制_中孚定制xwininfo
+  status: unsupported
+  reason: 需要外部硬件设备(USB/CD)，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-中孚定制xwininfo
+    测试功能: 中孚-检查音乐xwininfo展示路径情况
+    case_id: case_1677045
+    case_name: 中孚-检查音乐xwininfo展示路径情况
+    AT元素引用: []
+- id: suite_音乐_四性_安全_001
+  name: 【音乐安全性】播放音乐静置场景内存泄漏监测
+  module: 音乐_四性_安全
+  status: unsupported
+  reason: 内存泄漏监测，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-安全
+    测试功能: 【音乐安全性】播放音乐静置场景内存泄漏监测
+    case_id: case_1919815
+    case_name: 【音乐安全性】播放音乐静置场景内存泄漏监测
+    AT元素引用: []
+- id: suite_音乐_四性_性能_001
+  name: 性能-音乐热启动
+  module: 音乐_四性_性能
+  status: unsupported
+  reason: 性能基准测试，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-性能
+    测试功能: 性能-音乐热启动
+    case_id: case_1676823
+    case_name: 性能-音乐热启动
+    AT元素引用: []
+- id: suite_音乐_四性_性能_002
+  name: 性能-音乐冷启动
+  module: 音乐_四性_性能
+  status: unsupported
+  reason: 性能基准测试，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-性能
+    测试功能: 性能-音乐冷启动
+    case_id: case_1676821
+    case_name: 性能-音乐冷启动
+    AT元素引用: []
+- id: suite_音乐_四性_性能_003
+  name: 性能-循环播放音乐12h
+  module: 音乐_四性_性能
+  status: unsupported
+  reason: 性能基准测试，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-性能
+    测试功能: 性能-循环播放音乐12h
+    case_id: case_1676817
+    case_name: 性能-循环播放音乐12h
+    AT元素引用: []
+- id: suite_音乐_外部交互_系统事件响应机制_001
+  name: '[core]锁屏-播放歌曲时待机后唤醒'
+  module: 音乐_外部交互_系统事件响应机制
+  status: unsupported
+  reason: 需要锁屏/待机/休眠等系统级操作，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-系统事件响应机制
+    测试功能: '[core]锁屏-播放歌曲时待机后唤醒'
+    case_id: case_1676617
+    case_name: '[core]锁屏-播放歌曲时待机后唤醒'
+    AT元素引用: []
+- id: suite_音乐_外部交互_系统事件响应机制_002
+  name: '[core]锁屏-播放歌曲时休眠后唤醒'
+  module: 音乐_外部交互_系统事件响应机制
+  status: unsupported
+  reason: 需要锁屏/待机/休眠等系统级操作，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-系统事件响应机制
+    测试功能: '[core]锁屏-播放歌曲时休眠后唤醒'
+    case_id: case_1676615
+    case_name: '[core]锁屏-播放歌曲时休眠后唤醒'
+    AT元素引用: []
+- id: suite_音乐_外部交互_锁屏界面_001
+  name: '[core]锁屏-切换上一首歌曲'
+  module: 音乐_外部交互_锁屏界面
+  status: unsupported
+  reason: 需要锁屏/待机/休眠等系统级操作，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-锁屏界面
+    测试功能: '[core]锁屏-切换上一首歌曲'
+    case_id: case_1676629
+    case_name: '[core]锁屏-切换上一首歌曲'
+    AT元素引用: []
+- id: suite_音乐_外部交互_锁屏界面_002
+  name: 锁屏-音乐控件检查
+  module: 音乐_外部交互_锁屏界面
+  status: unsupported
+  reason: 需要锁屏/待机/休眠等系统级操作，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-锁屏界面
+    测试功能: 锁屏-音乐控件检查
+    case_id: case_1676619
+    case_name: 锁屏-音乐控件检查
+    AT元素引用: []
+- id: suite_音乐_安装_卸载_001
+  name: 卸载-启动器卸载
+  module: 音乐_安装_卸载
+  status: unsupported
+  reason: 需要系统安装/卸载操作，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-卸载
+    测试功能: 卸载-启动器卸载
+    case_id: case_1678913
+    case_name: 卸载-启动器卸载
+    AT元素引用: []
+- id: suite_音乐_安装_卸载_002
+  name: 卸载-终端命令卸载
+  module: 音乐_安装_卸载
+  status: unsupported
+  reason: 需要系统安装/卸载操作，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-卸载
+    测试功能: 卸载-终端命令卸载
+    case_id: case_1678911
+    case_name: 卸载-终端命令卸载
+    AT元素引用: []
+- id: suite_音乐_打开_关闭_001
+  name: 【玲珑】【音乐】查看玲珑应用包含的文件
+  module: 音乐_打开_关闭
+  status: unsupported
+  reason: 需要linglong容器环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-关闭
+    测试功能: 【玲珑】【音乐】查看玲珑应用包含的文件
+    case_id: case_1798245
+    case_name: 【玲珑】【音乐】查看玲珑应用包含的文件
+    AT元素引用: []
+- id: suite_音乐_打开_关闭_003
+  name: 打开-应用商店启动
+  module: 音乐_打开_关闭
+  status: unsupported
+  reason: 需要应用商店环境，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-关闭
+    测试功能: 打开-应用商店启动
+    case_id: case_1677781
+    case_name: 打开-应用商店启动
+    AT元素引用: []
+- id: suite_音乐_用户场景_002
+  name: '[acp2][音乐]检查外设输出音频功能'
+  module: 音乐_用户场景
+  status: unsupported
+  reason: 需要外部音频设备，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-用户场景
+    测试功能: '[acp2][音乐]检查外设输出音频功能'
+    case_id: case_1676593
+    case_name: '[acp2][音乐]检查外设输出音频功能'
+    AT元素引用: []
+- id: suite_音乐_界面操作_工具栏_011
+  name: '[231][core][acp1]工具栏-切换列表播放'
+  module: 音乐_界面操作_工具栏
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[231][core][acp1]工具栏-切换列表播放'
+    case_id: case_1677355
+    case_name: '[231][core][acp1]工具栏-切换列表播放'
+    AT元素引用: []
+- id: suite_音乐_界面操作_工具栏_015
+  name: '[026][smoke][acp1]工具栏-收藏按钮收藏歌曲'
+  module: 音乐_界面操作_工具栏
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[026][smoke][acp1]工具栏-收藏按钮收藏歌曲'
+    case_id: case_1677339
+    case_name: '[026][smoke][acp1]工具栏-收藏按钮收藏歌曲'
+    AT元素引用: []
+- id: suite_音乐_界面操作_工具栏_016
+  name: 工具栏-播放歌曲时点击快进歌曲进度条
+  module: 音乐_界面操作_工具栏
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: 工具栏-播放歌曲时点击快进歌曲进度条
+    case_id: case_1677323
+    case_name: 工具栏-播放歌曲时点击快进歌曲进度条
+    AT元素引用: []
+- id: suite_音乐_界面操作_工具栏_017
+  name: '[smoke]工具栏-进度条状态检查'
+  module: 音乐_界面操作_工具栏
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[smoke]工具栏-进度条状态检查'
+    case_id: case_1677321
+    case_name: '[smoke]工具栏-进度条状态检查'
+    AT元素引用: []
+- id: suite_音乐_界面操作_工具栏_018
+  name: '[229][smoke][acp1]工具栏-播放音乐时点击上一首按钮'
+  module: 音乐_界面操作_工具栏
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[229][smoke][acp1]工具栏-播放音乐时点击上一首按钮'
+    case_id: case_1677309
+    case_name: '[229][smoke][acp1]工具栏-播放音乐时点击上一首按钮'
+    AT元素引用: []
+- id: suite_音乐_界面操作_歌曲导入_008
+  name: '[004][smoke][acp1]歌曲导入-初始界面添加歌曲路径'
+  module: 音乐_界面操作_歌曲导入
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-歌曲导入
+    测试功能: '[004][smoke][acp1]歌曲导入-初始界面添加歌曲路径'
+    case_id: case_1677617
+    case_name: '[004][smoke][acp1]歌曲导入-初始界面添加歌曲路径'
+    AT元素引用: []
+- id: suite_音乐_窗口_001
+  name: '[020][core][acp1]窗口-歌曲信息详情检查'
+  module: 音乐_窗口
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-窗口
+    测试功能: '[020][core][acp1]窗口-歌曲信息详情检查'
+    case_id: case_1678889
+    case_name: '[020][core][acp1]窗口-歌曲信息详情检查'
+    AT元素引用: []
+- id: suite_音乐_窗口_002
+  name: 窗口-移动歌曲信息弹窗
+  module: 音乐_窗口
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-窗口
+    测试功能: 窗口-移动歌曲信息弹窗
+    case_id: case_1678883
+    case_name: 窗口-移动歌曲信息弹窗
+    AT元素引用: []
+- id: suite_音乐_窗口_003
+  name: '[285][core][acp1]窗口-关闭歌曲信息弹窗'
+  module: 音乐_窗口
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-窗口
+    测试功能: '[285][core][acp1]窗口-关闭歌曲信息弹窗'
+    case_id: case_1678881
+    case_name: '[285][core][acp1]窗口-关闭歌曲信息弹窗'
+    AT元素引用: []
+- id: suite_音乐_窗口_004
+  name: '[371]窗口-初始界面主菜单检查'
+  module: 音乐_窗口
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-窗口
+    测试功能: '[371]窗口-初始界面主菜单检查'
+    case_id: case_1678879
+    case_name: '[371]窗口-初始界面主菜单检查'
+    AT元素引用: []
+- id: suite_音乐_适配_001
+  name: 埋点-音乐埋点检查
+  module: 音乐_适配
+  status: unsupported
+  reason: 埋点数据检查，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-适配
+    测试功能: 埋点-音乐埋点检查
+    case_id: case_1677043
+    case_name: 埋点-音乐埋点检查
+    AT元素引用: []
+- id: suite_音乐_适配_002
+  name: 适配-1.25缩放比下音乐界面UI检查
+  module: 音乐_适配
+  status: unsupported
+  reason: 缩放比UI检查，需要人工目视验证
+  steps: []
+  annotation:
+    测试界面: 音乐-适配
+    测试功能: 适配-1.25缩放比下音乐界面UI检查
+    case_id: case_1677041
+    case_name: 适配-1.25缩放比下音乐界面UI检查
+    AT元素引用: []
+- id: suite_音乐_适配_003
+  name: 可靠性-连续12H播放音乐
+  module: 音乐_适配
+  status: unsupported
+  reason: 长时间可靠性测试，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-适配
+    测试功能: 可靠性-连续12H播放音乐
+    case_id: case_1676991
+    case_name: 可靠性-连续12H播放音乐
+    AT元素引用: []
+- id: suite_音乐_适配_004
+  name: '[core]适配-断开外设音频输出暂停播放'
+  module: 音乐_适配
+  status: unsupported
+  reason: 需要外部音频设备，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-适配
+    测试功能: '[core]适配-断开外设音频输出暂停播放'
+    case_id: case_1676985
+    case_name: '[core]适配-断开外设音频输出暂停播放'
+    AT元素引用: []
+- id: suite_音乐_适配_触摸屏_001
+  name: 触摸屏-dock栏音乐插件
+  module: 音乐_适配_触摸屏
+  status: unsupported
+  reason: 需要触摸屏/触摸板硬件设备，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-触摸屏
+    测试功能: 触摸屏-dock栏音乐插件
+    case_id: case_1676951
+    case_name: 触摸屏-dock栏音乐插件
+    AT元素引用: []
+- id: suite_音乐_适配_触摸屏_002
+  name: 触摸屏-音量调节
+  module: 音乐_适配_触摸屏
+  status: unsupported
+  reason: 需要触摸屏/触摸板硬件设备，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-触摸屏
+    测试功能: 触摸屏-音量调节
+    case_id: case_1676939
+    case_name: 触摸屏-音量调节
+    AT元素引用: []
+- id: suite_音乐_适配_触摸屏_003
+  name: 触摸屏-歌词界面与进度条交互
+  module: 音乐_适配_触摸屏
+  status: unsupported
+  reason: 需要触摸屏/触摸板硬件设备，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-触摸屏
+    测试功能: 触摸屏-歌词界面与进度条交互
+    case_id: case_1676937
+    case_name: 触摸屏-歌词界面与进度条交互
+    AT元素引用: []
+- id: suite_音乐_适配_触摸屏_004
+  name: 触摸屏-拖拽添加音乐文件
+  module: 音乐_适配_触摸屏
+  status: unsupported
+  reason: 需要触摸屏/触摸板硬件设备，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-触摸屏
+    测试功能: 触摸屏-拖拽添加音乐文件
+    case_id: case_1676931
+    case_name: 触摸屏-拖拽添加音乐文件
+    AT元素引用: []
+- id: suite_音乐_适配_触摸板_001
+  name: 触摸板-播放队列
+  module: 音乐_适配_触摸板
+  status: unsupported
+  reason: 需要触摸屏/触摸板硬件设备，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-触摸板
+    测试功能: 触摸板-播放队列
+    case_id: case_1676971
+    case_name: 触摸板-播放队列
+    AT元素引用: []
+- id: suite_音乐_适配_触摸板_002
+  name: 触摸板—歌词控件检查
+  module: 音乐_适配_触摸板
+  status: unsupported
+  reason: 需要触摸屏/触摸板硬件设备，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-触摸板
+    测试功能: 触摸板—歌词控件检查
+    case_id: case_1676965
+    case_name: 触摸板—歌词控件检查
+    AT元素引用: []
+- id: suite_音乐_适配_触摸板_003
+  name: 触摸板—一指拖拽添加音乐文件
+  module: 音乐_适配_触摸板
+  status: unsupported
+  reason: 需要触摸屏/触摸板硬件设备，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-触摸板
+    测试功能: 触摸板—一指拖拽添加音乐文件
+    case_id: case_1676961
+    case_name: 触摸板—一指拖拽添加音乐文件
+    AT元素引用: []
+- id: suite_音乐_适配_键盘交互_005
+  name: '[164]快捷键-删除歌曲/歌单Delet'
+  module: 音乐_适配_键盘交互
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-键盘交互
+    测试功能: '[164]快捷键-删除歌曲/歌单Delet'
+    case_id: case_1676919
+    case_name: '[164]快捷键-删除歌曲/歌单Delet'
+    AT元素引用: []
+- id: suite_音乐_适配_键盘交互_007
+  name: '[162]快捷键-新建歌单Ctrl+Shift+'
+  module: 音乐_适配_键盘交互
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-键盘交互
+    测试功能: '[162]快捷键-新建歌单Ctrl+Shift+'
+    case_id: case_1676915
+    case_name: '[162]快捷键-新建歌单Ctrl+Shift+'
+    AT元素引用: []
+- id: suite_音乐_适配_键盘交互_010
+  name: '[158]捷键-音量减小Ctrl+Alt+Dow'
+  module: 音乐_适配_键盘交互
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-键盘交互
+    测试功能: '[158]捷键-音量减小Ctrl+Alt+Dow'
+    case_id: case_1676909
+    case_name: '[158]捷键-音量减小Ctrl+Alt+Dow'
+    AT元素引用: []
+- id: suite_音乐_适配_键盘交互_012
+  name: '[156]快捷键-播放/暂停Spac'
+  module: 音乐_适配_键盘交互
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-键盘交互
+    测试功能: '[156]快捷键-播放/暂停Spac'
+    case_id: case_1676905
+    case_name: '[156]快捷键-播放/暂停Spac'
+    AT元素引用: []
+- id: suite_音乐_音乐动效_001
+  name: 详情图/列表模式切换
+  module: 音乐_音乐动效
+  status: unsupported
+  reason: 动画效果验证，需要人工目视确认，无法通过AT-SPI断言
+  steps: []
+  annotation:
+    测试界面: 音乐-音乐动效
+    测试功能: 详情图/列表模式切换
+    case_id: case_1695449
+    case_name: 详情图/列表模式切换
+    AT元素引用: []
+- id: suite_音乐_音乐动效_002
+  name: 专辑/艺人打开二级页面
+  module: 音乐_音乐动效
+  status: unsupported
+  reason: 动画效果验证，需要人工目视确认，无法通过AT-SPI断言
+  steps: []
+  annotation:
+    测试界面: 音乐-音乐动效
+    测试功能: 专辑/艺人打开二级页面
+    case_id: case_1695447
+    case_name: 专辑/艺人打开二级页面
+    AT元素引用: []
+- id: suite_音乐_音乐动效_003
+  name: 专辑详情页鼠标移出
+  module: 音乐_音乐动效
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-音乐动效
+    测试功能: 专辑详情页鼠标移出
+    case_id: case_1695445
+    case_name: 专辑详情页鼠标移出
+    AT元素引用: []
+- id: suite_音乐_音乐动效_004
+  name: 专辑详情页悬浮
+  module: 音乐_音乐动效
+  status: unsupported
+  reason: 动画效果验证，需要人工目视确认，无法通过AT-SPI断言
+  steps: []
+  annotation:
+    测试界面: 音乐-音乐动效
+    测试功能: 专辑详情页悬浮
+    case_id: case_1695443
+    case_name: 专辑详情页悬浮
+    AT元素引用: []
+- id: suite_音乐_音乐动效_005
+  name: 歌词展开收起
+  module: 音乐_音乐动效
+  status: unsupported
+  reason: 动画效果验证，需要人工目视确认，无法通过AT-SPI断言
+  steps: []
+  annotation:
+    测试界面: 音乐-音乐动效
+    测试功能: 歌词展开收起
+    case_id: case_1695441
+    case_name: 歌词展开收起
+    AT元素引用: []
+- id: suite_音乐_音乐格式_001
+  name: 格式支持-CD歌单与所有音乐交互
+  module: 音乐_音乐格式
+  status: unsupported
+  reason: 需要外部硬件设备(USB/CD)，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-音乐格式
+    测试功能: 格式支持-CD歌单与所有音乐交互
+    case_id: case_1676611
+    case_name: 格式支持-CD歌单与所有音乐交互
+    AT元素引用: []
+- id: suite_音乐_音乐格式_002
+  name: '[core]格式支持-CD歌单播放'
+  module: 音乐_音乐格式
+  status: unsupported
+  reason: 需要外部硬件设备(USB/CD)，无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-音乐格式
+    测试功能: '[core]格式支持-CD歌单播放'
+    case_id: case_1676607
+    case_name: '[core]格式支持-CD歌单播放'
+    AT元素引用: []
+- id: suite_音乐_音乐格式_004
+  name: '[318][core][acp1]格式支持-ap'
+  module: 音乐_音乐格式
+  status: unsupported
+  reason: 无法通过AT-SPI自动化
+  steps: []
+  annotation:
+    测试界面: 音乐-音乐格式
+    测试功能: '[318][core][acp1]格式支持-ap'
+    case_id: case_1676599
+    case_name: '[318][core][acp1]格式支持-ap'
+    AT元素引用: []

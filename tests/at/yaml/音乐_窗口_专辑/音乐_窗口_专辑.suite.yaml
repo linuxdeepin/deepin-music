@@ -1,0 +1,31 @@
+name: 音乐_窗口_专辑_suite
+app: deepin-music
+module: 音乐_窗口_专辑
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_窗口_专辑_001_s1
+  name: '[186][smoke][acp1]专辑-详情页面返回按钮'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: SublistDelegate
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: Albums
+      role: push button
+  annotation:
+    测试界面: 音乐-专辑
+    测试功能: '[186][smoke][acp1]专辑-详情页面返回按钮'
+    case_id: case_1677873
+    case_name: '[186][smoke][acp1]专辑-详情页面返回按钮'
+    AT元素引用:
+    - SublistDelegate
+    - Albums
+teardown:
+- action: session_stop

@@ -1,0 +1,105 @@
+name: 音乐_窗口_我的歌单_suite
+app: deepin-music
+module: 音乐_窗口_我的歌单
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_窗口_我的歌单_001_s1
+  name: 新建歌单时，输入html标签能正常显示
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Empty
+      role: push button
+  - action: keyboard_type
+    text: test
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-我的歌单
+    测试功能: 新建歌单时，输入html标签能正常显示
+    case_id: case_1678697
+    case_name: 新建歌单时，输入html标签能正常显示
+    AT元素引用:
+    - Empty
+    - PlaylistDelegate
+- id: suite_音乐_窗口_我的歌单_002_s1
+  name: 排序-我的歌单-拖拽歌单至音乐库列表
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Empty
+      role: push button
+  - action: mouse_drag
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-我的歌单
+    测试功能: 排序-我的歌单-拖拽歌单至音乐库列表
+    case_id: case_1678653
+    case_name: 排序-我的歌单-拖拽歌单至音乐库列表
+    AT元素引用:
+    - Empty
+    - PlaylistDelegate
+- id: suite_音乐_窗口_我的歌单_004_s1
+  name: '[207][smoke][acp1]我的歌单-播放所有按钮播放'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: SidebarItem
+      role: list item
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-我的歌单
+    测试功能: '[207][smoke][acp1]我的歌单-播放所有按钮播放'
+    case_id: case_1678563
+    case_name: '[207][smoke][acp1]我的歌单-播放所有按钮播放'
+    AT元素引用:
+    - SidebarItem
+    - Play All
+    - PlaylistDelegate
+- id: suite_音乐_窗口_我的歌单_006_s1
+  name: '[205][smoke][acp1]我的歌单-新建按钮增加歌单'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Empty
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-我的歌单
+    测试功能: '[205][smoke][acp1]我的歌单-新建按钮增加歌单'
+    case_id: case_1678541
+    case_name: '[205][smoke][acp1]我的歌单-新建按钮增加歌单'
+    AT元素引用:
+    - Empty
+    - PlaylistDelegate
+teardown:
+- action: session_stop

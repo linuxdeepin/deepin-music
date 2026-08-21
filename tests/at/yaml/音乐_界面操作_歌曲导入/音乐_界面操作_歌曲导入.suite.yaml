@@ -1,0 +1,33 @@
+name: 音乐_界面操作_歌曲导入_suite
+app: deepin-music
+module: 音乐_界面操作_歌曲导入
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_界面操作_歌曲导入_001_s1
+  name: '[314][core][acp1]歌曲导入-自定义歌单页面拖拽添加音乐目录'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-歌曲导入
+    测试功能: '[314][core][acp1]歌曲导入-自定义歌单页面拖拽添加音乐目录'
+    case_id: case_1677709
+    case_name: '[314][core][acp1]歌曲导入-自定义歌单页面拖拽添加音乐目录'
+    AT元素引用:
+    - Add Songs
+    - PlaylistDelegate
+teardown:
+- action: session_stop
