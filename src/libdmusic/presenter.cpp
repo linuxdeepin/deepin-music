@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -252,6 +251,7 @@ Presenter::~Presenter()
     }
 }
 
+#ifdef Q_OS_LINUX
 void Presenter::setMprisPlayer(const QString &serviceName, const QString &desktopEntry, const QString &identity)
 {
     qCDebug(dmMusic) << "Setting MPRIS player - Service:" << serviceName
@@ -259,6 +259,7 @@ void Presenter::setMprisPlayer(const QString &serviceName, const QString &deskto
                      << "Identity:" << identity;
     m_data->m_playerEngine->setMprisPlayer(serviceName, desktopEntry, identity);
 }
+#endif
 
 void Presenter::prepareStartupAssets()
 {
@@ -275,6 +276,11 @@ QStringList Presenter::supportedSuffixList() const
     }
     qCDebug(dmMusic) << "Supported suffixes:" << suffixList;
     return suffixList;
+}
+
+PlayerEngine* Presenter::playerEngine() const
+{
+    return m_data->m_playerEngine;
 }
 
 QColor Presenter::getMainColorByKmeans()

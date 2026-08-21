@@ -79,5 +79,10 @@ target_link_libraries(${CMD_NAME} Qt6::Core Qt6::Multimedia Qt6::DBus Qt6::Sql Q
 
 # qt5_use_modules(${CMD_NAME} )
 
+# Windows SMTC support
+if(WIN32 AND NOT MSVC)
+    target_link_libraries(${CMD_NAME} runtimeobject ole32 user32 propsys shell32)
+endif()
+
 include(GNUInstallDirs)
 install(TARGETS ${CMD_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
