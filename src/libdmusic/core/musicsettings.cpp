@@ -58,16 +58,7 @@ void MusicSettings::ensureDefaultCover()
 {
     auto coverPath = DmGlobal::cachePath() + "/images/default_cover.png";
     if (!QFile::exists(coverPath)) {
-        QDir imageDir(DmGlobal::cachePath() + "/images");
-        if (!imageDir.exists()) {
-            qCDebug(dmMusic) << "Creating images directory";
-            bool isExists = imageDir.cdUp();
-            isExists &= imageDir.mkdir("images");
-            isExists &= imageDir.cd("images");
-            if (!isExists) {
-                qCWarning(dmMusic) << "Failed to create images directory";
-            }
-        }
+        QDir().mkpath(DmGlobal::cachePath() + "/images");
         qCDebug(dmMusic) << "Creating default cover image";
         QImage defaultImg(":/data/default_cover.png");
         defaultImg = defaultImg.scaled(430, 430, Qt::KeepAspectRatio, Qt::SmoothTransformation);
