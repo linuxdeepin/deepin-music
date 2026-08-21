@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -45,7 +45,7 @@ Rectangle {
         onDoubleClicked: {
             itemDoubleClicked(model);
         }
-        onClicked: {
+        onClicked: function(mouse) {
             if(mouse.button === Qt.RightButton){
                 albumMoreMenu.albumData = model
                 albumMoreMenu.popup();

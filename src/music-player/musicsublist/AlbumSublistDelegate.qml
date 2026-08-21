@@ -64,7 +64,7 @@ ItemDelegate {
                     // 生成拖拽图像
                     dragDelegate.grabToImage(function(result) {
                         parent.Drag.imageSource = result.url
-                    });
+                    }, Qt.size(dragDelegate.width, dragDelegate.height));
                     break;
                 }
             } else if (mouse.button ===  Qt.RightButton) {

@@ -406,11 +406,11 @@ Rectangle {
 
     Connections {
         target: artistMoreMenu
-        onViewArtistDatails: { itemDoubleClicked(artistData);}
+        function onViewArtistDatails(artistData) { itemDoubleClicked(artistData);}
     }
     Connections {
         target: albumMoreMenu
-        onViewAlbumDatails: { itemDoubleClicked(artistData);}
+        function onViewAlbumDatails(artistData) { itemDoubleClicked(artistData);}
     }
     Component.onCompleted: {
         updateSearchResultInfo(pattern, curIndex)

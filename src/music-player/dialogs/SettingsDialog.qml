@@ -29,6 +29,9 @@ Settings.SettingsDialog {
             x = (Screen.width - width) / 2
             y = (Screen.height - height) / 2
         }
+        if (!visible) {
+            Presenter.syncToSettings()
+        }
     }
 
     groups: [  // 创建配置组，管理配置子组和Options
@@ -62,7 +65,6 @@ Settings.SettingsDialog {
                         name: qsTr("Remember playback position on exit")
                         Settings.CheckBox {}
                         onValueChanged: {
-//                            console.log("onValueChanged rememberProgress.........." + value)
                             Presenter.setValueToSettings("base.play.remember_progress", value)
                         }
                         Component.onCompleted: {
@@ -462,7 +464,7 @@ Settings.SettingsDialog {
             }
         }
 
-        onClosing: {
+        onClosing: function(close) {
             if (!replaceFlag) {
                 switch(curId) {
                 case 0:

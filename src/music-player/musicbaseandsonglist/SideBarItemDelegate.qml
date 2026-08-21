@@ -45,7 +45,7 @@ ItemDelegate {
         onPressed: {
             dragItem.grabToImage(function(result) {
                 parent.Drag.imageSource = result.url
-            })
+            }, Qt.size(dragItem.width, dragItem.height))
         }
         onReleased: {
             if(parent.Drag.supportedActions === Qt.CopyAction){
@@ -58,7 +58,7 @@ ItemDelegate {
         onDoubleClicked:{
             item.rename();
         }
-        onClicked: {
+        onClicked: function(mouse) {
             sideListView.currentIndex = index;
             item.forceActiveFocus();
             if(mouse.button === Qt.RightButton){

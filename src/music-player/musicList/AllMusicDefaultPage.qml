@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -157,14 +157,6 @@ Rectangle {
                     }
                 }
             }
-
-    //        Label {
-    //            anchors.top: favouriteLable.bottom; anchors.topMargin: 13
-    //            anchors.horizontalCenter: favmusicDefault.horizontalCenter;
-    //            color: Qt.rgba(0, 0, 0, 0.4)
-    //            text: qsTr("Click “ ♥ ” to add a song to My Favorites");
-    //            horizontalAlignment: Qt.AlignHCenter
-    //        }
         }
     }
 
@@ -207,15 +199,6 @@ Rectangle {
                     }
                 }
             }
-
-    //        Label {
-    //            id: songListLable
-    //            anchors.top: songListImage.bottom; anchors.topMargin: 40
-    //            anchors.horizontalCenter: songListDefault.horizontalCenter;
-    //            color: Qt.rgba(0, 0, 0, 0.4)
-    //            text: qsTr("No songs yet. Click “ ➕ ” to add songs to the playlist.")
-    //            horizontalAlignment: Qt.AlignHCenter
-    //        }
         }
     }
 

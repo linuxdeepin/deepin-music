@@ -67,7 +67,7 @@ ItemDelegate{
                     dragDelegate.updateImages(playlistView.dragGroup)
                     dragDelegate.grabToImage(function(result) {
                         parent.Drag.imageSource = result.url
-                    });
+                    }, Qt.size(dragDelegate.width, dragDelegate.height));
                     break;
                 }
             } else if (mouse.button ===  Qt.RightButton){

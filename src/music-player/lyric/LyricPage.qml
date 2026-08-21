@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -131,7 +131,7 @@ Rectangle{
                                         width: 174
                                         height: parent.height
                                         color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(255, 255, 255, 0.7) : Qt.rgba(0, 0, 0, 0.7)
-                                        text: qsTr("Artist") + (": %1".arg(artist.length == 0 ? "未知" : artist));
+                                        text: qsTr("Artist") + (": %1".arg(artist.length == 0 ? qsTr("Unknown") : artist));
                                         font: DTK.fontManager.t6
                                         elide: Text.ElideRight
                                     }
@@ -139,7 +139,7 @@ Rectangle{
                                         width: 174
                                         height: parent.height
                                         color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(255, 255, 255, 0.7) : Qt.rgba(0, 0, 0, 0.7)
-                                        text: qsTr("Album") + ": %1".arg(album.length == 0 ? "未知" : album);
+                                        text: qsTr("Album") + ": %1".arg(album.length == 0 ? qsTr("Unknown") : album);
                                         font: DTK.fontManager.t6
                                         elide: Text.ElideRight
                                     }

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -19,7 +19,7 @@ Rectangle{
     SublistTitleBackground{
         id: titleBackground
         width: titleWidth; height: titleHeight
-        imageUrl: "file:///" + titleRectangle.currentData.coverUrl
+        imageUrl: !titleRectangle.currentData ? "" : "file:///" + titleRectangle.currentData.coverUrl
         visible: titleButton1.visible
     }
     SublistTitleButton {
@@ -43,7 +43,7 @@ Rectangle{
                 height: parent.height
                 fillMode: Image.PreserveAspectCrop
                 clip: true
-                source: "file:///" + titleRectangle.currentData.coverUrl
+                source: !titleRectangle.currentData ? "" : "file:///" + titleRectangle.currentData.coverUrl
                 cache: false
             }
             FastBlur {
@@ -95,7 +95,7 @@ Rectangle{
             }
             Label {
                 id: buttonLable
-                text: currentData.name
+                text: !currentData ? "" : currentData.name
                 color: "#000000"
                 font: DTK.fontManager.t2
             }

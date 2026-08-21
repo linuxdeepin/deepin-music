@@ -314,18 +314,15 @@ ApplicationWindow {
             playlistLoader.item.x = width - playlistLoader.item.width - 10
     }
     onHeightChanged: {
-//        playlistLoader.item.y = height - playlistLoader.item.height - 80 - 50
         if (playlistLoader.item)
             playlistLoader.item.height = rootWindow.height - 90 - 50
     }
 
-    onClosing: {
+    onClosing: function(close) {
         var closeAction = Number(Presenter.valueFromSettings("base.close.close_action"))
         if (isNaN(closeAction))
             closeAction = 2
-        //console.log("closeAction: " + closeAction)
 
-        // Do not instantiate the confirmation dialog when the configured action is direct exit.
         if (closeAction === 1) {
             Presenter.forceExit()
             return
@@ -384,15 +381,12 @@ ApplicationWindow {
              }
         }
         function onSearchItemTriggered(text, type) {
-            //console.log("maindow:onSearchItemTriggered:" + text)
-            //searchResultDlgItemTriggered(text)
             contentWindow.onSearchResultItemChanged(text, type)
         }
     }
     Connections {
         target: globalVariant.closeConfirmDlgLoader.item
         function onMinimizeToSystemTray() {
-            //console.log("onMinimizeToSystemTray......................")
             close()
         }
     }

@@ -497,7 +497,7 @@ ToolFloatingPanel {
 
     onPlayModeChanged: {
         globalVariant.curPlayMode = playMode
-        if (mediaData.hash == "")
+        if (!mediaData || mediaData.hash == "")
             return
 
         updatePlayControlBtnStatus()

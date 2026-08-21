@@ -28,26 +28,6 @@ Rectangle{
         anchors.verticalCenter: parent.verticalCenter
         leftPadding: 10
         spacing: 10
-//        DciIcon {
-//            id: playall
-//            name: "headline_play_bottom"
-//            sourceSize: Qt.size(28, 28)
-//            ActionButton {
-//                id: palyBtn
-//                anchors.fill: playall
-//                icon.name: "list_play";
-//                width: 20; height: 20
-//                hoverEnabled: true
-//                ColorSelector.hovered: false
-//                ToolTip {
-//                    visible: palyBtn.hovered
-//                    text: qsTr("Play All")
-//                }
-//                onClicked: {
-//                    Presenter.playPlaylist(pageHash);
-//                }
-//            }
-//        }
         FloatingButton {
             id: palyBtn
             enabled: isPlayAll
