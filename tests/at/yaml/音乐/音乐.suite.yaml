@@ -1,0 +1,53 @@
+name: 音乐_suite
+app: deepin-music
+module: 音乐
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_001_s1
+  name: 主菜单-关于
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Settings
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 主菜单-关于
+    case_id: case_2003951
+    case_name: 主菜单-关于
+    AT元素引用:
+    - WindowTitlebar_Menu
+- id: suite_音乐_002_s1
+  name: 音乐_窗口菜单hover状态检查
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  annotation:
+    测试界面: 音乐主窗口
+    测试功能: 音乐_窗口菜单hover状态检查
+    case_id: case_1992957
+    case_name: 音乐_窗口菜单hover状态检查
+    AT元素引用:
+    - WindowTitlebar_Menu
+teardown:
+- action: session_stop

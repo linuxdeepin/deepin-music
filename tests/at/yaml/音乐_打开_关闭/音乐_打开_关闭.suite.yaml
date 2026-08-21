@@ -1,0 +1,26 @@
+name: 音乐_打开_关闭_suite
+app: deepin-music
+module: 音乐_打开_关闭
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_打开_关闭_002_s1
+  name: '[174][smoke][acp1]打开-右键菜单打开'
+  description: ''
+  steps: []
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  annotation:
+    测试界面: 音乐-关闭
+    测试功能: '[174][smoke][acp1]打开-右键菜单打开'
+    case_id: case_1677785
+    case_name: '[174][smoke][acp1]打开-右键菜单打开'
+    AT元素引用:
+    - WindowTitlebar_Menu
+teardown:
+- action: session_stop

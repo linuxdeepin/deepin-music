@@ -1,0 +1,38 @@
+name: 音乐_用户场景_suite
+app: deepin-music
+module: 音乐_用户场景
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_用户场景_001_s1
+  name: '[acp2][音乐]检查音乐播放功能'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-用户场景
+    测试功能: '[acp2][音乐]检查音乐播放功能'
+    case_id: case_1676597
+    case_name: '[acp2][音乐]检查音乐播放功能'
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - PlaylistDelegate
+teardown:
+- action: session_stop

@@ -1,0 +1,356 @@
+name: 音乐_窗口_所有音乐_suite
+app: deepin-music
+module: 音乐_窗口_所有音乐
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_窗口_所有音乐_001_s1
+  name: 播放队列同步-所有音乐-播放歌曲时从本地删除歌曲，播放队列同步减少歌曲
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: mouse_right_click
+    selector:
+      name: ItemD
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: ItemD
+    items:
+    - Delete from local disk
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: 播放队列同步-所有音乐-播放歌曲时从本地删除歌曲，播放队列同步减少歌曲
+    case_id: case_1678763
+    case_name: 播放队列同步-所有音乐-播放歌曲时从本地删除歌曲，播放队列同步减少歌曲
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - ItemD
+    - MoreMenu_2
+- id: suite_音乐_窗口_所有音乐_003_s1
+  name: 播放队列同步-所有音乐-播放歌曲时从文管拖拽歌曲增加歌曲，播放队列同步增加歌曲
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: 播放队列同步-所有音乐-播放歌曲时从文管拖拽歌曲增加歌曲，播放队列同步增加歌曲
+    case_id: case_1678759
+    case_name: 播放队列同步-所有音乐-播放歌曲时从文管拖拽歌曲增加歌曲，播放队列同步增加歌曲
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - ListBtn
+    - PlaylistDelegate
+- id: suite_音乐_窗口_所有音乐_004_s1
+  name: 播放队列同步-所有音乐-播放歌曲时从主菜单添加选项增加歌曲，播放队列同步增加歌曲
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Add music
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test2.mp3
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: 播放队列同步-所有音乐-播放歌曲时从主菜单添加选项增加歌曲，播放队列同步增加歌曲
+    case_id: case_1678757
+    case_name: 播放队列同步-所有音乐-播放歌曲时从主菜单添加选项增加歌曲，播放队列同步增加歌曲
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - WindowTitlebar_Menu
+    - Add music
+    - ItemD
+- id: suite_音乐_窗口_所有音乐_005_s1
+  name: '[322][core]播放队列同步-所有音乐-播放歌曲时从标题栏添加按钮增加歌曲，播放队列同步增加歌曲'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test2.mp3
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[322][core]播放队列同步-所有音乐-播放歌曲时从标题栏添加按钮增加歌曲，播放队列同步增加歌曲'
+    case_id: case_1678755
+    case_name: '[322][core]播放队列同步-所有音乐-播放歌曲时从标题栏添加按钮增加歌曲，播放队列同步增加歌曲'
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - ItemD
+- id: suite_音乐_窗口_所有音乐_006_s1
+  name: 播放队列同步-所有音乐-播放歌曲时从歌单右键菜单增加歌曲，播放队列同步增加歌曲
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: mouse_right_click
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: PlaylistDelegate
+    items:
+    - Add songs
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test2.mp3
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: 播放队列同步-所有音乐-播放歌曲时从歌单右键菜单增加歌曲，播放队列同步增加歌曲
+    case_id: case_1678753
+    case_name: 播放队列同步-所有音乐-播放歌曲时从歌单右键菜单增加歌曲，播放队列同步增加歌曲
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - PlaylistDelegate
+    - PlaylistMenu
+- id: suite_音乐_窗口_所有音乐_007_s1
+  name: '[191][smoke][acp1]所有音乐-歌曲数量展示情况'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: listTitle
+      role: push button
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[191][smoke][acp1]所有音乐-歌曲数量展示情况'
+    case_id: case_1678733
+    case_name: '[191][smoke][acp1]所有音乐-歌曲数量展示情况'
+    AT元素引用:
+    - Add Songs
+    - listTitle
+- id: suite_音乐_窗口_所有音乐_008_s1
+  name: '[374]所有音乐-翻页查看所有歌曲'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_scroll
+    selector:
+      name: ItemD
+      role: list item
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[374]所有音乐-翻页查看所有歌曲'
+    case_id: case_1678731
+    case_name: '[374]所有音乐-翻页查看所有歌曲'
+    AT元素引用:
+    - Add Songs
+    - ItemD
+- id: suite_音乐_窗口_所有音乐_009_s1
+  name: '[192][core][acp1]所有音乐-删除所有歌曲'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: keyboard_hot_key
+    key: ctrl+a
+  - action: keyboard_press
+    key: Delete
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[192][core][acp1]所有音乐-删除所有歌曲'
+    case_id: case_1678727
+    case_name: '[192][core][acp1]所有音乐-删除所有歌曲'
+    AT元素引用:
+    - Add Songs
+    - ItemD
+- id: suite_音乐_窗口_所有音乐_010_s1
+  name: 所有音乐-歌曲名称反向排序
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: SortBtn
+      role: push button
+  - action: dtk_context_menu
+    selector:
+      name: SortBtn
+    items:
+    - title
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: 所有音乐-歌曲名称反向排序
+    case_id: case_1678717
+    case_name: 所有音乐-歌曲名称反向排序
+    AT元素引用:
+    - SortBtn
+    - ItemD
+- id: suite_音乐_窗口_所有音乐_012_s1
+  name: '[373]所有音乐-Enter键播放歌曲'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: ItemD
+      role: list item
+  - action: keyboard_press
+    key: Enter
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[373]所有音乐-Enter键播放歌曲'
+    case_id: case_1678703
+    case_name: '[373]所有音乐-Enter键播放歌曲'
+    AT元素引用:
+    - Add Songs
+    - ItemD
+    - PlaylistDelegate
+- id: suite_音乐_窗口_所有音乐_013_s1
+  name: '[190][core][acp1]所有音乐-平铺视图下双击播放歌曲'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.mp3
+  - action: mouse_click
+    selector:
+      name: ItemD
+      role: list item
+    do: dblclick
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-所有音乐
+    测试功能: '[190][core][acp1]所有音乐-平铺视图下双击播放歌曲'
+    case_id: case_1678701
+    case_name: '[190][core][acp1]所有音乐-平铺视图下双击播放歌曲'
+    AT元素引用:
+    - Add Songs
+    - ItemD
+    - PlaylistDelegate
+teardown:
+- action: session_stop

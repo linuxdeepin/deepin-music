@@ -1,0 +1,162 @@
+name: 音乐_界面操作_工具栏_suite
+app: deepin-music
+module: 音乐_界面操作_工具栏
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_界面操作_工具栏_001_s1
+  name: 排序-播放队列-使用shift多选歌曲拖拽排序，歌曲按照所选顺序排序
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: push button
+  - action: mouse_drag
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: 排序-播放队列-使用shift多选歌曲拖拽排序，歌曲按照所选顺序排序
+    case_id: case_1677475
+    case_name: 排序-播放队列-使用shift多选歌曲拖拽排序，歌曲按照所选顺序排序
+    AT元素引用:
+    - ListBtn
+    - PlaylistDelegate
+- id: suite_音乐_界面操作_工具栏_003_s1
+  name: 排序-播放队列-拖动歌曲至播放队列上滚动区域向上翻页功能
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: push button
+  - action: mouse_scroll
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: 排序-播放队列-拖动歌曲至播放队列上滚动区域向上翻页功能
+    case_id: case_1677461
+    case_name: 排序-播放队列-拖动歌曲至播放队列上滚动区域向上翻页功能
+    AT元素引用:
+    - ListBtn
+    - PlaylistDelegate
+- id: suite_音乐_界面操作_工具栏_005_s1
+  name: '[351][core]工具栏-歌词与切换歌曲交互'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: LrcBtn
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: LrcBtn
+      role: push button
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[351][core]工具栏-歌词与切换歌曲交互'
+    case_id: case_1677413
+    case_name: '[351][core]工具栏-歌词与切换歌曲交互'
+    AT元素引用:
+    - LrcBtn
+- id: suite_音乐_界面操作_工具栏_006_s1
+  name: '[032][core][acp1]工具栏-播放歌曲时从播放队列移除当前歌曲'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: ListBtn
+      role: push button
+  - action: mouse_right_click
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: PlaylistDelegate
+    items:
+    - Delete
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistMenu
+      role: menu
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[032][core][acp1]工具栏-播放歌曲时从播放队列移除当前歌曲'
+    case_id: case_1677389
+    case_name: '[032][core][acp1]工具栏-播放歌曲时从播放队列移除当前歌曲'
+    AT元素引用:
+    - ListBtn
+    - PlaylistDelegate
+    - PlaylistMenu
+- id: suite_音乐_界面操作_工具栏_008_s1
+  name: '[238][core][acp1]工具栏-点击音量条静音按钮解除静'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: VolumeBtn
+      role: push button
+  - action: mouse_click
+    selector:
+      name: ContentSlider
+      role: slider
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ContentSlider
+      role: slider
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[238][core][acp1]工具栏-点击音量条静音按钮解除静'
+    case_id: case_1677369
+    case_name: '[238][core][acp1]工具栏-点击音量条静音按钮解除静'
+    AT元素引用:
+    - VolumeBtn
+    - ContentSlider
+- id: suite_音乐_界面操作_工具栏_009_s1
+  name: '[235][core][acp1]工具栏-拖拽放大音量条声'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: VolumeBtn
+      role: push button
+  - action: element_set_value
+    selector:
+      name: ContentSlider
+      role: slider
+    value: '50'
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ContentSlider
+      role: slider
+  annotation:
+    测试界面: 音乐-工具栏
+    测试功能: '[235][core][acp1]工具栏-拖拽放大音量条声'
+    case_id: case_1677363
+    case_name: '[235][core][acp1]工具栏-拖拽放大音量条声'
+    AT元素引用:
+    - VolumeBtn
+    - ContentSlider
+teardown:
+- action: session_stop

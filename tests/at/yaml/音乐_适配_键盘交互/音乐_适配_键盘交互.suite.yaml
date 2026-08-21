@@ -1,0 +1,46 @@
+name: 音乐_适配_键盘交互_suite
+app: deepin-music
+module: 音乐_适配_键盘交互
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_适配_键盘交互_001_s1
+  name: 快捷键-下一首Ctrl+Right
+  description: ''
+  steps:
+  - action: keyboard_hot_key
+    key: ctrl+right
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-键盘交互
+    测试功能: 快捷键-下一首Ctrl+Right
+    case_id: case_1676927
+    case_name: 快捷键-下一首Ctrl+Right
+    AT元素引用:
+    - ItemD
+- id: suite_音乐_适配_键盘交互_006_s1
+  name: '[163]快捷键-重命名歌单F2'
+  description: ''
+  steps:
+  - action: keyboard_press
+    key: F2
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SidebarItem
+      role: list item
+  annotation:
+    测试界面: 音乐-键盘交互
+    测试功能: '[163]快捷键-重命名歌单F2'
+    case_id: case_1676917
+    case_name: '[163]快捷键-重命名歌单F2'
+    AT元素引用:
+    - SidebarItem
+teardown:
+- action: session_stop
