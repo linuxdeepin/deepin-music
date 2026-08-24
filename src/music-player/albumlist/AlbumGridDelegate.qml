@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -121,10 +121,8 @@ Rectangle {
             }
             onHoveredChanged: {
                 if (hovered) {
-                    if (defaultY < 0) {
-                        var p = albumColumn.mapToItem(rootrectangle.parent, albumColumn.x, albumColumn.y)
-                        defaultY = p.y
-                    }
+                    var p = albumColumn.mapToItem(rootrectangle.parent, albumColumn.x, albumColumn.y)
+                    defaultY = p.y
                     albumHoverItemAnimator.start()
                 } else
                     albumExitItemAnimator.start()
