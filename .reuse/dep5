@@ -54,7 +54,7 @@ Copyright: None
 License: LGPL-3.0-or-later
 
 # translations
-Files: translations/*
+Files: translations/* deepin-music-dde-shell-plugin/translations/*
 Copyright: UnionTech Software Technology Co., Ltd.
 License: LGPL-3.0-or-later
 
