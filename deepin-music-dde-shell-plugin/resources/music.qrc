@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/music">
+        <file alias="MusicCard.qml">qml/MusicCard.qml</file>
+    </qresource>
+</RCC>

@@ -22,9 +22,6 @@ class MusicApplet : public QObject
     Q_PROPERTY(bool canGoPrevious READ canGoPrevious NOTIFY musicStateChanged FINAL)
     Q_PROPERTY(bool canGoNext READ canGoNext NOTIFY musicStateChanged FINAL)
     Q_PROPERTY(bool canTogglePlayback READ canTogglePlayback NOTIFY musicStateChanged FINAL)
-    // Changes when the system icon theme changes; QML appends it to image://theme
-    // URLs to bust QtQuick's image cache and force a reload from the new theme.
-    Q_PROPERTY(QString iconThemeKey READ iconThemeKey NOTIFY iconThemeKeyChanged FINAL)
 
 public:
     explicit MusicApplet(QObject *parent = nullptr);
@@ -39,7 +36,6 @@ public:
     bool canGoPrevious() const;
     bool canGoNext() const;
     bool canTogglePlayback() const;
-    QString iconThemeKey() const;
 
     Q_INVOKABLE void openMusicPlayer();
     Q_INVOKABLE void playPreviousTrack();
@@ -48,31 +44,24 @@ public:
 
 signals:
     void musicStateChanged();
-    void iconThemeKeyChanged();
 
 private slots:
     void refreshMusicState();
     void markStateDirty();
-    void onAppearancePropertiesChanged(const QString &interfaceName,
-                                       const QVariantMap &changedProperties,
-                                       const QStringList &invalidatedProperties);
 
 private:
     MusicProber *m_prober = nullptr;
 
     bool m_musicAvailable = false;
-    QString m_titleText = QStringLiteral("未检测到音乐");
-    QString m_subtitleText = QStringLiteral("打开播放器开始播放");
-    QString m_appName = QStringLiteral("音乐");
+    QString m_titleText;
+    QString m_subtitleText;
+    QString m_appName;
     QUrl m_artSource;
     bool m_musicPlaying = false;
     bool m_canGoPrevious = false;
     bool m_canGoNext = false;
     bool m_canTogglePlayback = false;
 
-    QString m_iconThemeKey;
-
     bool m_stateDirty = true;
-
     QTimer *m_debounceTimer = nullptr;
 };

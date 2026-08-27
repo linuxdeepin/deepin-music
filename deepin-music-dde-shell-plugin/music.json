@@ -1,0 +1,6 @@
+{
+    "api": "2.0.0",
+    "name": "deepin-music",
+    "version": "1.0.0",
+    "description": "Dock plugin for deepin-music playback status and controls"
+}

@@ -30,7 +30,8 @@ Build-Depends:
  libdtk6declarative-dev,
  qt6-5compat-dev,
  libsdl2-dev,
- libsdl1.2debian
+ libsdl1.2debian,
+ dde-tray-loader-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
@@ -57,4 +58,13 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  libsdl1.2debian
 Description: Music software for UOS
  Music is a local music player with beautiful design and simple functions.
+
+Package: deepin-music-dde-shell-plugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ deepin-music (=${binary:Version}),
+ dde-tray-loader
+Description: Dock plugin for deepin-music
+ V3 dock plugin that shows music playback status and controls
+ in the dde-dock quick panel and card surface.
 

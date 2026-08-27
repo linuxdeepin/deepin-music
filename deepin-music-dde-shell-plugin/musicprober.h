@@ -16,8 +16,8 @@ struct MusicSnapshot
     QString service;
     QString desktopEntry;
     QString appName;
-    QString title = QStringLiteral("未检测到音乐");
-    QString subtitle = QStringLiteral("打开播放器开始播放");
+    QString title;
+    QString subtitle;
     QUrl artSource;
     bool available = false;
     bool playing = false;
