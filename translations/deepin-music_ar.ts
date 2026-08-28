@@ -609,7 +609,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>تم حفظ المؤثرات الصوتية</translation>
     </message>
 </context>
 <context>
@@ -730,7 +730,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="384"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>تم حفظ المؤثرات الصوتية</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="395"/>
