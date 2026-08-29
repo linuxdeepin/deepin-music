@@ -259,8 +259,10 @@ Rectangle{
     }
 
     function positionChange(position, length) {
-        position = position + 500
+        // currentPosition 用于逐字高亮，必须使用原始播放位置；
+        // +500ms 偏移仅用于提前滚动当前行到视野中央
         currentPosition = position
+        var searchPosition = position + 500
         //二分法查找位置
         var lt,rt
         lt = 0
@@ -269,7 +271,7 @@ Rectangle{
             var mid = (lt + rt) >> 1
             var item =lrcModel.get(mid)
 
-            if (item["time"] > position)
+            if (item["time"] > searchPosition)
                 rt = mid
             else
                 lt = mid

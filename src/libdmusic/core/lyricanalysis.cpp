@@ -27,7 +27,8 @@ static qint64 parseTimeStamp(const QString &timeStr)
     qint64 time = t.msecsSinceStartOfDay();
     if (timeParts.size() > 1) {
         QString frac = timeParts[1];
-        if (frac.length() == 2) time += frac.toInt() * 10;      // 厘秒转毫秒
+        if (frac.length() == 1) time += frac.toInt() * 100;      // 十分之一秒转毫秒
+        else if (frac.length() == 2) time += frac.toInt() * 10;  // 厘秒转毫秒
         else if (frac.length() == 3) time += frac.toInt();       // 已经是毫秒
     }
     return time;
@@ -154,8 +155,8 @@ void LyricAnalysis::parseLyric(const QString &str)
     qCDebug(dmMusic) << "Parsing lyrics with length:" << str.length();
     auto lines = str.split("\n");
     QRegExp rx("\\[([^\\]]*)\\]\\s*(\\S.*\\S|\\S)\\s*$");
-    // 用于检测时间戳数量的正则（不含行尾锚点）
-    QRegExp timestampRx("\\[\\d{2}:\\d{2}\\.\\d{2,3}\\]");
+    // 用于检测时间戳数量的正则（不含行尾锚点），小数部分支持 1~3 位（旧格式存在一位小数如 [01:23.4]）
+    QRegExp timestampRx("\\[\\d{2}:\\d{2}\\.\\d{1,3}\\]");
     // 匹配逐字歌词中单个 [时间]文本 片段
     QRegExp wordRx("\\[([^\\]]+)\\]([^\\[]*)");
     QVector<QPair<qint64, QString>> tmp;
