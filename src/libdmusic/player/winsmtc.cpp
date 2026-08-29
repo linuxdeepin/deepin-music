@@ -114,14 +114,20 @@ void WinSMTC::ensureStartMenuShortcut()
     QDir().mkpath(shortcutDir);
     QString shortcutPath = shortcutDir + QStringLiteral("\\深度音乐.lnk");
 
-    CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    // Only pair CoUninitialize when we actually own the initialization
+    HRESULT coInit = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    if (FAILED(coInit) && coInit != RPC_E_CHANGED_MODE) {
+        qWarning() << "WinSMTC: CoInitializeEx failed:" << QString::number(coInit, 16);
+        return;
+    }
+    bool coOwned = SUCCEEDED(coInit);
 
     ComPtr<IShellLinkW> shellLink;
     HRESULT hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER,
                                   IID_PPV_ARGS(&shellLink));
     if (FAILED(hr)) {
         qDebug() << "WinSMTC: Failed to create IShellLink:" << QString::number(hr, 16);
-        CoUninitialize();
+        if (coOwned) CoUninitialize();
         return;
     }
 
@@ -161,7 +167,7 @@ void WinSMTC::ensureStartMenuShortcut()
         }
     }
 
-    CoUninitialize();
+    if (coOwned) CoUninitialize();
 }
 
 WinSMTC::WinSMTC(QObject *parent) : QObject(parent) {}
@@ -181,8 +187,10 @@ bool WinSMTC::initialize(HWND hwnd)
 
     HRESULT hr = RoInitialize(RO_INIT_SINGLETHREADED);
     if (hr == RPC_E_CHANGED_MODE) {
-        // COM already initialized, continue
-    } else if (FAILED(hr)) {
+        // COM already initialized in another mode, we don't own it
+    } else if (SUCCEEDED(hr)) {
+        m_roInitialized = true;
+    } else {
         qWarning() << "WinSMTC: RoInitialize failed:" << QString::number(hr, 16);
         return false;
     }
@@ -212,13 +220,13 @@ bool WinSMTC::initialize(HWND hwnd)
         qWarning() << "WinSMTC: Failed to get display updater";
     }
 
-    EventRegistrationToken token;
     ButtonDelegate *handler = new ButtonDelegate(this);
-    hr = m_smtc->add_ButtonPressed(handler, &token);
+    hr = m_smtc->add_ButtonPressed(handler, &m_buttonToken);
     handler->Release();
 
     if (FAILED(hr)) {
         qWarning() << "WinSMTC: Failed to add ButtonPressed handler:" << QString::number(hr, 16);
+        m_buttonToken.value = 0;
     }
 
     m_initialized = true;
@@ -230,11 +238,21 @@ void WinSMTC::shutdown()
     if (!m_initialized) return;
 
     if (m_smtc) {
+        // Unregister the ButtonPressed handler first to avoid use-after-free
+        // when the system dispatches a media key after this object is gone
+        if (m_buttonToken.value != 0) {
+            m_smtc->remove_ButtonPressed(m_buttonToken);
+            m_buttonToken.value = 0;
+        }
         m_smtc->put_IsEnabled(false);
         m_smtc.Reset();
     }
     m_updater.Reset();
     m_musicProps.Reset();
+    if (m_roInitialized) {
+        RoUninitialize();
+        m_roInitialized = false;
+    }
     m_initialized = false;
 }
 
@@ -293,9 +311,11 @@ void WinSMTC::updateMetadata(const QString &title, const QString &artist,
                                         reinterpret_cast<BYTE*>(imageData.data()));
                                     
                                     ComPtr<IAsyncOperation<unsigned int>> storeOp;
-                                    writer->StoreAsync(&storeOp);
-                                    if (storeOp) {
-                                        storeOp->GetResults(nullptr);
+                                    if (SUCCEEDED(writer->StoreAsync(&storeOp)) && storeOp) {
+                                        unsigned int written = 0;
+                                        if (FAILED(storeOp->GetResults(&written))) {
+                                            qWarning() << "WinSMTC: DataWriter StoreAsync failed";
+                                        }
                                     }
 
                                     memStream->Seek(0);

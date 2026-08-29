@@ -256,6 +256,12 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     logStartupStage("qml-components-created");
+
+    if (engine.rootObjects().isEmpty()) {
+        qCDebug(dmMusic) << "engine.rootObjects().isEmpty(), return -1";
+        return -1;
+    }
+
     engine.rootObjects()[0]->installEventFilter(&eventsFilter);
 #ifdef Q_OS_WIN
     if (auto *window = qobject_cast<QWindow*>(engine.rootObjects()[0])) {
@@ -263,11 +269,6 @@ int main(int argc, char *argv[])
         presenter->playerEngine()->setWinSMTC(reinterpret_cast<void*>(window->winId()));
     }
 #endif
-
-    if (engine.rootObjects().isEmpty()) {
-        qCDebug(dmMusic) << "engine.rootObjects().isEmpty(), return -1";
-        return -1;
-    }
 
     if (auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().first())) {
         const auto deferredUiTriggered = std::make_shared<bool>(false);

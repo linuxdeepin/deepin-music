@@ -12,6 +12,7 @@
 #include <windows.h>
 #include <wrl.h>
 #include <wrl/wrappers/corewrappers.h>
+#include <eventtoken.h>
 #include <windows.media.h>
 #include <systemmediatransportcontrolsinterop.h>
 
@@ -51,6 +52,8 @@ private:
     Microsoft::WRL::ComPtr<ABI::Windows::Media::ISystemMediaTransportControls> m_smtc;
     Microsoft::WRL::ComPtr<ABI::Windows::Media::ISystemMediaTransportControlsDisplayUpdater> m_updater;
     Microsoft::WRL::ComPtr<ABI::Windows::Media::IMusicDisplayProperties> m_musicProps;
+    EventRegistrationToken m_buttonToken{};
+    bool m_roInitialized = false;
     bool m_initialized = false;
 };
 

@@ -341,6 +341,7 @@ void PlayerEngine::setMprisPlayer(const QString &serviceName, const QString &des
 void PlayerEngine::setWinSMTC(void *hwnd)
 {
     if (!hwnd) return;
+    if (m_data->m_winSmtc) return;
 
     m_data->m_winSmtc = new WinSMTC(this);
 
@@ -358,11 +359,9 @@ void PlayerEngine::setWinSMTC(void *hwnd)
             if (isEmpty()) {
                 Q_EMIT playPlaylistRequested("all");
             } else {
-                if (!getMediaMeta().localPath.isEmpty() && !getMediaMeta().hash.isEmpty()) {
-                    play();
-                } else {
-                    playNextMeta(false);
-                }
+                // play() falls back to forcePlay() when the current meta has
+                // no localPath, so pressing Play always produces sound
+                play();
             }
         } else {
             pauseNow();
