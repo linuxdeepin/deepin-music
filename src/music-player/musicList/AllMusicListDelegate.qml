@@ -78,7 +78,6 @@ ItemDelegate{
                     }
                     hashList = list.join(",")
                     dragDelegate.grabToImage(function(result) {
-                        //result.saveToFile("test1.png")
                         parent.Drag.imageSource = result.url
                     }/*, Qt.size(dragDelegate.width * globalVariant.devicePixelRatio,
                                dragDelegate.height * globalVariant.devicePixelRatio)*/);
@@ -248,6 +247,7 @@ ItemDelegate{
                     elide: Text.ElideRight
                     text: title
                     anchors.verticalCenter: imagecell.verticalCenter
+                    verticalAlignment: Qt.AlignVCenter
                     palette.text: DTK.themeType === ApplicationHelper.DarkType ? "#B2F7F7F7" : "#000000"
                     color: checked ? palette.highlightedText :
                                      (imagecell.isCurPlay ? palette.highlight : palette.text)

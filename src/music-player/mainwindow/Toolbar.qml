@@ -164,9 +164,12 @@ ToolFloatingPanel {
             height: 40
             color: "transparent"
             anchors.verticalCenter: parent.verticalCenter
+            
             Column {
                 width: parent.width
-                Text{
+                anchors.verticalCenter: parent.verticalCenter
+
+                Text {
                     id: title
                     width: parent.width
                     color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.9) : Qt.rgba(0, 0, 0, 0.9)
@@ -178,10 +181,8 @@ ToolFloatingPanel {
                     id: artist
                     width: parent.width
                     text: artistStr
-                    font.pixelSize: 12
                     color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                     font {
-                        //family: "SourceHanSansSC, SourceHanSansSC-Normal"
                         pixelSize: 12
                         weight: Font.Medium
                     }
@@ -375,6 +376,7 @@ ToolFloatingPanel {
                             text: enabled ? currentTime : "0:00"
                             color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                             font: DTK.fontManager.t8
+                            verticalAlignment: Qt.AlignVCenter
                         }
                         Text {
                             id: totalTimeText
@@ -383,7 +385,7 @@ ToolFloatingPanel {
                             text: "/ " + (enabled ? totalTime : "0:00")
                             color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
                             font: DTK.fontManager.t8
-
+                            verticalAlignment: Qt.AlignVCenter
                         }
                     }
                 }
@@ -497,7 +499,7 @@ ToolFloatingPanel {
 
     onPlayModeChanged: {
         globalVariant.curPlayMode = playMode
-        if (mediaData.hash == "")
+        if (!mediaData || mediaData.hash == "")
             return
 
         updatePlayControlBtnStatus()

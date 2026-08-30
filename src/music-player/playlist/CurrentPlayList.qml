@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -161,14 +161,14 @@ CurrentFloatingPanel {
             model: listmodel
             delegate: CurrentPlayListDelegate {
                 id: playlistDelegate
-                width: 300
+                width: playlistView.width - 20
+                anchors.horizontalCenter: parent.horizontalCenter
                 height: 56
-                anchors.left: parent.left
-                anchors.leftMargin: 10
                 backgroundVisible: true
                 normalBackgroundVisible: index % 2 === 0
                 autoExclusive: false
             }
+            footer: Item { width: 1; height: 10 }
 
             DropArea {
                 property int lastDragIndex: 0
@@ -424,7 +424,7 @@ CurrentFloatingPanel {
 
     Connections {
         target: playlistHideAnimation
-        onStopped: {
+        function onStopped() {
             isPlaylistShow = false
         }
     }
