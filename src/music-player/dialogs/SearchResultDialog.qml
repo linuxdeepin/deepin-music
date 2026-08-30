@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,6 +18,10 @@ Popup {
     id: searchResultRect
     width: 360
     height: (songList == null ? 0 : songList.length + artistModel.count + albumModel.count) * itemHeight + 110
+    leftPadding: 8
+    rightPadding: 8
+    topPadding: 8
+    bottomPadding: 8
 
     Column {
         width: parent.width
@@ -64,6 +68,7 @@ Popup {
             id: itemRect
             width: parent.width
             height: itemHeight
+            radius: 6
             color: "#00000000"
             Row {
                 width: parent.width
@@ -101,6 +106,7 @@ Popup {
             id: itemRect
             width: parent.width
             height: itemHeight
+            radius: 6
             color: "#00000000"
             Row {
                 width: parent.width
@@ -133,7 +139,6 @@ Popup {
                     itemRect.color = "transparent"
                 }
                 onClicked: {
-//                    console.log(model.type)
                     var type = 0
 
                     if (model.type === "artist")

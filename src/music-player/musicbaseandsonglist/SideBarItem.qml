@@ -219,7 +219,6 @@ ColumnLayout {
             Connections {
                 target: musicBaseScrollView.contentItem
                 function onContentYChanged() {
-//                    console.log("Connections........onContentYChanged   ", musicBaseScrollView.contentItem.contentY)
                     if (control.type === "playlists")
                         dropArea.updateHoverIndex()
                 }
@@ -307,14 +306,5 @@ ColumnLayout {
         }
     }
 
-    Component.onCompleted: {
-        globalVariant.curListPageChanged.connect(function(){
-            if (globalVariant !== undefined && globalVariant.curListPage === "search") {
-                sideListView.currentItem.checked = false
-            }
-        })
-
-//        musicBaseScrollView.contentItem.contentYChanged.connect(dropArea.updateHoverIndex())
-    }
 
 }
