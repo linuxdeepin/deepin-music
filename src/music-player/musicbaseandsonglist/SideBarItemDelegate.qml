@@ -58,7 +58,7 @@ ItemDelegate {
         onDoubleClicked:{
             item.rename();
         }
-        onClicked: {
+        onClicked: function(mouse) {
             sideListView.currentIndex = index;
             item.forceActiveFocus();
             if(mouse.button === Qt.RightButton){

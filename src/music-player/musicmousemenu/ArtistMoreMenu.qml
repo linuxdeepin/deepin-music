@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -28,7 +28,6 @@ Menu{
             Presenter.playArtist(artistData.name);
         }
     }
-//    MenuItem { text: qsTr("Add to Play queue") }
     MenuSeparator{}
     ImportMenu {
         id:importArtistMenu
@@ -39,6 +38,7 @@ Menu{
         }
     }
     onArtistDataChanged: {
+        if(!moreMenu.artistData || !moreMenu.artistData.musicinfos) return;
         var tmplist = [];
         for(var key in moreMenu.artistData.musicinfos){
             tmplist.push(moreMenu.artistData.musicinfos[key].hash);

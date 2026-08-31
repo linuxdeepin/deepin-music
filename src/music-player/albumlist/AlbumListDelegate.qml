@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -37,14 +37,13 @@ ItemDelegate{
         }
     }
     Rectangle {
-        width: parent.width
-        height: parent.height
-        anchors.centerIn: parent
+        anchors.fill: parent
         radius: 8
         color: itemDelegate.hovered ? Qt.rgba(0, 0, 0, 0.08) : Qt.rgba(0, 0, 0, 0)
     Row {
         id: row
-        anchors.fill: itemDelegate
+        width: parent.width
+        height: parent.height
 //        anchors.centerIn: itemDelegate
         Label {
             id: numLable

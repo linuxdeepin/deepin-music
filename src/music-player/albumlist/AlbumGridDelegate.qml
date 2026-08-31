@@ -45,7 +45,7 @@ Rectangle {
         onDoubleClicked: {
             itemDoubleClicked(model);
         }
-        onClicked: {
+        onClicked: function(mouse) {
             if(mouse.button === Qt.RightButton){
                 albumMoreMenu.albumData = model
                 albumMoreMenu.popup();

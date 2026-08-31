@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -21,7 +21,7 @@ Rectangle {
         RoundedImage{
             id: image
             backgroundWidth: 184; backgroundHeight: 184
-            backgroundImageUrl: "file:///" + currentData.coverUrl
+            backgroundImageUrl: !currentData ? "" : "file:///" + currentData.coverUrl
         }
     }
 
@@ -35,7 +35,7 @@ Rectangle {
             width: 479; height: 46
             elide: Text.ElideRight
             color: "#000000"
-            text: (currentData.name === "") ? "undefine" : currentData.name
+            text: !currentData || (currentData.name === "") ? "undefine" : (currentData.name || "")
             font: DTK.fontManager.t2
         }
         Row {
@@ -44,14 +44,14 @@ Rectangle {
             spacing: 14
             Label {
                 elide: Text.ElideRight
-                text: currentData.artist
+                text: !currentData ? "" : (currentData.artist || "")
                 color: "#000000"
             }
             Label {
                 anchors.bottom: parent.bottom
                 width: 56; height: 17
                 verticalAlignment: Text.AlignBottom
-                text: currentData.musicCount === 1 ? qsTr("1 song") : qsTr("%1 songs").arg(currentData.musicCount)
+                text: !currentData ? "" : (currentData.musicCount === 1 ? qsTr("1 song") : qsTr("%1 songs").arg(currentData.musicCount))
                 font: DTK.fontManager.t8
                 color: "#7C7C7C"
             }

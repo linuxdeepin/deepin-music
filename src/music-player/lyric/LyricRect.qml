@@ -206,7 +206,7 @@ Rectangle {
 
     Connections {
         target: lrcRectItem
-        onCurrentIndexChanged: {
+        function onCurrentIndexChanged(index) {
             if (isFlicking)
                 return
             if(!listViewLyric.flicking)

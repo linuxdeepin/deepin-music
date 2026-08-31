@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2020 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -59,7 +58,9 @@ void ShaderDataView::setShaderData(const QVector<int> &data)
         *line = b;
         line++;
     }
-    update();
+    if (window() && isComponentComplete()) {
+        update();
+    }
 }
 
 QVariant ShaderDataView::presenter() const
