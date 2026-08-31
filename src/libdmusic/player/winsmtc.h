@@ -16,8 +16,6 @@
 #include <windows.media.h>
 #include <systemmediatransportcontrolsinterop.h>
 
-#define WINSMTC_AUMID L"Deepin.DeepinMusicPlayer"
-
 class WinSMTC : public QObject
 {
     Q_OBJECT
@@ -27,8 +25,6 @@ public:
 
     bool initialize(HWND hwnd);
     void shutdown();
-
-    static void ensureStartMenuShortcut();
 
     void updateMetadata(const QString &title,
                        const QString &artist,

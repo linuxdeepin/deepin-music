@@ -7,17 +7,10 @@
 #ifdef Q_OS_WIN
 
 #include <QDebug>
-#include <QUrl>
 #include <QFileInfo>
 #include <QFile>
-#include <QDir>
-#include <QStandardPaths>
 #include <roapi.h>
 #include <windows.storage.streams.h>
-#include <shlobj.h>
-#include <shobjidl.h>
-#include <propkey.h>
-#include <propvarutil.h>
 
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
@@ -89,86 +82,6 @@ private:
     LONG m_ref;
     WinSMTC *m_owner;
 };
-
-void WinSMTC::ensureStartMenuShortcut()
-{
-    wchar_t exePath[MAX_PATH];
-    GetModuleFileNameW(NULL, exePath, MAX_PATH);
-    QString appDir = QFileInfo(QString::fromWCharArray(exePath)).absolutePath();
-
-    PWSTR programsPath = nullptr;
-    if (FAILED(SHGetKnownFolderPath(FOLDERID_Programs, 0, NULL, &programsPath))) {
-        qDebug() << "WinSMTC: Failed to get Programs folder path";
-        return;
-    }
-    QString programsDir = QString::fromWCharArray(programsPath);
-    CoTaskMemFree(programsPath);
-
-    // Remove old English-name shortcuts
-    QDir().remove(programsDir + QStringLiteral("\\Deepin Music\\Deepin Music Player.lnk"));
-    QDir().remove(programsDir + QStringLiteral("\\Deepin Music\\deepin-music.lnk"));
-    QDir().rmdir(programsDir + QStringLiteral("\\Deepin Music"));
-
-    // Create new Chinese-name shortcut
-    QString shortcutDir = programsDir + QStringLiteral("\\深度音乐");
-    QDir().mkpath(shortcutDir);
-    QString shortcutPath = shortcutDir + QStringLiteral("\\深度音乐.lnk");
-
-    // Only pair CoUninitialize when we actually own the initialization
-    HRESULT coInit = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-    if (FAILED(coInit) && coInit != RPC_E_CHANGED_MODE) {
-        qWarning() << "WinSMTC: CoInitializeEx failed:" << QString::number(coInit, 16);
-        return;
-    }
-    bool coOwned = SUCCEEDED(coInit);
-
-    ComPtr<IShellLinkW> shellLink;
-    HRESULT hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER,
-                                  IID_PPV_ARGS(&shellLink));
-    if (FAILED(hr)) {
-        qDebug() << "WinSMTC: Failed to create IShellLink:" << QString::number(hr, 16);
-        if (coOwned) CoUninitialize();
-        return;
-    }
-
-    shellLink->SetPath(exePath);
-    shellLink->SetDescription(L"深度音乐");
-    shellLink->SetWorkingDirectory(appDir.toStdWString().c_str());
-
-    QString iconPath = appDir + QStringLiteral("\\dsg\\img\\deepin-music.ico");
-    if (QFileInfo::exists(iconPath)) {
-        shellLink->SetIconLocation(iconPath.toStdWString().c_str(), 0);
-    }
-
-    // Set AUMID via IPropertyStore
-    ComPtr<IPropertyStore> propStore;
-    hr = shellLink.As(&propStore);
-    if (SUCCEEDED(hr) && propStore) {
-        PROPVARIANT propVar;
-        PropVariantInit(&propVar);
-        propVar.vt = VT_LPWSTR;
-        // Use a heap-allocated copy since PropVariantClear will free it
-        propVar.pwszVal = static_cast<LPWSTR>(CoTaskMemAlloc(sizeof(WINSMTC_AUMID)));
-        if (propVar.pwszVal) {
-            memcpy(propVar.pwszVal, WINSMTC_AUMID, sizeof(WINSMTC_AUMID));
-            propStore->SetValue(PKEY_AppUserModel_ID, propVar);
-            propStore->Commit();
-            PropVariantClear(&propVar);
-        }
-    }
-
-    // Save the shortcut
-    ComPtr<IPersistFile> persistFile;
-    hr = shellLink.As(&persistFile);
-    if (SUCCEEDED(hr) && persistFile) {
-        hr = persistFile->Save(shortcutPath.toStdWString().c_str(), TRUE);
-        if (FAILED(hr)) {
-            qWarning() << "WinSMTC: Failed to save shortcut:" << QString::number(hr, 16);
-        }
-    }
-
-    if (coOwned) CoUninitialize();
-}
 
 WinSMTC::WinSMTC(QObject *parent) : QObject(parent) {}
 
