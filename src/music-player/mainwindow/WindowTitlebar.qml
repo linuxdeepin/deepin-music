@@ -342,7 +342,7 @@ TitleBar {
                     y: 50
 
                     visible: false
-                    function onSearchItemTriggered(value, type) {
+                    onSearchItemTriggered: function(value, type) {
                         titleBar.searchItemTriggered(value, type)
                         searchEdit.text = value
                         visible = false
