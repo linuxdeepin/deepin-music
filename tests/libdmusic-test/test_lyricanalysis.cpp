@@ -281,6 +281,46 @@ TEST(LyricAnalysisTest, wordTimingHasCorrectTimes)
     EXPECT_EQ(words[4].text, QStringLiteral(""));
 }
 
+TEST(LyricAnalysisTest, parsesRepeatedTimestampsAsSeparateLines)
+{
+    TempLrcFile tempLrc("[00:01.00][00:02.00]same line\n");
+    LyricAnalysis la;
+    la.setFromFile(tempLrc.path());
+
+    ASSERT_EQ(la.getCount(), 2);
+    EXPECT_EQ(la.getPostion(0), 1000);
+    EXPECT_EQ(la.getPostion(1), 2000);
+    EXPECT_EQ(la.getLineAt(0), QStringLiteral("same line"));
+    EXPECT_EQ(la.getLineAt(1), QStringLiteral("same line"));
+    EXPECT_FALSE(la.hasWordTiming(0));
+    EXPECT_FALSE(la.hasWordTiming(1));
+}
+
+TEST(LyricAnalysisTest, trimsRepeatedTimestampLyricText)
+{
+    TempLrcFile tempLrc("[00:01.00][00:02.00] same line\r\n");
+    LyricAnalysis la;
+    la.setFromFile(tempLrc.path());
+
+    ASSERT_EQ(la.getCount(), 2);
+    EXPECT_EQ(la.getLineAt(0), QStringLiteral("same line"));
+    EXPECT_EQ(la.getLineAt(1), QStringLiteral("same line"));
+}
+
+TEST(LyricAnalysisTest, ignoresRepeatedTimestampsWithoutLyricText)
+{
+    TempLrcFile tempLrc(
+        "[00:01.00][00:02.00]\n"
+        "[00:03.00][00:04.00]   \r\n"
+        "[00:05.00]valid line\n");
+    LyricAnalysis la;
+    la.setFromFile(tempLrc.path());
+
+    ASSERT_EQ(la.getCount(), 1);
+    EXPECT_EQ(la.getPostion(0), 5000);
+    EXPECT_EQ(la.getLineAt(0), QStringLiteral("valid line"));
+}
+
 TEST(LyricAnalysisTest, simpleLyricsHaveNoWordTiming)
 {
     TempLrcFile tempLrc("[00:01.20]first line\n[00:03.50]second line\n");

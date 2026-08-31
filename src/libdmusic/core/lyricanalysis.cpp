@@ -172,10 +172,8 @@ void LyricAnalysis::parseLyric(const QString &str)
         }
 
         if (timestampCount > 1) {
-            // 逐字歌词格式：[mm:ss.xx]字[mm:ss.xx]字...
-            QVector<LyricWord> words;
+            QVector<QPair<qint64, QString> > parsedWords;
             qint64 firstTime = -1;
-            QString fullText;
             pos = 0;
             while ((pos = wordRx.indexIn(line, pos)) != -1) {
                 auto timeStr = wordRx.capturedTexts()[1];
@@ -183,13 +181,43 @@ void LyricAnalysis::parseLyric(const QString &str)
                 qint64 time = parseTimeStamp(timeStr);
                 if (time >= 0) {
                     if (firstTime < 0) firstTime = time;
-                    words.push_back({time, textStr});
-                    fullText += textStr;
+                    parsedWords.push_back({time, textStr});
                     qCDebug(dmMusic) << "Parsed word - Time:" << timeStr << "ms:" << time << "Text:" << textStr;
                 }
                 pos += wordRx.matchedLength();
             }
-            if (!words.isEmpty() && firstTime >= 0) {
+
+            // Standard LRC allows the same lyric to have multiple timestamps:
+            // [00:01.00][00:02.00]same lyric
+            // Treat the line as word-timed when any intermediate timestamp
+            // is followed by actual lyric text.
+            bool repeatedLine = false;
+            for (int i = 0; i + 1 < parsedWords.size(); ++i) {
+                if (!parsedWords[i].second.trimmed().isEmpty()) {
+                    repeatedLine = false;
+                    break;
+                }
+                repeatedLine = true;
+            }
+
+            if (repeatedLine && parsedWords.size() > 1) {
+                const QString lyricText = parsedWords.last().second.trimmed();
+                if (lyricText.isEmpty()) {
+                    continue;
+                }
+                for (const auto &item : parsedWords) {
+                    tmp.push_back({item.first, lyricText});
+                    tmpWord.push_back(QVector<LyricWord>());
+                }
+            } else if (!parsedWords.isEmpty() && firstTime >= 0) {
+                // Word-timed lyric format: [mm:ss.xx]word[mm:ss.xx]word...
+                QVector<LyricWord> words;
+                QString fullText;
+                words.reserve(parsedWords.size());
+                for (const auto &item : parsedWords) {
+                    words.push_back({item.first, item.second});
+                    fullText += item.second;
+                }
                 tmp.push_back({firstTime, fullText});
                 tmpWord.push_back(words);
                 qCDebug(dmMusic) << "Parsed lyric line with" << words.size() << "words - Time:" << firstTime << "Text:" << fullText;
