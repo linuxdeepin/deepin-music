@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="sv" sourcelanguage="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sv" sourcelanguage="en_US">
 <context>
     <name>AlbumDefaultPage</name>
     <message>
@@ -609,7 +607,7 @@
     <message>
         <location filename="../src/music-player/dialogs/EqualizerDialog.qml" line="491"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Ljudeffekterna har sparats</translation>
     </message>
 </context>
 <context>
@@ -730,7 +728,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="384"/>
         <source>Sound Effects Saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Ljudeffekterna har sparats</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="395"/>
