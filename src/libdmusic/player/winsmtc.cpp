@@ -235,7 +235,11 @@ bool WinSMTC::initialize(HWND hwnd)
 
 void WinSMTC::shutdown()
 {
-    if (!m_initialized) return;
+    // Keep shutdown idempotent while also cleaning up partial initialization.
+    if (!m_initialized && !m_roInitialized
+            && !m_smtc.Get() && !m_updater.Get() && !m_musicProps.Get()) {
+        return;
+    }
 
     if (m_smtc) {
         // Unregister the ButtonPressed handler first to avoid use-after-free
