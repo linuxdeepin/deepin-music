@@ -27,8 +27,6 @@ if(VLC_INCLUDE_DIR)
     include_directories(${VLC_INCLUDE_DIR}/vlc)
   endif()
 endif()
-# VLC headers use poll() without including poll.h; force-include it
-add_definitions(-include poll.h)
 if(EXISTS "/runtime/include/vlc")
   include_directories(/runtime/include/vlc)
   include_directories(/runtime/include/vlc/plugins)
