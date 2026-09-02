@@ -338,8 +338,10 @@ TitleBar {
                 id: searchResultComponent
                 SearchResultDialog {
                     width: 360
-                    x: searchEdit.x - (width - searchEdit.width) / 2
-                    y: 50
+                    parent: titleBar
+                    x: searchEdit.mapToItem(titleBar, 0, 0).x
+                       - (width - searchEdit.width) / 2
+                    y: searchEdit.mapToItem(titleBar, 0, searchEdit.height).y + 4
 
                     visible: false
                     onSearchItemTriggered: function(value, type) {
