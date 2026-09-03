@@ -12,11 +12,48 @@ Popup {
     property string pattern: ""
 
     property int itemHeight: 40
+    property int selectedIndex: -1
+    property int resultCount: (songList == null ? 0 : songList.length) + artistModel.count + albumModel.count
 
     signal searchItemTriggered(string value, int type)
 
     id: searchResultRect
     width: 360
+
+    // Moves the keyboard selection by offset, wrapping around available results.
+    function moveSelection(offset) {
+        if (resultCount <= 0)
+            return
+
+        if (selectedIndex < 0) {
+            selectedIndex = offset > 0 ? 0 : resultCount - 1
+            return
+        }
+
+        selectedIndex = (selectedIndex + offset + resultCount) % resultCount
+    }
+
+    // Activates the currently selected result and returns whether activation succeeded.
+    function activateSelection() {
+        if (selectedIndex < 0 || selectedIndex >= resultCount)
+            return false
+
+        var songCount = songList == null ? 0 : songList.length
+        if (selectedIndex < songCount) {
+            searchItemTriggered(songList[selectedIndex], 0)
+            return true
+        }
+
+        var artistIndex = selectedIndex - songCount
+        if (artistIndex < artistModel.count) {
+            searchItemTriggered(artistModel.get(artistIndex).name, 1)
+            return true
+        }
+
+        searchItemTriggered(albumModel.get(artistIndex - artistModel.count).name, 2)
+        return true
+    }
+
     height: (songList == null ? 0 : songList.length + artistModel.count + albumModel.count) * itemHeight + 110
     leftPadding: 8
     rightPadding: 8
@@ -66,10 +103,17 @@ Popup {
         id: resultItemTextDelegate
         Rectangle {
             id: itemRect
+            property int resultIndex: index
             width: parent.width
             height: itemHeight
             radius: 6
             color: "#00000000"
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                color: palette.highlight
+                visible: searchResultRect.selectedIndex === itemRect.resultIndex
+            }
             Row {
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
@@ -104,10 +148,20 @@ Popup {
         id: resultItemImgDelegate
         Rectangle {
             id: itemRect
+            property int resultIndex: (model.type === "album"
+                                       ? (searchResultRect.songList == null ? 0 : searchResultRect.songList.length)
+                                         + searchResultRect.artistModel.count
+                                       : (searchResultRect.songList == null ? 0 : searchResultRect.songList.length)) + index
             width: parent.width
             height: itemHeight
             radius: 6
             color: "#00000000"
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                color: palette.highlight
+                visible: searchResultRect.selectedIndex === itemRect.resultIndex
+            }
             Row {
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter

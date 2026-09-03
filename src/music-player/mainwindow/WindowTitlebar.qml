@@ -272,10 +272,27 @@ TitleBar {
                 Layout.alignment: Qt.AlignCenter
                 placeholder: qsTr("Search")
                 enabled: Presenter.isExistMeta()
+                Keys.onDownPressed: function(event) {
+                    var searchResDlg = searchResultLoader.item
+                    if (!searchResDlg || !searchResDlg.visible)
+                        return
+                    searchResDlg.moveSelection(1)
+                    event.accepted = true
+                }
+                Keys.onUpPressed: function(event) {
+                    var searchResDlg = searchResultLoader.item
+                    if (!searchResDlg || !searchResDlg.visible)
+                        return
+                    searchResDlg.moveSelection(-1)
+                    event.accepted = true
+                }
                 Keys.onReturnPressed: {
                     //console.log("SearchEdit: Keys.onEnterPressed....")
                     var searchResDlg = searchResultLoader.item
                     if (text.length <= 0 || !searchResDlg || searchResDlg.songList == null)
+                        return
+
+                    if (searchResDlg.visible && searchResDlg.activateSelection())
                         return
 
                     var type = -1
@@ -372,6 +389,7 @@ TitleBar {
         }
 
         var searchResDlg = searchResultLoader.item
+        searchResDlg.selectedIndex = -1
         searchResDlg.songList = []
         searchResDlg.artistModel.clear()
         searchResDlg.albumModel.clear()
