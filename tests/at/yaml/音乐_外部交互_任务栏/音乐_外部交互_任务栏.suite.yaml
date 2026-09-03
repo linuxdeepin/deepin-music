@@ -1,0 +1,58 @@
+name: 音乐_外部交互_任务栏_suite
+app: deepin-music
+module: 音乐_外部交互_任务栏
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_外部交互_任务栏_001_s1
+  name: 托盘-删除所有歌曲后检查托盘右键菜单选项状态
+  description: ''
+  steps:
+  - action: mouse_right_click
+    selector:
+      name: Component_Menu
+      role: menu
+  - action: dtk_context_menu
+    selector:
+      name: Component_Menu
+    items:
+    - Play/Pause
+    - Previous
+    - Next
+    - Exit
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: Component_Menu
+      role: menu
+  annotation:
+    测试界面: 音乐-任务栏
+    测试功能: 托盘-删除所有歌曲后检查托盘右键菜单选项状态
+    case_id: case_1676659
+    case_name: 托盘-删除所有歌曲后检查托盘右键菜单选项状态
+    AT元素引用:
+    - Component_Menu
+- id: suite_音乐_外部交互_任务栏_003_s1
+  name: '[302][smoke][acp1]托盘-调起'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Component_Menu
+      role: menu
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: Component_Menu
+      role: menu
+  annotation:
+    测试界面: 音乐-任务栏
+    测试功能: '[302][smoke][acp1]托盘-调起'
+    case_id: case_1676639
+    case_name: '[302][smoke][acp1]托盘-调起'
+    AT元素引用:
+    - Component_Menu
+teardown:
+- action: session_stop

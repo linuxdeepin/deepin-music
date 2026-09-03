@@ -1,0 +1,82 @@
+name: 音乐_窗口_演唱者_suite
+app: deepin-music
+module: 音乐_窗口_演唱者
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_窗口_演唱者_001_s1
+  name: '[124]演唱者-暂停时删除当前演唱者的所有歌曲'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  - action: keyboard_hot_key
+    key: ctrl+a
+  - action: keyboard_press
+    key: Delete
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MusicSingerGridItem_2
+      role: list item
+  annotation:
+    测试界面: 音乐-演唱者
+    测试功能: '[124]演唱者-暂停时删除当前演唱者的所有歌曲'
+    case_id: case_1678093
+    case_name: '[124]演唱者-暂停时删除当前演唱者的所有歌曲'
+    AT元素引用:
+    - Play All
+    - MusicSingerGridItem_2
+- id: suite_音乐_窗口_演唱者_002_s1
+  name: 演唱者-演唱者名称排序
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: SortBtn
+      role: push button
+  - action: dtk_context_menu
+    selector:
+      name: SortBtn
+    items:
+    - title
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: MusicSingerGridItem_2
+      role: list item
+  annotation:
+    测试界面: 音乐-演唱者
+    测试功能: 演唱者-演唱者名称排序
+    case_id: case_1678065
+    case_name: 演唱者-演唱者名称排序
+    AT元素引用:
+    - SortBtn
+    - MusicSingerGridItem_2
+- id: suite_音乐_窗口_演唱者_003_s1
+  name: '[180][smoke][acp1]演唱者-详情页面返回按钮'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: SublistDelegate
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: Artists
+      role: push button
+  annotation:
+    测试界面: 音乐-演唱者
+    测试功能: '[180][smoke][acp1]演唱者-详情页面返回按钮'
+    case_id: case_1678051
+    case_name: '[180][smoke][acp1]演唱者-详情页面返回按钮'
+    AT元素引用:
+    - SublistDelegate
+    - Artists
+teardown:
+- action: session_stop

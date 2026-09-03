@@ -1,0 +1,87 @@
+name: 音乐_窗口_我的收藏_suite
+app: deepin-music
+module: 音乐_窗口_我的收藏
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_窗口_我的收藏_001_s1
+  name: 排序-我的收藏-列表模式使用shift从文管多选歌曲拖拽排序，歌曲按照所选顺序排序
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: SidebarItem
+      role: list item
+  - action: mouse_drag
+    selector:
+      name: ItemD
+      role: list item
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SidebarItem
+      role: list item
+  annotation:
+    测试界面: 音乐-我的收藏
+    测试功能: 排序-我的收藏-列表模式使用shift从文管多选歌曲拖拽排序，歌曲按照所选顺序排序
+    case_id: case_1678497
+    case_name: 排序-我的收藏-列表模式使用shift从文管多选歌曲拖拽排序，歌曲按照所选顺序排序
+    AT元素引用:
+    - SidebarItem
+    - ItemD
+- id: suite_音乐_窗口_我的收藏_002_s1
+  name: '[329][smoke]排序-我的收藏-列表模式下拖拽多首歌排序'
+  description: ''
+  steps:
+  - action: mouse_right_click
+    selector:
+      name: ItemD
+      role: list item
+  - action: dtk_context_menu
+    selector:
+      name: ItemD
+    items:
+    - Add to
+    - My favorites
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ImportMenu
+      role: menu
+  annotation:
+    测试界面: 音乐-我的收藏
+    测试功能: '[329][smoke]排序-我的收藏-列表模式下拖拽多首歌排序'
+    case_id: case_1678367
+    case_name: '[329][smoke]排序-我的收藏-列表模式下拖拽多首歌排序'
+    AT元素引用:
+    - ItemD
+    - ImportMenu
+    - My favorites
+- id: suite_音乐_窗口_我的收藏_003_s1
+  name: '[095]我的收藏-删除所有歌曲'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: SidebarItem
+      role: list item
+  - action: keyboard_hot_key
+    key: ctrl+a
+  - action: keyboard_press
+    key: Delete
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: SidebarItem
+      role: list item
+  annotation:
+    测试界面: 音乐-我的收藏
+    测试功能: '[095]我的收藏-删除所有歌曲'
+    case_id: case_1678285
+    case_name: '[095]我的收藏-删除所有歌曲'
+    AT元素引用:
+    - SidebarItem
+teardown:
+- action: session_stop

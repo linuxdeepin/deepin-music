@@ -1,0 +1,307 @@
+elements:
+  WindowTitlebar_Menu:
+    name: WindowTitlebar_Menu
+    role: menu
+  Component_Menu:
+    name: Component_Menu
+    role: menu
+  Add Songs:
+    name: Add Songs
+    role: push button
+  Play All:
+    name: Play All
+    role: push button
+  PlaylistDelegate:
+    name: PlaylistDelegate
+    role: list item
+  Replace:
+    name: Replace
+    role: push button
+  Ask me always:
+    name: Ask me always
+    role: radio button
+  Cancel:
+    name: Cancel
+    role: push button
+  SwitchBtn:
+    name: SwitchBtn
+    role: toggle button
+  PreamplifierSlider:
+    name: PreamplifierSlider
+    role: slider
+  Reset:
+    name: Reset
+    role: push button
+  PlaylistMenu:
+    name: PlaylistMenu
+    role: menu
+  ListBtn:
+    name: ListBtn
+    role: push button
+  ItemD:
+    name: ItemD
+    role: list item
+  MulitSelectMenu:
+    name: MulitSelectMenu
+    role: menu
+  LrcBtn:
+    name: LrcBtn
+    role: push button
+  VolumeBtn:
+    name: VolumeBtn
+    role: push button
+  ContentSlider:
+    name: ContentSlider
+    role: slider
+  SublistDelegate:
+    name: SublistDelegate
+    role: push button
+  Albums:
+    name: Albums
+    role: push button
+  SidebarItem:
+    name: SidebarItem
+    role: list item
+  ImportMenu:
+    name: ImportMenu
+    role: menu
+  Empty:
+    name: Empty
+    role: push button
+  listTitle:
+    name: listTitle
+    role: push button
+  SortBtn:
+    name: SortBtn
+    role: push button
+  TabArea:
+    name: TabArea
+    role: page tab list
+  ItemDelegate_2:
+    name: ItemDelegate_2
+    role: list item
+  MusicSingerGridItem_2:
+    name: MusicSingerGridItem_2
+    role: list item
+  Artists:
+    name: Artists
+    role: push button
+  Open Folders:
+    name: Open Folders
+    role: push button
+  RoundedImage_CircularButton:
+    name: RoundedImage_CircularButton
+    role: push button
+  Morebutton:
+    name: Morebutton
+    role: push button
+  ItemDelegate:
+    name: ItemDelegate
+    role: list item
+  Imagecell:
+    name: Imagecell
+    role: list item
+  ListView_AlbumListDelegate:
+    name: ListView_AlbumListDelegate
+    role: list item
+  CircularButton_Button:
+    name: CircularButton_Button
+    role: push button
+  Menu:
+    name: Menu
+    role: menu
+  title:
+    name: title
+    role: push button
+  DataSort:
+    name: DataSort
+    role: menu
+  GridViewButton:
+    name: GridViewButton
+    role: push button
+  ListViewButton:
+    name: ListViewButton
+    role: push button
+  Minimize to system tray:
+    name: Minimize to system tray
+    role: radio button
+  Exit:
+    name: Exit
+    role: menu item
+  Do not ask again:
+    name: Do not ask again
+    role: check box
+  Confirm:
+    name: Confirm
+    role: push button
+  SelectComBox:
+    name: SelectComBox
+    role: combo box
+  Save:
+    name: Save
+    role: push button
+  DelegateSlider:
+    name: DelegateSlider
+    role: slider
+  OK:
+    name: OK
+    role: push button
+  Title:
+    name: Title
+    role: list item
+  Artist:
+    name: Artist
+    role: page tab
+  Album:
+    name: Album
+    role: page tab
+  Type:
+    name: Type
+    role: list item
+  Size:
+    name: Size
+    role: list item
+  Duration:
+    name: Duration
+    role: list item
+  Path:
+    name: Path
+    role: list item
+  SettingsDialog_CheckBox:
+    name: SettingsDialog_CheckBox
+    role: check box
+  SettingsDialog_CheckBox_2:
+    name: SettingsDialog_CheckBox_2
+    role: check box
+  SettingsDialog_CheckBox_3:
+    name: SettingsDialog_CheckBox_3
+    role: check box
+  Restore Defaults:
+    name: Restore Defaults
+    role: push button
+  Play/Pause:
+    name: Play/Pause
+    role: menu item
+  Previous:
+    name: Previous
+    role: menu item
+  Next:
+    name: Next
+    role: menu item
+  Music:
+    name: Music
+    role: page tab
+  AllMusicSortMenu:
+    name: AllMusicSortMenu
+    role: menu
+  AlbumMusicSortMenu:
+    name: AlbumMusicSortMenu
+    role: menu
+  ArtistMusicSortMenu:
+    name: ArtistMusicSortMenu
+    role: menu
+  MusicSingerGridItem:
+    name: MusicSingerGridItem
+    role: list item
+  Add playlist:
+    name: Add playlist
+    role: menu item
+  Add music:
+    name: Add music
+    role: menu item
+  Settings:
+    name: Settings
+    role: menu item
+  Imagecell_4:
+    name: Imagecell_4
+    role: list item
+  Item:
+    name: Item
+    role: push button
+  MoreMenu:
+    name: MoreMenu
+    role: menu
+  View details:
+    name: View details
+    role: menu item
+  Play all:
+    name: Play all
+    role: menu item
+  Add to:
+    name: Add to
+    role: menu
+  MoreMenu_3:
+    name: MoreMenu_3
+    role: menu
+  Play queue:
+    name: Play queue
+    role: menu item
+  My favorites:
+    name: My favorites
+    role: menu item
+  Create new playlist:
+    name: Create new playlist
+    role: menu item
+  '&lt;':
+    name: '&lt;'
+    role: menu item
+  play:
+    name: play
+    role: menu item
+  Delete from local disk:
+    name: Delete from local disk
+    role: menu item
+  MoreMenu_2:
+    name: MoreMenu_2
+    role: menu
+  Pause:
+    name: Pause
+    role: menu item
+  Open in file manager:
+    name: Open in file manager
+    role: menu item
+  Encoding:
+    name: Encoding
+    role: menu
+  encodings:
+    name: encodings
+    role: menu item
+  Song info:
+    name: Song info
+    role: menu item
+  Play:
+    name: Play
+    role: menu item
+  Add songs:
+    name: Add songs
+    role: menu item
+  Rename:
+    name: Rename
+    role: menu item
+  Delete:
+    name: Delete
+    role: menu item
+  ListView_AlbumSublistDelegate_2:
+    name: ListView_AlbumSublistDelegate_2
+    role: list item
+  ListView_AlbumSublistDelegate:
+    name: ListView_AlbumSublistDelegate
+    role: list item
+  Imagecell_2:
+    name: Imagecell_2
+    role: list item
+  ListView_ArtistSublistDelegate:
+    name: ListView_ArtistSublistDelegate
+    role: list item
+  TitleButton1:
+    name: TitleButton1
+    role: push button
+  Imagecell_3:
+    name: Imagecell_3
+    role: list item
+  CircularImg_CircularButton:
+    name: CircularImg_CircularButton
+    role: push button
+  Morebutton_2:
+    name: Morebutton_2
+    role: push button

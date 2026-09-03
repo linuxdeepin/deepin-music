@@ -1,0 +1,38 @@
+name: 音乐_音乐格式_suite
+app: deepin-music
+module: 音乐_音乐格式
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_音乐格式_003_s1
+  name: '[318][core][acp1]格式支持-ac3'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: Add Songs
+      role: push button
+  - action: file_dialog_select
+    path: ${TEST_FILES_DIR}/test.ac3
+  - action: mouse_click
+    selector:
+      name: Play All
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: ItemD
+      role: list item
+  annotation:
+    测试界面: 音乐-音乐格式
+    测试功能: '[318][core][acp1]格式支持-ac3'
+    case_id: case_1676601
+    case_name: '[318][core][acp1]格式支持-ac3'
+    AT元素引用:
+    - Add Songs
+    - Play All
+    - ItemD
+teardown:
+- action: session_stop

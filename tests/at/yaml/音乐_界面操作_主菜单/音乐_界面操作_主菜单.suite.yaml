@@ -1,0 +1,165 @@
+name: 音乐_界面操作_主菜单_suite
+app: deepin-music
+module: 音乐_界面操作_主菜单
+setup:
+- action: session_start
+  command: deepin-music
+  wait: 3.0
+suites:
+- id: suite_音乐_界面操作_主菜单_001_s1
+  name: 设置-修改为重复快捷键
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Settings
+  - action: mouse_click
+    selector:
+      name: Replace
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: Replace
+      role: push button
+  annotation:
+    测试界面: 音乐-主菜单
+    测试功能: 设置-修改为重复快捷键
+    case_id: case_1677101
+    case_name: 设置-修改为重复快捷键
+    AT元素引用:
+    - Replace
+- id: suite_音乐_界面操作_主菜单_002_s1
+  name: '[129][core][acp1]设置-每次询问'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Settings
+  - action: mouse_click
+    selector:
+      name: Ask me always
+      role: radio button
+  - action: mouse_click
+    selector:
+      name: Cancel
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: Ask me always
+      role: radio button
+  annotation:
+    测试界面: 音乐-主菜单
+    测试功能: '[129][core][acp1]设置-每次询问'
+    case_id: case_1677097
+    case_name: '[129][core][acp1]设置-每次询问'
+    AT元素引用:
+    - Ask me always
+    - Cancel
+- id: suite_音乐_界面操作_主菜单_006_s1
+  name: '[136]均衡器-调整数值后恢复默认'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Settings
+  - action: mouse_click
+    selector:
+      name: SwitchBtn
+      role: toggle button
+  - action: element_set_value
+    selector:
+      name: PreamplifierSlider
+      role: slider
+    value: '50'
+  - action: mouse_click
+    selector:
+      name: Reset
+      role: push button
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PreamplifierSlider
+      role: slider
+  annotation:
+    测试界面: 音乐-主菜单
+    测试功能: '[136]均衡器-调整数值后恢复默认'
+    case_id: case_1677079
+    case_name: '[136]均衡器-调整数值后恢复默认'
+    AT元素引用:
+    - SwitchBtn
+    - PreamplifierSlider
+    - Reset
+- id: suite_音乐_界面操作_主菜单_007_s1
+  name: '[135][core][acp1]均衡器-自定义调整数值'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Settings
+  - action: mouse_click
+    selector:
+      name: SwitchBtn
+      role: toggle button
+  - action: element_set_value
+    selector:
+      name: PreamplifierSlider
+      role: slider
+    value: '50'
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PreamplifierSlider
+      role: slider
+  annotation:
+    测试界面: 音乐-主菜单
+    测试功能: '[135][core][acp1]均衡器-自定义调整数值'
+    case_id: case_1677077
+    case_name: '[135][core][acp1]均衡器-自定义调整数值'
+    AT元素引用:
+    - SwitchBtn
+    - PreamplifierSlider
+- id: suite_音乐_界面操作_主菜单_009_s1
+  name: '[005][smoke][acp1]主菜单-添加新歌单选项'
+  description: ''
+  steps:
+  - action: mouse_click
+    selector:
+      name: WindowTitlebar_Menu
+      role: menu
+  - action: dtk_main_menu
+    items:
+    - Add playlist
+  assert_steps:
+  - action: assert_element
+    selector:
+      name: PlaylistDelegate
+      role: list item
+  annotation:
+    测试界面: 音乐-主菜单
+    测试功能: '[005][smoke][acp1]主菜单-添加新歌单选项'
+    case_id: case_1677053
+    case_name: '[005][smoke][acp1]主菜单-添加新歌单选项'
+    AT元素引用:
+    - WindowTitlebar_Menu
+    - Add playlist
+    - PlaylistDelegate
+teardown:
+- action: session_stop

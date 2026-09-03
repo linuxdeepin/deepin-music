@@ -1,0 +1,4237 @@
+version: '1.0'
+app: deepin-music
+tree:
+- name: albumlist
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: albumlist
+  children:
+  - name: AlbumDefaultPage.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AlbumDefaultPage.qml
+    children:
+    - name: Add Songs
+      role: push button
+      object_name: importMusicFile
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: &id001 []
+      index_in_parent: -1
+      states: &id002 []
+      state_labels: &id003 []
+      comment: ''
+      annotation_status: draft
+    - name: Open Folders
+      role: push button
+      object_name: importMusicDir
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: AlbumGridDelegate.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AlbumGridDelegate.qml
+    children:
+    - name: BackgroundImage
+      role: image
+      object_name: backgroundImage
+      accessible_id: ''
+      source: static
+      class_name: RoundedImage
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: RoundedImage_CircularButton
+      role: push button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: CircularButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Morebutton
+      role: push button
+      object_name: morebutton
+      accessible_id: ''
+      source: static
+      class_name: CircularButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: AlbumGridView.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AlbumGridView.qml
+    children:
+    - name: AlbumGridView
+      role: list
+      object_name: albumGridView
+      accessible_id: ''
+      source: static
+      class_name: GridView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: GridView_ScrollBar
+      role: scroll bar
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ItemDelegate
+      role: list item
+      object_name: itemDelegate
+      accessible_id: ''
+      source: static
+      class_name: AlbumGridDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: AlbumListDelegate.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AlbumListDelegate.qml
+    children:
+    - name: Imagecell
+      role: list item
+      object_name: imagecell
+      accessible_id: ''
+      source: static
+      class_name: ImageCell
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: AlbumListView.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AlbumListView.qml
+    children:
+    - name: Listview_2
+      role: list
+      object_name: listview
+      accessible_id: ''
+      source: static
+      class_name: ListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListView_ScrollBar
+      role: scroll bar
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListView_AlbumListDelegate
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: AlbumListDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: AlbumView.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AlbumView.qml
+    children:
+    - name: Component_AlbumSublistView
+      role: list
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: AlbumSublistView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Albums
+      role: push button
+      object_name: toolButtonItem
+      accessible_id: ''
+      source: static
+      class_name: ToolButtonItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: DefaultPage
+      role: panel
+      object_name: defaultPage
+      accessible_id: ''
+      source: static
+      class_name: AlbumDefaultPage
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Listview
+      role: list
+      object_name: listview
+      accessible_id: ''
+      source: static
+      class_name: AlbumListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Gridview
+      role: list
+      object_name: gridview
+      accessible_id: ''
+      source: static
+      class_name: AlbumGridView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: allItems
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: allItems
+  children:
+  - name: CircularButton.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: CircularButton.qml
+    children:
+    - name: CircularButton_Button
+      role: push button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: SortMenu.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: SortMenu.qml
+    children:
+    - name: SortBtn
+      role: push button
+      object_name: sortBtn
+      accessible_id: ''
+      source: static
+      class_name: ToolButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Menu
+      role: menu
+      object_name: menu
+      accessible_id: ''
+      source: static
+      class_name: Menu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: title
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: SublistTitleButton.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: SublistTitleButton.qml
+    children:
+    - name: Image
+      role: image
+      object_name: image
+      accessible_id: ''
+      source: static
+      class_name: RoundedImage
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Play All
+      role: push button
+      object_name: palyall
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: ToolButtonItem.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: ToolButtonItem.qml
+    children:
+    - name: DataSort
+      role: menu
+      object_name: dataSort
+      accessible_id: ''
+      source: static
+      class_name: SortMenu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: GridViewButton
+      role: push button
+      object_name: gridViewButton
+      accessible_id: ''
+      source: static
+      class_name: ToolButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListViewButton
+      role: push button
+      object_name: listViewButton
+      accessible_id: ''
+      source: static
+      class_name: ToolButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: dialogs
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: dialogs
+  children:
+  - name: CDRemovedDialog.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: CDRemovedDialog.qml
+    children:
+    - name: Cancel
+      role: push button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: CloseConfirmDialog.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: CloseConfirmDialog.qml
+    children:
+    - name: Minimize to system tray
+      role: radio button
+      object_name: minimizeBtn
+      accessible_id: ''
+      source: static
+      class_name: RadioButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Exit
+      role: radio button
+      object_name: closeBtn
+      accessible_id: ''
+      source: static
+      class_name: RadioButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Do not ask again
+      role: check box
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: CheckBox
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Cancel
+      role: push button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Confirm
+      role: push button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: DeleteLocalDialog.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: DeleteLocalDialog.qml
+    children:
+    - name: Cancel
+      role: push button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: DeleteSonglistDialog.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: DeleteSonglistDialog.qml
+    children:
+    - name: Cancel
+      role: push button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: EqualizerDialog.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: EqualizerDialog.qml
+    children:
+    - name: SwitchBtn
+      role: toggle button
+      object_name: switchBtn
+      accessible_id: ''
+      source: static
+      class_name: Switch
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: SelectComBox
+      role: combo box
+      object_name: selectComBox
+      accessible_id: ''
+      source: static
+      class_name: ComboBox
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Save
+      role: push button
+      object_name: saveBtn
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Reset
+      role: push button
+      object_name: resetBtn
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: PreamplifierSlider
+      role: slider
+      object_name: preamplifierSlider
+      accessible_id: ''
+      source: static
+      class_name: Slider
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: RightSliderListView
+      role: list
+      object_name: rightSliderListView
+      accessible_id: ''
+      source: static
+      class_name: ListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: DelegateSlider
+      role: slider
+      object_name: delegateSlider
+      accessible_id: ''
+      source: static
+      class_name: Slider
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: FileDialog.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: FileDialog.qml
+    children:
+    - name: FileDialog
+      role: dialog
+      object_name: fileDialog
+      accessible_id: ''
+      source: static
+      class_name: FileDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: FolderDialog.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: FolderDialog.qml
+    children:
+    - name: FolderDialog
+      role: dialog
+      object_name: folderDialog
+      accessible_id: ''
+      source: static
+      class_name: FolderDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: ImportFailedDialog.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: ImportFailedDialog.qml
+    children:
+    - name: OK
+      role: push button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: MusicInfoDialog.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: MusicInfoDialog.qml
+    children:
+    - name: Title
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: PropertyItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Artist
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: PropertyItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Album
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: PropertyItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Type
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: PropertyItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Size
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: PropertyItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Duration
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: PropertyItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Path
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: PropertyItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: PropertyItem.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: PropertyItem.qml
+    children:
+    - name: title
+      role: push button
+      object_name: titleBar
+      accessible_id: ''
+      source: static
+      class_name: ItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Info
+      role: list
+      object_name: info
+      accessible_id: ''
+      source: static
+      class_name: ListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: SettingsDialog.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: SettingsDialog.qml
+    children:
+    - name: Dialog
+      role: dialog
+      object_name: dialog
+      accessible_id: ''
+      source: static
+      class_name: SettingsDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: SettingsDialog_CheckBox
+      role: check box
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: CheckBox
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: SettingsDialog_CheckBox_2
+      role: check box
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: CheckBox
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: SettingsDialog_CheckBox_3
+      role: check box
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: CheckBox
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Minimize to system tray
+      role: radio button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: RadioButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Exit
+      role: radio button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: RadioButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Ask me always
+      role: radio button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: RadioButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Cancel
+      role: push button
+      object_name: cancelBtn
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Replace
+      role: push button
+      object_name: replaceBtn
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Restore Defaults
+      role: push button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: lyric
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: lyric
+  children:
+  - name: EffectLightWave.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: EffectLightWave.qml
+    children:
+    - name: R_4
+      role: canvas
+      object_name: r
+      accessible_id: ''
+      source: static
+      class_name: CusShaderToy
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: EffectLine.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: EffectLine.qml
+    children:
+    - name: R_3
+      role: canvas
+      object_name: r
+      accessible_id: ''
+      source: static
+      class_name: CusShaderToy
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: EffectParticle.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: EffectParticle.qml
+    children:
+    - name: R_5
+      role: canvas
+      object_name: r
+      accessible_id: ''
+      source: static
+      class_name: CusShaderToy
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: EffectRing.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: EffectRing.qml
+    children:
+    - name: R
+      role: canvas
+      object_name: r
+      accessible_id: ''
+      source: static
+      class_name: CusShaderToy
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: EffectSun.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: EffectSun.qml
+    children:
+    - name: R_2
+      role: canvas
+      object_name: r
+      accessible_id: ''
+      source: static
+      class_name: CusShaderToy
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: EffectWaterWave.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: EffectWaterWave.qml
+    children:
+    - name: R_6
+      role: canvas
+      object_name: r
+      accessible_id: ''
+      source: static
+      class_name: CusShaderToy
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: LyricPage.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: LyricPage.qml
+    children:
+    - name: ShaderView
+      role: canvas
+      object_name: shaderView
+      accessible_id: ''
+      source: static
+      class_name: ShaderView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: LyricRect
+      role: canvas
+      object_name: lyricRect
+      accessible_id: ''
+      source: static
+      class_name: LyricRect
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: LyricRect.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: LyricRect.qml
+    children:
+    - name: ListViewLyric
+      role: list
+      object_name: listViewLyric
+      accessible_id: ''
+      source: static
+      class_name: ListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListView_ScrollBar_3
+      role: scroll bar
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: ShaderView.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: ShaderView.qml
+    children:
+    - name: Around
+      role: canvas
+      object_name: around
+      accessible_id: ''
+      source: static
+      class_name: EffectLine
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: CircularImg_2
+      role: image
+      object_name: circular_img
+      accessible_id: ''
+      source: static
+      class_name: Circular_img
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Around_2
+      role: canvas
+      object_name: around
+      accessible_id: ''
+      source: static
+      class_name: EffectLightWave
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: CircularImg_3
+      role: image
+      object_name: circular_img
+      accessible_id: ''
+      source: static
+      class_name: Circular_img
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Around_3
+      role: canvas
+      object_name: around
+      accessible_id: ''
+      source: static
+      class_name: EffectSun
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: CircularImg_4
+      role: image
+      object_name: circular_img
+      accessible_id: ''
+      source: static
+      class_name: Circular_img
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Around_4
+      role: canvas
+      object_name: around
+      accessible_id: ''
+      source: static
+      class_name: EffectWaterWave
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: CircularImg_5
+      role: image
+      object_name: circular_img
+      accessible_id: ''
+      source: static
+      class_name: Circular_img
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Around_5
+      role: canvas
+      object_name: around
+      accessible_id: ''
+      source: static
+      class_name: EffectParticle
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: CircularImg_6
+      role: image
+      object_name: circular_img
+      accessible_id: ''
+      source: static
+      class_name: Circular_img
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: CircularImg_7
+      role: image
+      object_name: circular_img
+      accessible_id: ''
+      source: static
+      class_name: Circular_img
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: main.qml
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: main.qml
+  children:
+  - name: main.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: main.qml
+    children:
+    - name: Root
+      role: frame
+      object_name: root
+      accessible_id: ''
+      source: static
+      class_name: MainWindow
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: mainwindow
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: mainwindow
+  children:
+  - name: LyricWindow.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: LyricWindow.qml
+    children:
+    - name: LyricPage
+      role: panel
+      object_name: lyricPage
+      accessible_id: ''
+      source: static
+      class_name: LyricPage
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: MainWindow.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: MainWindow.qml
+    children:
+    - name: MusicTitle
+      role: panel
+      object_name: musicTitle
+      accessible_id: ''
+      source: static
+      class_name: WindowTitlebar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Shortcuts
+      role: panel
+      object_name: shortcuts
+      accessible_id: ''
+      source: static
+      class_name: Shortcuts
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ContentWindow
+      role: panel
+      object_name: contentWindow
+      accessible_id: ''
+      source: static
+      class_name: MusicContentWindow
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Toolbox
+      role: panel
+      object_name: toolbox
+      accessible_id: ''
+      source: static
+      class_name: Toolbar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Component_Menu
+      role: menu
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Menu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Play/Pause
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Previous
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Next
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Exit
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: MusicContentWindow.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: MusicContentWindow.qml
+    children:
+    - name: Component_AllMusicList
+      role: list
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: AllMusicList
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Component_AlbumView
+      role: list
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: AlbumView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Component_ArtistView
+      role: list
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ArtistView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Component_AllMusicList_2
+      role: list
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: AllMusicList
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: MusicBaselist
+      role: list
+      object_name: musicBaselist
+      accessible_id: ''
+      source: static
+      class_name: MusicBaselistview
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: MusicContentWindow_AllMusicList
+      role: list
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: AllMusicList
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: SearchResultWindow.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: SearchResultWindow.qml
+    children:
+    - name: Component_ArtistSublistView
+      role: list
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ArtistSublistView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Component_AlbumSublistView_2
+      role: list
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: AlbumSublistView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: TabArea
+      role: page tab list
+      object_name: tabArea
+      accessible_id: ''
+      source: static
+      class_name: TabBar
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Music
+      role: page tab
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: TabButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Album
+      role: page tab
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: TabButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Artist
+      role: page tab
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: TabButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: AllMusicSortMenu
+      role: menu
+      object_name: allMusicSortMenu
+      accessible_id: ''
+      source: static
+      class_name: SortMenu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: AlbumMusicSortMenu
+      role: menu
+      object_name: albumMusicSortMenu
+      accessible_id: ''
+      source: static
+      class_name: SortMenu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ArtistMusicSortMenu
+      role: menu
+      object_name: artistMusicSortMenu
+      accessible_id: ''
+      source: static
+      class_name: SortMenu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: AllMusicList
+      role: list
+      object_name: allMusicList
+      accessible_id: ''
+      source: static
+      class_name: AllMusicListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ArtistView
+      role: list
+      object_name: artistView
+      accessible_id: ''
+      source: static
+      class_name: GridView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: GridView_ScrollBar_2
+      role: scroll bar
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: MusicSingerGridItem
+      role: list item
+      object_name: musicSingerGridItem
+      accessible_id: ''
+      source: static
+      class_name: ArtistGridDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: AlbumGridView_2
+      role: list
+      object_name: albumGridView
+      accessible_id: ''
+      source: static
+      class_name: GridView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: GridView_ScrollBar_3
+      role: scroll bar
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ItemDelegate_2
+      role: list item
+      object_name: itemDelegate
+      accessible_id: ''
+      source: static
+      class_name: AlbumGridDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: Toolbar.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: Toolbar.qml
+    children:
+    - name: ToolbarRoot
+      role: panel
+      object_name: toolbarRoot
+      accessible_id: ''
+      source: static
+      class_name: ToolFloatingPanel
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Waveform
+      role: canvas
+      object_name: waveform
+      accessible_id: ''
+      source: static
+      class_name: WaveformRect
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: LrcBtn
+      role: push button
+      object_name: lrcBtn
+      accessible_id: ''
+      source: static
+      class_name: ToolButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: VolumeBtn
+      role: push button
+      object_name: volumeBtn
+      accessible_id: ''
+      source: static
+      class_name: ToolButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListBtn
+      role: push button
+      object_name: listBtn
+      accessible_id: ''
+      source: static
+      class_name: ToolButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: WindowTitlebar.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: WindowTitlebar.qml
+    children:
+    - name: WindowTitlebar_Menu
+      role: menu
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Menu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Add playlist
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Add music
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Settings
+      role: menu item
+      object_name: settingsControl
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Component_SearchResultDialog
+      role: dialog
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: SearchResultDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: musicList
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: musicList
+  children:
+  - name: AllMusicDefaultPage.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AllMusicDefaultPage.qml
+    children:
+    - name: Add Songs
+      role: push button
+      object_name: importMusicFile
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Open Folders
+      role: push button
+      object_name: importMusicDir
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: AllMusicList.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AllMusicList.qml
+    children:
+    - name: listTitle
+      role: push button
+      object_name: toolButtonItem
+      accessible_id: ''
+      source: static
+      class_name: ToolButtonItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: DefaultPage_3
+      role: panel
+      object_name: defaultPage
+      accessible_id: ''
+      source: static
+      class_name: AllMusicDefaultPage
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Component_AllMusicListView
+      role: list
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: AllMusicListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: AllMusicListDelegate.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AllMusicListDelegate.qml
+    children:
+    - name: Imagecell_4
+      role: list item
+      object_name: imagecell
+      accessible_id: ''
+      source: static
+      class_name: ImageCell
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: AllMusicListView.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AllMusicListView.qml
+    children:
+    - name: Listview_6
+      role: list
+      object_name: listview
+      accessible_id: ''
+      source: static
+      class_name: ListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListView_ScrollBar_5
+      role: scroll bar
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ItemD
+      role: list item
+      object_name: itemD
+      accessible_id: ''
+      source: static
+      class_name: AllMusicListDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: RemoveSong_7
+      role: dialog
+      object_name: removeSong
+      accessible_id: ''
+      source: static
+      class_name: DeleteSonglistDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: musicbaseandsonglist
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: musicbaseandsonglist
+  children:
+  - name: MusicBaselistview.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: MusicBaselistview.qml
+    children:
+    - name: Library
+      role: panel
+      object_name: musicbaseSidebar
+      accessible_id: ''
+      source: static
+      class_name: SideBarItem
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Playlists
+      role: panel
+      object_name: musicSonglist
+      accessible_id: ''
+      source: static
+      class_name: SideBarItem
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: SideBarItem.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: SideBarItem.qml
+    children:
+    - name: SideListView
+      role: list
+      object_name: sideListView
+      accessible_id: ''
+      source: static
+      class_name: ListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: SidebarItem
+      role: list item
+      object_name: sidebarItem
+      accessible_id: ''
+      source: static
+      class_name: SideBarItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: SideBarItemDelegate.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: SideBarItemDelegate.qml
+    children:
+    - name: Item
+      role: push button
+      object_name: item
+      accessible_id: ''
+      source: static
+      class_name: ItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: musicmousemenu
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: musicmousemenu
+  children:
+  - name: AlbumMoreMenu.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AlbumMoreMenu.qml
+    children:
+    - name: MoreMenu
+      role: menu
+      object_name: moreMenu
+      accessible_id: ''
+      source: static
+      class_name: Menu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: View details
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Play all
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Add to
+      role: menu
+      object_name: imporAlbumtMenu
+      accessible_id: ''
+      source: static
+      class_name: ImportMenu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: ArtistMoreMenu.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: ArtistMoreMenu.qml
+    children:
+    - name: MoreMenu_3
+      role: menu
+      object_name: moreMenu
+      accessible_id: ''
+      source: static
+      class_name: Menu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: View details
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Play all
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Add to
+      role: menu
+      object_name: importArtistMenu
+      accessible_id: ''
+      source: static
+      class_name: ImportMenu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: ImportMenu.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: ImportMenu.qml
+    children:
+    - name: ImportMenu
+      role: menu
+      object_name: importMenu
+      accessible_id: ''
+      source: static
+      class_name: Menu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Play queue
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: My favorites
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Create new playlist
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: '&lt;'
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: MulitSelectMenu.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: MulitSelectMenu.qml
+    children:
+    - name: MulitSelectMenu
+      role: menu
+      object_name: mulitSelectMenu
+      accessible_id: ''
+      source: static
+      class_name: Menu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Add to
+      role: menu
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ImportMenu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: RemoveSong_6
+      role: dialog
+      object_name: removeSong
+      accessible_id: ''
+      source: static
+      class_name: DeleteSonglistDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: play
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: DeleteLocal_2
+      role: dialog
+      object_name: deleteLocal
+      accessible_id: ''
+      source: static
+      class_name: DeleteLocalDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Delete from local disk
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: MusicMoreMenu.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: MusicMoreMenu.qml
+    children:
+    - name: MoreMenu_2
+      role: menu
+      object_name: moreMenu
+      accessible_id: ''
+      source: static
+      class_name: Menu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Pause
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Add to
+      role: menu
+      object_name: musicMoreImportMenu
+      accessible_id: ''
+      source: static
+      class_name: ImportMenu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Open in file manager
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: RemoveSong_5
+      role: dialog
+      object_name: removeSong
+      accessible_id: ''
+      source: static
+      class_name: DeleteSonglistDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: play
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: DeleteLocal
+      role: dialog
+      object_name: deleteLocal
+      accessible_id: ''
+      source: static
+      class_name: DeleteLocalDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Delete from local disk
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Encoding
+      role: menu
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Menu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: encodings
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: InfoDialog
+      role: dialog
+      object_name: infoDialog
+      accessible_id: ''
+      source: static
+      class_name: MusicInfoDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Song info
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: SidebarMenu.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: SidebarMenu.qml
+    children:
+    - name: PlaylistMenu
+      role: menu
+      object_name: playlistMenu
+      accessible_id: ''
+      source: static
+      class_name: Menu
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Play
+      role: menu item
+      object_name: playMenuItem
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Add songs
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Rename
+      role: menu item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: RemoveSong_4
+      role: dialog
+      object_name: removeSong
+      accessible_id: ''
+      source: static
+      class_name: DeleteSonglistDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Delete
+      role: menu item
+      object_name: deletePlaylist
+      accessible_id: ''
+      source: static
+      class_name: MenuItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: musicsublist
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: musicsublist
+  children:
+  - name: AlbumSublist.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AlbumSublist.qml
+    children:
+    - name: MusicSublistTitle_3
+      role: label
+      object_name: musicSublistTitle
+      accessible_id: ''
+      source: static
+      class_name: MusicSublistTitle
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Listview_5
+      role: list
+      object_name: listview
+      accessible_id: ''
+      source: static
+      class_name: ListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListView_ScrollBar_2
+      role: scroll bar
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListView_AlbumSublistDelegate_2
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: AlbumSublistDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: AlbumSublistView.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: AlbumSublistView.qml
+    children:
+    - name: MusicSublistTitle
+      role: label
+      object_name: musicSublistTitle
+      accessible_id: ''
+      source: static
+      class_name: MusicSublistTitle
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Listview_3
+      role: list
+      object_name: listview
+      accessible_id: ''
+      source: static
+      class_name: ListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: AlbumSublistScrollBar
+      role: scroll bar
+      object_name: albumSublistScrollBar
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListView_AlbumSublistDelegate
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: AlbumSublistDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: RemoveSong
+      role: dialog
+      object_name: removeSong
+      accessible_id: ''
+      source: static
+      class_name: DeleteSonglistDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: ArtistSublistDelegate.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: ArtistSublistDelegate.qml
+    children:
+    - name: SublistDelegate
+      role: push button
+      object_name: sublistDelegate
+      accessible_id: ''
+      source: static
+      class_name: ItemDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Imagecell_2
+      role: list item
+      object_name: imagecell
+      accessible_id: ''
+      source: static
+      class_name: ImageCell
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: ArtistSublistView.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: ArtistSublistView.qml
+    children:
+    - name: MusicSublistTitle_2
+      role: label
+      object_name: musicSublistTitle
+      accessible_id: ''
+      source: static
+      class_name: MusicSublistTitle
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Listview_4
+      role: list
+      object_name: listview
+      accessible_id: ''
+      source: static
+      class_name: ListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ArtistSublistScrollBar
+      role: scroll bar
+      object_name: artistSublistScrollBar
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListView_ArtistSublistDelegate
+      role: list item
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ArtistSublistDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: RemoveSong_2
+      role: dialog
+      object_name: removeSong
+      accessible_id: ''
+      source: static
+      class_name: DeleteSonglistDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: MusicSublistTitle.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: MusicSublistTitle.qml
+    children:
+    - name: TitleBackground
+      role: panel
+      object_name: titleBackground
+      accessible_id: ''
+      source: static
+      class_name: SublistTitleBackground
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: TitleButton1
+      role: push button
+      object_name: titleButton1
+      accessible_id: ''
+      source: static
+      class_name: SublistTitleButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: playlist
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: playlist
+  children:
+  - name: CurrentPlayList.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: CurrentPlayList.qml
+    children:
+    - name: PlaylistRoot
+      role: panel
+      object_name: playlistRoot
+      accessible_id: ''
+      source: static
+      class_name: CurrentFloatingPanel
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Empty
+      role: push button
+      object_name: deleteBtn
+      accessible_id: ''
+      source: static
+      class_name: ToolButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: PlaylistView
+      role: list
+      object_name: playlistView
+      accessible_id: ''
+      source: static
+      class_name: ListView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: ListView_ScrollBar_4
+      role: scroll bar
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: PlaylistDelegate
+      role: list item
+      object_name: playlistDelegate
+      accessible_id: ''
+      source: static
+      class_name: CurrentPlayListDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: RemoveSong_3
+      role: dialog
+      object_name: removeSong
+      accessible_id: ''
+      source: static
+      class_name: DeleteSonglistDialog
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: CurrentPlayListDelegate.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: CurrentPlayListDelegate.qml
+    children:
+    - name: Imagecell_3
+      role: list item
+      object_name: imagecell
+      accessible_id: ''
+      source: static
+      class_name: ImageCell
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: singerlist
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: singerlist
+  children:
+  - name: ArtistDefaultPage.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: ArtistDefaultPage.qml
+    children:
+    - name: Add Songs
+      role: push button
+      object_name: importMusicFile
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Open Folders
+      role: push button
+      object_name: importMusicDir
+      accessible_id: ''
+      source: static
+      class_name: Button
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: ArtistGridDelegate.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: ArtistGridDelegate.qml
+    children:
+    - name: CircularImg
+      role: image
+      object_name: circular_img
+      accessible_id: ''
+      source: static
+      class_name: CircularImg
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: CircularImg_CircularButton
+      role: push button
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: CircularButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Morebutton_2
+      role: push button
+      object_name: morebutton
+      accessible_id: ''
+      source: static
+      class_name: CircularButton
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: ArtistView.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: ArtistView.qml
+    children:
+    - name: Component_ArtistSublistView_2
+      role: list
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ArtistSublistView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Artists
+      role: push button
+      object_name: toolButtonItem
+      accessible_id: ''
+      source: static
+      class_name: ToolButtonItem
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: DefaultPage_2
+      role: panel
+      object_name: defaultPage
+      accessible_id: ''
+      source: static
+      class_name: ArtistDefaultPage
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: Singergridview
+      role: list
+      object_name: singergridview
+      accessible_id: ''
+      source: static
+      class_name: GridView
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: GridView_ScrollBar_4
+      role: scroll bar
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: ScrollBar
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: MusicSingerGridItem_2
+      role: list item
+      object_name: musicSingerGridItem
+      accessible_id: ''
+      source: static
+      class_name: ArtistGridDelegate
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
+- name: toolbar
+  role: panel
+  object_name: ''
+  accessible_id: ''
+  source: static
+  class_name: toolbar
+  children:
+  - name: VolumeSlider.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: VolumeSlider.qml
+    children:
+    - name: ContentSlider
+      role: slider
+      object_name: contentSlider
+      accessible_id: ''
+      source: static
+      class_name: Slider
+      classification: interactive
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: WaveformItem.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: WaveformItem.qml
+    children:
+    - name: WaveformItem_StripedRectangle
+      role: canvas
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: StripedRectangle
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: WaveformItem_StripedRectangle_2
+      role: canvas
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: StripedRectangle
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  - name: WaveformRect.qml
+    role: panel
+    object_name: ''
+    accessible_id: ''
+    source: static
+    class_name: WaveformRect.qml
+    children:
+    - name: WaveItem
+      role: canvas
+      object_name: waveItem
+      accessible_id: ''
+      source: static
+      class_name: WaveformItem
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: TimeLabel
+      role: canvas
+      object_name: timeLabel
+      accessible_id: ''
+      source: static
+      class_name: ArrowRectangle
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    - name: WaveformRect_Triangle
+      role: canvas
+      object_name: ''
+      accessible_id: ''
+      source: static
+      class_name: Triangle
+      classification: container
+      description: ''
+      actions: *id001
+      index_in_parent: -1
+      states: *id002
+      state_labels: *id003
+      comment: ''
+      annotation_status: draft
+    classification: container
+    description: ''
+    actions: *id001
+    index_in_parent: -1
+    states: *id002
+    state_labels: *id003
+    comment: ''
+    annotation_status: draft
+  classification: container
+  description: ''
+  actions: *id001
+  index_in_parent: -1
+  states: *id002
+  state_labels: *id003
+  comment: ''
+  annotation_status: draft
