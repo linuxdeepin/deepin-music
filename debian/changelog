@@ -1,3 +1,35 @@
+deepin-music (7.0.67) unstable; urgency=medium
+
+  * fix: add keyboard navigation for search dropdown
+  * fix: correct search dropdown position offset
+  * refactor: remove Windows start menu shortcut creation logic
+  * fix(lyrics): parse repeated LRC timestamps as separate lines
+  * [skip CI] i18n: Translate deepin-music_en_US.ts in pl
+  * [skip CI] i18n: Translate deepin-music_en_US.ts in ar
+  * [skip CI] i18n: Translate deepin-music_en_US.ts in sv
+  * fix: clean up partial WinSMTC initialization in shutdown
+  * fix: correct QML signal handler syntax in WindowTitlebar
+  * fix: remove forced poll.h include workaround for VLC headers
+  * fix: resolve QML compatibility issues and add null safety checks
+  * fix: harden WinSMTC teardown and fix SMTC play fallback per review
+  * feat: add Windows SMTC support and wrap MPRIS in Linux-only guards
+  * fix: word highlight 500ms early and 1-digit fraction timestamps dropped
+  * feat: support word-by-word lyric parsing and highlighting
+  * fix: improve search result UI and navigation
+  * fix: resolve UI centering and alignment issues
+  * fix: ensure directories exist before use and update cover metadata
+  * fix: update Arabic (ar) translations
+  * fix: always recalculate position to prevent issues on window resize
+  * chore: update shader files for Windows GLSL compatibility
+  * fix: improve VLC engine detection and null safety
+  * fix: remove SystemPalette and use hardcoded colors in sidebar
+  * fix: Use version-agnostic library names for FFmpeg DLLs on Windows
+  * fix: disable unnecessary VLC modules and add Qt6::DBus dependency
+  * fix: Windows file location support
+  * fix: QtPlayer volume setting - convert int to qreal
+
+ -- Wang Yu <wangyu@uniontech.com>  Thu, 03 Sep 2026 14:28:00 +0800
+
 deepin-music (7.0.66) unstable; urgency=medium
 
   * perf(startup): defer non-critical initialization until first frame
