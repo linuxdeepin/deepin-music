@@ -176,12 +176,12 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
         <source>No songs yet. Click “</source>
-        <translation>Brak jeszcze piosenek. Kliknij „ </translation>
+        <translation>Jeszcze nie dodano piosenek. Kliknij “</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
         <source>” to add songs to the playlist</source>
-        <translation> „ aby dodać piosenki do listy odtwarzania</translation>
+        <translation> „, aby dodać piosenki do listy odtwarzania</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
