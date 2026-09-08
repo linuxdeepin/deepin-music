@@ -615,7 +615,7 @@
     <message>
         <location filename="../src/music-player/dialogs/FileDialog.qml" line="15"/>
         <source>All Music</source>
-        <translation>Wszystkie piosenki</translation>
+        <translation>Formaty muzyczne </translation>
     </message>
 </context>
 <context>
