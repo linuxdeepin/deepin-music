@@ -693,7 +693,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="210"/>
         <source>Previous</source>
-        <translation>Poprzedni</translation>
+        <translation>Poprzednia</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="221"/>
@@ -1040,7 +1040,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="201"/>
         <source>Previous</source>
-        <translation>Poprzedni</translation>
+        <translation>Poprzednia</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="245"/>
@@ -1315,7 +1315,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="240"/>
         <source>Previous</source>
-        <translation>Poprzedni</translation>
+        <translation>Poprzednia</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="261"/>
