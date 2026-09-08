@@ -166,22 +166,22 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
         <source>Click “</source>
-        <translation>Kliknij “</translation>
+        <translation>Kliknij </translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
         <source>” to add a song to My Favorites</source>
-        <translation> „ aby dodać piosenkę do Ulubionych</translation>
+        <translation> , aby dodać piosenkę do Ulubionych</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
         <source>No songs yet. Click “</source>
-        <translation>Jeszcze nie dodano piosenek. Kliknij “</translation>
+        <translation>Jeszcze nie dodano piosenek. Kliknij </translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
         <source>” to add songs to the playlist</source>
-        <translation>„, aby dodać piosenki do listy odtwarzania</translation>
+        <translation> , aby dodać piosenki do listy odtwarzania</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
