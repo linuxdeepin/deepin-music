@@ -161,7 +161,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation>Twoje ulubione piosenki pojawią się tutaj</translation>
+        <translation>Twoje ulubione utwory pojawią się tutaj</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
@@ -171,17 +171,17 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
         <source>” to add a song to My Favorites</source>
-        <translation> , aby dodać piosenkę do Ulubionych</translation>
+        <translation> , aby dodać utwór do Ulubionych</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
         <source>No songs yet. Click “</source>
-        <translation>Jeszcze nie dodano piosenek. Kliknij </translation>
+        <translation>Jeszcze nie dodano utworów. Kliknij </translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
         <source>” to add songs to the playlist</source>
-        <translation> , aby dodać piosenki do listy odtwarzania</translation>
+        <translation> , aby dodać utwory do listy odtwarzania</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
