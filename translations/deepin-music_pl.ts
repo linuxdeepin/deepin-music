@@ -161,7 +161,7 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation>Twoje ulubione piosenki będą wyświetlane tutaj</translation>
+        <translation>Twoje ulubione piosenki pojawią się tutaj</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
