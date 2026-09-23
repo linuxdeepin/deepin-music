@@ -1,3 +1,10 @@
+deepin-music (7.0.68) unstable; urgency=medium
+
+  * chore: migrate linglong deps to declarative buildext.apt
+  * fix: remove always-on-top flag from settings dialog
+
+ -- Wang Yu <wangyu@uniontech.com>  Wed, 23 Sep 2026 20:49:36 +0800
+
 deepin-music (7.0.67) unstable; urgency=medium
 
   * fix: add keyboard navigation for search dropdown
