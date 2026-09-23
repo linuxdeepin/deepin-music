@@ -85,7 +85,6 @@ VlcInstance::VlcInstance(const QStringList &args,
       _status(false),
       _logLevel(Vlc::ErrorLevel)
 {
-    Q_UNUSED(args)
     vlc_new_function vlc_new = (vlc_new_function)DynamicLibraries::instance()->resolve("libvlc_new");
     vlc_set_user_agent_function vlc_set_user_agent = (vlc_set_user_agent_function)DynamicLibraries::instance()->resolve("libvlc_set_user_agent");
     vlc_set_app_id_function vlc_set_app_id = (vlc_set_app_id_function)DynamicLibraries::instance()->resolve("libvlc_set_app_id");
@@ -99,14 +98,15 @@ VlcInstance::VlcInstance(const QStringList &args,
         qCDebug(dmMusic) << "VLC plugin path set to:" << pluginPath;
     }
 #endif
-
-    // 禁用不需要的模块（音乐播放器不需要视频、字幕等功能）
-    const char *vlcArgs[] = {
-        "--no-video",            // 禁用视频输出
-        "--no-stats",            // 禁用统计信息
-        "--no-spu",              // 禁用字幕处理单元
-    };
-    _vlcInstance = vlc_new(sizeof(vlcArgs) / sizeof(vlcArgs[0]), vlcArgs);
+    QVector<QByteArray> vlcArgData;
+    vlcArgData.reserve(args.size());
+    QVector<const char*> vlcArgs;
+    vlcArgs.reserve(args.size());
+    for (const QString& s : args) {
+        vlcArgData.append(s.toUtf8());
+        vlcArgs.append(vlcArgData.last().constData());
+    }
+    _vlcInstance = vlc_new(static_cast<int>(vlcArgs.size()), vlcArgs.data());
     if (_vlcInstance) {
         qCDebug(dmMusic) << "VLC instance created successfully";
         vlc_set_user_agent(_vlcInstance, DmGlobal::getAppName().toStdString().c_str(), "");//name
