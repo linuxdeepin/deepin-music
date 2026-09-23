@@ -161,27 +161,27 @@
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="104"/>
         <source>Your favorite songs will be displayed here</source>
-        <translation>Twoje ulubione piosenki będą wyświetlane tutaj</translation>
+        <translation>Twoje ulubione utwory pojawią się tutaj</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="116"/>
         <source>Click “</source>
-        <translation>Kliknij „ </translation>
+        <translation>Kliknij </translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="127"/>
         <source>” to add a song to My Favorites</source>
-        <translation> „ aby dodać piosenkę do Ulubionych</translation>
+        <translation> , aby dodać utwór do Ulubionych</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="163"/>
         <source>No songs yet. Click “</source>
-        <translation>Brak jeszcze piosenek. Kliknij „ </translation>
+        <translation>Jeszcze nie dodano utworów. Kliknij </translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="174"/>
         <source>” to add songs to the playlist</source>
-        <translation> „ aby dodać piosenki do listy odtwarzania</translation>
+        <translation> , aby dodać utwory do listy odtwarzania</translation>
     </message>
     <message>
         <location filename="../src/music-player/musicList/AllMusicDefaultPage.qml" line="71"/>
@@ -615,7 +615,7 @@
     <message>
         <location filename="../src/music-player/dialogs/FileDialog.qml" line="15"/>
         <source>All Music</source>
-        <translation>Wszystkie piosenki</translation>
+        <translation>Formaty muzyczne </translation>
     </message>
 </context>
 <context>
@@ -693,7 +693,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="210"/>
         <source>Previous</source>
-        <translation>Poprzedni</translation>
+        <translation>Poprzednia</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/MainWindow.qml" line="221"/>
@@ -1040,7 +1040,7 @@
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="201"/>
         <source>Previous</source>
-        <translation>Poprzedni</translation>
+        <translation>Poprzednia</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/SettingsDialog.qml" line="245"/>
@@ -1315,7 +1315,7 @@
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="240"/>
         <source>Previous</source>
-        <translation>Poprzedni</translation>
+        <translation>Poprzednia</translation>
     </message>
     <message>
         <location filename="../src/music-player/mainwindow/Toolbar.qml" line="261"/>
