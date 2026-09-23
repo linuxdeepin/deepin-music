@@ -22,7 +22,8 @@ Settings.SettingsDialog {
     height: 548
     width: 664
     config: SettingsConfig {}
-    flags: Qt.WindowCloseButtonHint | Qt.WindowStaysOnTopHint
+    flags: Qt.Dialog | Qt.WindowCloseButtonHint
+    modality: Qt.WindowModal
 
     onVisibleChanged: {
         if (visible && Qt.platform.os === "windows") {
