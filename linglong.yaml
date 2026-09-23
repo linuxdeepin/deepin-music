@@ -20,10 +20,6 @@ command:
   - deepin-music
 
 build: |
-  # 下载和安装依赖
-  apt -y install --download-only libavutil-dev libavcodec-dev libavformat-dev libdtk6core-bin libdtk6gui-dev libicu-dev libmpris-qt6-dev libtag1-dev qt6-svg-dev libqt6sql6-sqlite libxtst-dev libvlc-dev libvlccore-dev vlc-plugin-base qt6-multimedia-dev qt6-tools-dev qt6-tools-dev-tools qml6-module-qtquick-dialogs qt6-declarative-dev libdtk6declarative-dev qt6-5compat-dev libsdl2-dev libsdl1.2debian
-  bash ./install_dep /var/cache/apt/archives "$PREFIX"
-
   # 修改路径
   sed -i "s|/usr|$PREFIX|g" src/libdmusic/CMakeLists.txt
 
@@ -40,29 +36,25 @@ build: |
   # update for libdmusic.so
   ldconfig -C "$LINGLONG_LD_SO_CACHE"
 
-  # 项目生成应用名和动态隐式加载的依赖库，ldd无法找到的其他库
-  LDD_FILES=(
-    deepin-music
-    libvlccore.so
-    libvlc.so
-    libavcodec.so
-    libavformat.so
-    libSDL2-2.0.so
-  )
-
-  # 生成.install 文件
-  bash ./deploy_dep "${LDD_FILES[@]}"
-  ID_VALUE=$(awk -F ': ' '/^  id: / {print $2}' linglong.yaml)
-  find ${PREFIX}/lib/${TRIPLET}/vlc >> "${ID_VALUE}.install"
-
-  # 将 vlc 子目录下的 libvlc_pulse.so 复制到标准库路径，确保动态链接器能找到
-  if [ -f "${PREFIX}/lib/${TRIPLET}/vlc/libvlc_pulse.so.0" ]; then
-    cp -a "${PREFIX}/lib/${TRIPLET}/vlc/libvlc_pulse.so"* "${PREFIX}/lib/${TRIPLET}/"
-    ls "${PREFIX}/lib/${TRIPLET}/libvlc_pulse.so"* >> "${ID_VALUE}.install"
-  fi
-
-# allow apt download in build and do apt update
 buildext:
   apt:
     build_depends:
-      - libc6
+      - cmake
+      - pkg-config
+      - libavutil-dev
+      - libavcodec-dev
+      - libavformat-dev
+      - libicu-dev
+      - libmpris-qt6-dev
+      - libtag1-dev
+      - libvlc-dev
+      - libvlccore-dev
+      - libsdl2-dev
+    depends:
+      - libvlc5
+      - libvlccore9
+      - vlc-plugin-base
+      - libsdl2-2.0-0
+      - libtag1v5
+      - libmpris-qt6
+      - libavcodec60
