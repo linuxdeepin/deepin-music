@@ -81,6 +81,10 @@ FooterWidget::FooterWidget(QWidget *parent) :
     connect(m_btPlay, SIGNAL(clicked(bool)), this, SLOT(slotPlayClick(bool)));
     connect(m_btNext, SIGNAL(clicked(bool)), this, SLOT(slotNextClick(bool)));
     connect(m_btPrev, SIGNAL(clicked(bool)), this, SLOT(slotPreClick(bool)));
+    connect(m_btPrev, SIGNAL(pressed()), this, SLOT(onPrevPressed()));
+    connect(m_btPrev, SIGNAL(released()), this, SLOT(onPrevReleased()));
+    connect(m_btNext, SIGNAL(pressed()), this, SLOT(onNextPressed()));
+    connect(m_btNext, SIGNAL(released()), this, SLOT(onNextReleased()));
     connect(m_btSound, &DIconButton::clicked, this, &FooterWidget::slotSoundClick);
     connect(m_btSound, &ControlIconButton::mouseIn, this, &FooterWidget::slotSoundMouseIn);
     connect(m_btFavorite, &DIconButton::clicked, this, &FooterWidget::slotFavoriteClick);
@@ -529,6 +533,42 @@ void FooterWidget::slotPreClick(bool click)
 {
     Q_UNUSED(click)
     Player::getInstance()->playPreMeta();
+}
+
+void FooterWidget::onPrevPressed()
+{
+    if (m_slotTheme == 1) {
+        m_btPrev->setIcon(QIcon(":/icons/deepin/builtin/texts/music_last_press_36px.svg"));
+    } else {
+        m_btPrev->setIcon(QIcon(":/icons/deepin/builtin/texts/music_last_light_press_36px.svg"));
+    }
+}
+
+void FooterWidget::onPrevReleased()
+{
+    if (m_slotTheme == 1) {
+        m_btPrev->setIcon(QIcon(":/icons/deepin/builtin/texts/music_last_36px.svg"));
+    } else {
+        m_btPrev->setIcon(QIcon(":/icons/deepin/builtin/texts/music_last_light_36px.svg"));
+    }
+}
+
+void FooterWidget::onNextPressed()
+{
+    if (m_slotTheme == 1) {
+        m_btNext->setIcon(QIcon(":/icons/deepin/builtin/texts/music_next_press_36px.svg"));
+    } else {
+        m_btNext->setIcon(QIcon(":/icons/deepin/builtin/texts/music_next_light_press_36px.svg"));
+    }
+}
+
+void FooterWidget::onNextReleased()
+{
+    if (m_slotTheme == 1) {
+        m_btNext->setIcon(QIcon(":/icons/deepin/builtin/texts/music_next_36px.svg"));
+    } else {
+        m_btNext->setIcon(QIcon(":/icons/deepin/builtin/texts/music_next_light_36px.svg"));
+    }
 }
 
 void FooterWidget::slotFavoriteClick(bool click)

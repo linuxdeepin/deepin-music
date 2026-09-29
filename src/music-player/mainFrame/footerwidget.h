@@ -59,6 +59,11 @@ public:
     void slotSetWaveValue(int step, long duration);
     // 阻止休眠
     void screenStandby(bool isStandby);
+private slots:
+    void onPrevPressed();
+    void onPrevReleased();
+    void onNextPressed();
+    void onNextReleased();
 private:
     void initUI(QWidget *parent = nullptr);
     void installTipHint(QWidget *widget, const QString &hintstr);
