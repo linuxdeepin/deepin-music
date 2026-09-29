@@ -167,8 +167,8 @@ void SubSonglistWidget::setThemeType(int type)
 
         auto playAllPalette = m_btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, Qt::white);
-        playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
         playAllPalette.setColor(DPalette::Light, QColor("#FD5E5E"));
+        playAllPalette.setColor(DPalette::Dark, QColor("#ED5656"));
         QColor sbcolor("#F82C47");
         sbcolor.setAlphaF(0.4);
         playAllPalette.setColor(DPalette::Shadow, sbcolor);
@@ -176,8 +176,8 @@ void SubSonglistWidget::setThemeType(int type)
 
         auto randomPlayPalette = m_btRandomPlay->palette();
         randomPlayPalette.setColor(DPalette::ButtonText, Qt::white);
-        randomPlayPalette.setColor(DPalette::Dark, QColor("#646464"));
-        randomPlayPalette.setColor(DPalette::Light, QColor("#5C5C5C"));
+        randomPlayPalette.setColor(DPalette::Light, QColor("#646464"));
+        randomPlayPalette.setColor(DPalette::Dark, QColor("#5C5C5C"));
         QColor randombcolor("#000000");
         randombcolor.setAlphaF(0.2);
         randomPlayPalette.setColor(DPalette::Shadow, randombcolor);
@@ -193,8 +193,8 @@ void SubSonglistWidget::setThemeType(int type)
 
         auto playAllPalette = m_btPlayAll->palette();
         playAllPalette.setColor(DPalette::ButtonText, "#FFFFFF");
-        playAllPalette.setColor(DPalette::Dark, QColor("#DA2D2D"));
-        playAllPalette.setColor(DPalette::Light, QColor("#A51B1B"));
+        playAllPalette.setColor(DPalette::Light, QColor("#DA2D2D"));
+        playAllPalette.setColor(DPalette::Dark, QColor("#A51B1B"));
         QColor sbcolor("#C10A0A");
         sbcolor.setAlphaF(0.5);
         playAllPalette.setColor(DPalette::Shadow, sbcolor);
@@ -202,8 +202,8 @@ void SubSonglistWidget::setThemeType(int type)
 
         auto randomPlayPalette = m_btRandomPlay->palette();
         randomPlayPalette.setColor(DPalette::ButtonText, "#FFFFFF");
-        randomPlayPalette.setColor(DPalette::Dark, QColor("#555454"));
-        randomPlayPalette.setColor(DPalette::Light, QColor("#414141"));
+        randomPlayPalette.setColor(DPalette::Light, QColor("#555454"));
+        randomPlayPalette.setColor(DPalette::Dark, QColor("#414141"));
         m_btRandomPlay->setPalette(randomPlayPalette);
     }
     m_btPlayAll->setIcon(QIcon::fromTheme("play_all"));
