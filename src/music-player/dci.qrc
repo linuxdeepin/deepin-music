@@ -97,5 +97,6 @@
         <file>dsg/icons/go_down.dci</file>
         <file>dsg/icons/default_add.dci</file>
         <file>dsg/icons/default_heart.dci</file>
+        <file>dsg/icons/location.dci</file>
     </qresource>
 </RCC>

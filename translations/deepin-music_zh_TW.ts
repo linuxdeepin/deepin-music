@@ -239,6 +239,11 @@
         <source>Duration</source>
         <translation>時長</translation>
     </message>
+    <message>
+        <location filename="../src/music-player/musicList/AllMusicListView.qml" line="462"/>
+        <source>Locate current song</source>
+        <translation>定位目前播放歌曲</translation>
+    </message>
 </context>
 <context>
     <name>ArtistDefaultPage</name>
