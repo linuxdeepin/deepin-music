@@ -65,24 +65,40 @@ AudioDataDetector::AudioDataDetector(QObject *parent)
     : QThread(parent)
 {
     qCDebug(dmMusic) << "Initializing AudioDataDetector";
-    connect(this, &AudioDataDetector::audioBufferFromThread, this, &AudioDataDetector::audioBuffer, Qt::QueuedConnection);
+    connect(this, &AudioDataDetector::audioBufferFromThread,
+            this, &AudioDataDetector::forwardAudioBuffer, Qt::QueuedConnection);
+    connect(this, &QThread::finished, this, &AudioDataDetector::startPendingRequest, Qt::QueuedConnection);
     qCDebug(dmMusic) << "AudioDataDetector initialized with queued connection";
 }
 
 AudioDataDetector::~AudioDataDetector()
 {
     qCDebug(dmMusic) << "Destroying AudioDataDetector";
-    m_stopFlag = true;
-    while (isRunning()) {
-        qCDebug(dmMusic) << "Waiting for detection thread to finish";
+    {
+        QMutexLocker locker(&m_mutex);
+        m_shuttingDown = true;
+        m_stopFlag = true;
+        m_hasPendingRequest = false;
+        m_pendingPath.clear();
+        m_pendingHash.clear();
+    }
+    if (isRunning()) {
+        wait();
     }
     qCDebug(dmMusic) << "AudioDataDetector destroyed";
 }
 
 void AudioDataDetector::run()
 {
-    QString path = m_curPath;
-    QString hash = m_curHash;
+    QString path;
+    QString hash;
+    quint64 requestGeneration = 0;
+    {
+        QMutexLocker locker(&m_mutex);
+        path = m_curPath;
+        hash = m_curHash;
+        requestGeneration = m_activeGeneration;
+    }
     qCInfo(dmMusic) << "Starting audio data detection for file:" << path << "hash:" << hash;
     
     if (path.isEmpty()) {
@@ -122,8 +138,7 @@ void AudioDataDetector::run()
     if (!fn_swr_alloc_set_opts2 || !fn_swr_init || !fn_swr_convert || !fn_av_rescale_rnd
         || !fn_av_samples_alloc || !fn_av_freep || !fn_av_channel_layout_default) {
         qCCritical(dmMusic) << "Failed to resolve swresample functions, cannot generate waveform";
-        m_curPath.clear();
-        m_curHash.clear();
+        clearRequestIfCurrent(requestGeneration);
         return;
     }
 
@@ -132,8 +147,7 @@ void AudioDataDetector::run()
     if (pFormatCtx == nullptr || ret != 0) {
         qCCritical(dmMusic) << "Failed to open input format context for file:" << path << "error code:" << ret;
         fn_avformat_free_context(pFormatCtx);
-        m_curPath.clear();
-        m_curHash.clear();
+        clearRequestIfCurrent(requestGeneration);
         return;
     }
 
@@ -149,8 +163,7 @@ void AudioDataDetector::run()
         qCWarning(dmMusic) << "No audio stream found in file:" << path;
         fn_avformat_close_input(&pFormatCtx);
         fn_avformat_free_context(pFormatCtx);
-        m_curPath.clear();
-        m_curHash.clear();
+        clearRequestIfCurrent(requestGeneration);
         return;
     }
 
@@ -166,8 +179,7 @@ void AudioDataDetector::run()
         fn_avcodec_free_context(&codecCtx);
         fn_avformat_close_input(&pFormatCtx);
         fn_avformat_free_context(pFormatCtx);
-        m_curPath.clear();
-        m_curHash.clear();
+        clearRequestIfCurrent(requestGeneration);
         return;
     }
 
@@ -176,8 +188,7 @@ void AudioDataDetector::run()
         fn_avcodec_free_context(&codecCtx);
         fn_avformat_close_input(&pFormatCtx);
         fn_avformat_free_context(pFormatCtx);
-        m_curPath.clear();
-        m_curHash.clear();
+        clearRequestIfCurrent(requestGeneration);
         return;
     }
 
@@ -197,8 +208,7 @@ void AudioDataDetector::run()
         fn_avcodec_free_context(&codecCtx);
         fn_avformat_close_input(&pFormatCtx);
         fn_avformat_free_context(pFormatCtx);
-        m_curPath.clear();
-        m_curHash.clear();
+        clearRequestIfCurrent(requestGeneration);
         return;
     }
 
@@ -211,7 +221,7 @@ void AudioDataDetector::run()
     int count = 0;
 
     while (fn_av_read_frame(pFormatCtx, packet) >= 0) {
-        if (m_stopFlag && curData.size() > 10) {
+        if (stopRequested(requestGeneration)) {
             qCDebug(dmMusic) << "Stop flag detected, cleaning up resources for file:" << path;
             fn_av_packet_unref(packet);
             fn_av_packet_free(&packet);
@@ -221,10 +231,7 @@ void AudioDataDetector::run()
             fn_avformat_close_input(&pFormatCtx);
             fn_avformat_free_context(pFormatCtx);
             if (currentPeak > 0) curData.append(currentPeak);
-            resample(curData, hash, true);
-            m_stopFlag = false;
-            m_curPath.clear();
-            m_curHash.clear();
+            resample(curData, hash, requestGeneration, true);
             qCDebug(dmMusic) << "Successfully stopped detection for file:" << path;
             return;
         }
@@ -275,24 +282,47 @@ void AudioDataDetector::run()
     fn_avformat_free_context(pFormatCtx);
 
     qCInfo(dmMusic) << "Waveform detection completed for:" << path << "grains:" << curData.size();
-    resample(curData, hash);
+    resample(curData, hash, requestGeneration);
 }
 
 void AudioDataDetector::onBufferDetector(const QString &path, const QString &hash)
 {
     qCDebug(dmMusic) << "Received buffer detection request for file:" << path << "hash:" << hash;
-    QString curHash = m_curHash;
-    if (hash == curHash/* || true*/) {
-        qCDebug(dmMusic) << "Hash matches current processing hash, ignoring request:" << hash;
-        return;
+    quint64 requestGeneration = 0;
+    {
+        QMutexLocker locker(&m_mutex);
+        if (m_shuttingDown) {
+            return;
+        }
+        if (hash == m_curHash && !m_hasPendingRequest) {
+            qCDebug(dmMusic) << "Hash matches current processing hash, ignoring request:" << hash;
+            return;
+        }
+
+        requestGeneration = ++m_requestGeneration;
+        if (isRunning()) {
+            // Keep the old worker's snapshot intact. It must not clear this new request
+            // when it exits after observing the stop flag.
+            qCDebug(dmMusic) << "Detection thread is running, queueing new request";
+            m_pendingPath = path;
+            m_pendingHash = hash;
+            m_hasPendingRequest = true;
+            m_stopFlag = true;
+            return;
+        }
+
+        m_curPath = path;
+        m_curHash = hash;
+        m_activeGeneration = requestGeneration;
+        m_stopFlag = false;
+        m_hasPendingRequest = false;
     }
-    if (isRunning()) {
-        qCDebug(dmMusic) << "Detection thread is running, setting stop flag";
-        m_stopFlag = true;
-    }
-    m_curPath = path;
-    m_curHash = hash;
-    if (!queryCacheExisted(hash) && DmGlobal::playbackEngineType() == 1) { //查询到本地无缓存信息
+
+    if (!queryCacheExisted(hash, requestGeneration) && DmGlobal::playbackEngineType() == 1) { //查询到本地无缓存信息
+        QMutexLocker locker(&m_mutex);
+        if (m_shuttingDown || requestGeneration != m_requestGeneration || m_hasPendingRequest || isRunning()) {
+            return;
+        }
         qCInfo(dmMusic) << "No cache found for hash:" << hash << "starting audio data detection thread";
         start();
     } else {
@@ -302,17 +332,75 @@ void AudioDataDetector::onBufferDetector(const QString &path, const QString &has
 
 void AudioDataDetector::onClearBufferDetector()
 {
+    QMutexLocker locker(&m_mutex);
     qCDebug(dmMusic) << "Clearing buffer detector, current path:" << m_curPath << "hash:" << m_curHash;
+    ++m_requestGeneration;
     if (isRunning()) {
         qCDebug(dmMusic) << "Detection thread is running, setting stop flag";
         m_stopFlag = true;
     }
     m_curPath.clear();
     m_curHash.clear();
+    m_pendingPath.clear();
+    m_pendingHash.clear();
+    m_hasPendingRequest = false;
     qCDebug(dmMusic) << "Buffer detector cleared";
 }
 
-void AudioDataDetector::resample(const QVector<float> &buffer, const QString &hash, bool forceQuit)
+void AudioDataDetector::startPendingRequest()
+{
+    QString path;
+    QString hash;
+    quint64 requestGeneration = 0;
+    {
+        QMutexLocker locker(&m_mutex);
+        if (m_shuttingDown) {
+            return;
+        }
+        if (!m_hasPendingRequest) {
+            return;
+        }
+
+        path = m_pendingPath;
+        hash = m_pendingHash;
+        requestGeneration = m_requestGeneration;
+        m_curPath = path;
+        m_curHash = hash;
+        m_activeGeneration = requestGeneration;
+        m_pendingPath.clear();
+        m_pendingHash.clear();
+        m_hasPendingRequest = false;
+        m_stopFlag = false;
+    }
+
+    if (!queryCacheExisted(hash, requestGeneration) && DmGlobal::playbackEngineType() == 1) {
+        QMutexLocker locker(&m_mutex);
+        if (m_shuttingDown || requestGeneration != m_requestGeneration || m_hasPendingRequest || isRunning()) {
+            return;
+        }
+        qCInfo(dmMusic) << "Starting queued audio data detection for file:" << path << "hash:" << hash;
+        start();
+    } else {
+        qCDebug(dmMusic) << "Queued request cache exists for hash:" << hash << ", skipping detection";
+    }
+}
+
+void AudioDataDetector::clearRequestIfCurrent(quint64 requestGeneration)
+{
+    QMutexLocker locker(&m_mutex);
+    if (m_activeGeneration == requestGeneration && !m_hasPendingRequest) {
+        m_curPath.clear();
+        m_curHash.clear();
+    }
+}
+
+bool AudioDataDetector::stopRequested(quint64 requestGeneration) const
+{
+    QMutexLocker locker(&m_mutex);
+    return m_shuttingDown || requestGeneration != m_requestGeneration || m_stopFlag;
+}
+
+void AudioDataDetector::resample(const QVector<float> &buffer, const QString &hash, quint64 requestGeneration, bool forceQuit)
 {
     qCDebug(dmMusic) << "Resampling audio data for hash:" << hash << "buffer size:" << buffer.size() << "forceQuit:" << forceQuit;
 
@@ -381,11 +469,28 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
     } else {
         qCDebug(dmMusic) << "Force quit mode, skipping cache write for hash:" << hash;
     }
-    Q_EMIT audioBufferFromThread(s_buffer, hash);
+    {
+        QMutexLocker locker(&m_mutex);
+        if (m_shuttingDown || requestGeneration != m_requestGeneration || m_stopFlag) {
+            qCDebug(dmMusic) << "Discarding stale audio buffer for hash:" << hash;
+            return;
+        }
+        Q_EMIT audioBufferFromThread(s_buffer, hash, requestGeneration);
+    }
     qCDebug(dmMusic) << "Emitted audio buffer data for hash:" << hash << "size:" << s_buffer.size();
 }
 
-bool AudioDataDetector::queryCacheExisted(const QString &hash)
+void AudioDataDetector::forwardAudioBuffer(const QVector<float> &buffer, const QString &hash, quint64 requestGeneration)
+{
+    QMutexLocker locker(&m_mutex);
+    if (m_shuttingDown || requestGeneration != m_requestGeneration || m_stopFlag) {
+        qCDebug(dmMusic) << "Discarding stale audio buffer for hash:" << hash;
+        return;
+    }
+    Q_EMIT audioBuffer(buffer, hash);
+}
+
+bool AudioDataDetector::queryCacheExisted(const QString &hash, quint64 requestGeneration)
 {
     qCDebug(dmMusic) << "Querying cache existence for hash:" << hash;
     QString path = DmGlobal::cachePath() + QString("/wave/%1.dat").arg(hash);
@@ -420,6 +525,6 @@ bool AudioDataDetector::queryCacheExisted(const QString &hash)
     file.close();
 
     qCInfo(dmMusic) << "Successfully loaded audio buffer from cache for hash:" << hash << "buffer size:" << f_buffer.size();
-    Q_EMIT audioBuffer(f_buffer, hash);
+    forwardAudioBuffer(f_buffer, hash, requestGeneration);
     return true;
 }

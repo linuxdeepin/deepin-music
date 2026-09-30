@@ -340,6 +340,7 @@ ToolFloatingPanel {
                 width: parent.width
                 height: parent.height
                 totalSecs: minute * 60 + second
+                pointList: toolbarRoot.pointList
                 visible: songTitle.length === 0 ? false : true
             }
         }
@@ -555,6 +556,11 @@ ToolFloatingPanel {
         updatePlayControlBtnStatus()
     }
     function audioBufferChange(buffer,hash) {
+        // 波形分析是异步的，旧歌曲的结果可能在切歌后才到达。
+        // 使用 Presenter 的当前歌曲状态，兼容缓存命中时 metaChanged 尚未通知 QML 的时序。
+        if (Presenter.getActivateMeta().hash !== hash)
+            return
+
         pointList = []  // 先清空
         pointList = buffer  // 设置新数据
         

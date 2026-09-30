@@ -10,6 +10,7 @@ import "../allItems"
 Rectangle {
     property int curSecs: 0
     property int totalSecs: 0
+    property var pointList: []
     property int magnification: 5
     property string dragTime: curSecs < 0 ? "00:00"
                                           : Math.floor(curSecs / 60) + (Math.floor(curSecs % 60) < 10 ? ":0" : ":") + Math.floor(curSecs % 60)
@@ -50,8 +51,8 @@ Rectangle {
 
         onWidthChanged: {
             // 只有在有数据时才重新绘制波形
-            if (parent.pointList && parent.pointList.length > 0) {
-                onAudioDataChanged(parent.pointList)
+            if (waveformRect.pointList && waveformRect.pointList.length > 0) {
+                onAudioDataChanged(waveformRect.pointList)
             }
             updatePosition(curSecs)
         }
@@ -207,9 +208,9 @@ Rectangle {
     }
 
     function onAudioDataChanged(pointList) {
-        // 如果没有传递参数，使用 parent.pointList 作为后备
+        // 如果没有传递参数，使用当前波形组件的数据作为后备
         if (pointList === undefined) {
-            pointList = parent.pointList || []
+            pointList = waveformRect.pointList || []
         }
         
         // 清理原有的pathElements，但不销毁对象，只是清空数组

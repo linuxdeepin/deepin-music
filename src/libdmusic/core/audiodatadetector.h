@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <QMutex>
 #include <QThread>
 #include <QVector>
 #include <QRandomGenerator>
@@ -23,16 +24,30 @@ public slots:
 
 signals:
     void audioBuffer(const QVector<float> &buffer, const QString &hash);
-    void audioBufferFromThread(const QVector<float> &buffer, const QString &hash);
+    void audioBufferFromThread(const QVector<float> &buffer, const QString &hash, quint64 requestGeneration);
+
+private slots:
+    void startPendingRequest();
+    void forwardAudioBuffer(const QVector<float> &buffer, const QString &hash, quint64 requestGeneration);
 
 private:
-    void resample(const QVector<float> &buffer, const QString &hash, bool forceQuit = false);
-    bool queryCacheExisted(const QString &hash);
+    void resample(const QVector<float> &buffer, const QString &hash,
+                  quint64 requestGeneration, bool forceQuit = false);
+    bool queryCacheExisted(const QString &hash, quint64 requestGeneration);
+    void clearRequestIfCurrent(quint64 requestGeneration);
+    bool stopRequested(quint64 requestGeneration) const;
     void run() override;
 
 private:
+    mutable QMutex    m_mutex;
     QString           m_curPath;
     QString           m_curHash;
+    QString           m_pendingPath;
+    QString           m_pendingHash;
     QVector<float>    m_listData;
+    quint64           m_requestGeneration = 0;
+    quint64           m_activeGeneration = 0;
+    bool              m_hasPendingRequest = false;
     bool              m_stopFlag = false;
+    bool              m_shuttingDown = false;
 };

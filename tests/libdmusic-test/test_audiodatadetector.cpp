@@ -8,7 +8,7 @@
 // AudioDataDetector 继承自 QThread，依赖 ffmpeg（通过 DynamicLibraries 动态加载）。
 // 测试策略：
 //   - 用 testdata/sample.mp3 触发完整解码链路：onBufferDetector → start() → run()
-//     → ffmpeg 解码 → resample() 降采样 → emit audioBufferFromThread（queued）→ audioBuffer。
+//     → ffmpeg 解码 → resample() 降采样 → emit audioBufferFromThread（携带 generation，queued）→ audioBuffer。
 //     这是覆盖 run()/resample() 核心算法（盲区主体）的关键。
 //   - 缓存命中：先解码写缓存(.dat)，再用相同 hash 触发 queryCacheExisted 命中分支。
 //   - engineType=0(Qt) 分支：onBufferDetector 走 queryCacheExisted 的 default_music.dat 兜底。
@@ -165,7 +165,7 @@ TEST(AudioDataDetectorBufferTest, onBufferDetectorWithSameHashIgnored)
 // ============================================================================
 // run() + resample() 真实解码链路：sample.mp3 触发完整波形计算
 // 这是覆盖率提升的核心：覆盖 run() 的 ffmpeg 解码循环、resample() 的
-// 降采样分支（buffer>1000）+ 归一化 + 缓存写入，以及 audioBufferFromThread 信号。
+// 降采样分支（buffer>1000）+ 归一化 + 缓存写入，以及带 generation 的 audioBufferFromThread 信号。
 // ============================================================================
 TEST(AudioDataDetectorDecodeTest, sampleMp3TriggersFullResampleAndEmitsSignal)
 {
@@ -178,7 +178,7 @@ TEST(AudioDataDetectorDecodeTest, sampleMp3TriggersFullResampleAndEmitsSignal)
 
     std::unique_ptr<AudioDataDetector> detector(new AudioDataDetector());
 
-    // 监听 worker 线程直接发出的信号（resample 末尾 emit）
+    // 监听 worker 线程排队的结果信号（包含 request generation）
     QSignalSpy spyFromThread(detector.get(), &AudioDataDetector::audioBufferFromThread);
     // 监听经 QueuedConnection 转发到主线程的信号
     QSignalSpy spyBuffer(detector.get(), &AudioDataDetector::audioBuffer);
@@ -309,11 +309,43 @@ TEST(AudioDataDetectorEngineTypeTest, onBufferDetectorWithVlcTypeNoCache)
 }
 
 // ============================================================================
-// stopFlag 截断：onBufferDetector 启动解码后立即 onClearBufferDetector
-// 覆盖 run() 中 (m_stopFlag && curData.size()>100) 截断分支 + resample forceQuit 分支
-// 注意：截断分支要求解码已产出 >100 个采样点。sample.mp3 解码足够快，
-// 但 stopFlag 时机不确定；即使未命中截断分支，也验证了并发清理的安全性。
+// 切歌竞态：新请求不能被旧线程退出时清空，旧波形也不能继续发送
 // ============================================================================
+TEST(AudioDataDetectorConcurrencyTest, newRequestSurvivesPreviousThreadStop)
+{
+    ASSERT_TRUE(QFile::exists(sampleMp3Path())) << "testdata/sample.mp3 missing";
+
+    EngineTypeGuard guard(1);
+    const QString firstHash = "stop_race_first_hash_005";
+    const QString secondHash = "stop_race_second_hash_005";
+    removeSystemCacheFor(firstHash);
+    removeSystemCacheFor(secondHash);
+
+    std::unique_ptr<AudioDataDetector> detector(new AudioDataDetector());
+    QSignalSpy spy(detector.get(), &AudioDataDetector::audioBuffer);
+
+    // QThread::started is emitted after start() marks the thread running.
+    // Submit the second request from a direct connection so it is guaranteed
+    // to arrive while the first worker is still running.
+    QMetaObject::Connection startedConnection;
+    startedConnection = QObject::connect(detector.get(), &QThread::started, detector.get(), [&] {
+        QObject::disconnect(startedConnection);
+        detector->onBufferDetector(sampleMp3Path(), secondHash);
+    }, Qt::DirectConnection);
+
+    detector->onBufferDetector(sampleMp3Path(), firstHash);
+
+    ASSERT_TRUE(spy.wait(20000)) << "second request did not produce waveform";
+    ensureThreadStopped(detector.get());
+    QCoreApplication::processEvents();
+
+    ASSERT_GT(spy.count(), 0);
+    for (const QList<QVariant> &arguments : spy) {
+        ASSERT_FALSE(arguments.isEmpty());
+        EXPECT_EQ(arguments.at(1).toString(), secondHash);
+    }
+}
+
 TEST(AudioDataDetectorConcurrencyTest, clearBufferDetectorStopsRunningThread)
 {
     ASSERT_TRUE(QFile::exists(sampleMp3Path())) << "testdata/sample.mp3 missing";
@@ -328,14 +360,14 @@ TEST(AudioDataDetectorConcurrencyTest, clearBufferDetectorStopsRunningThread)
     detector->onBufferDetector(sampleMp3Path(), hash);
 
     // 立即触发清理（设置 stopFlag）。若线程仍在运行，run() 循环中检测到
-    // m_stopFlag && curData.size()>100 会走截断分支并 resample(forceQuit=true)。
+    // 停止请求会走截断分支并 resample(forceQuit=true)。
     detector->onClearBufferDetector();
 
     // 等待线程退出（无论走正常结束还是 stopFlag 截断分支）
     ensureThreadStopped(detector.get());
     EXPECT_FALSE(detector->isRunning());
 
-    // 验证清理后内部状态被清空：再次用空 hash 调用不崩溃
+    // 验证清理后状态已失效：再次用空 hash 调用不崩溃
     detector->onClearBufferDetector();
     SUCCEED();
 }
@@ -390,11 +422,11 @@ TEST(AudioDataDetectorSignalTest, audioBufferFromThreadSignalExists)
 {
     std::unique_ptr<AudioDataDetector> detector(new AudioDataDetector());
     const QMetaObject *mo = detector->metaObject();
-    EXPECT_GE(mo->indexOfSignal("audioBufferFromThread(QVector<float>,QString)"), 0);
+    EXPECT_GE(mo->indexOfSignal("audioBufferFromThread(QVector<float>,QString,quint64)"), 0);
 }
 
 // ============================================================================
-// 信号连接验证：构造时建立 audioBufferFromThread → audioBuffer 的 QueuedConnection
+// 信号连接验证：构造时建立带 generation 的 audioBufferFromThread → audioBuffer QueuedConnection
 // 通过实际 sample.mp3 触发验证两个信号都被 emit（解码链路 + queued 转发）
 // ============================================================================
 TEST(AudioDataDetectorConnectionTest, queuedConnectionForwardsSignalOnRealDecode)
