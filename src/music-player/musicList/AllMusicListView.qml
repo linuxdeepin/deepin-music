@@ -25,6 +25,40 @@ Rectangle {
     // 判断是否显示扩展列（Artist, Album）
     property bool showExtendedColumns: musicListView.width > 500
 
+    // 定位当前播放歌曲悬浮按钮状态
+    property int playingIndex: -1
+    property bool locateBtnVisible: false
+
+    function updateLocateButton() {
+        playingIndex = -1
+        var hash = globalVariant.curPlayingHash
+        if (hash && mediaModel && mediaModel.count > 0) {
+            for (var i = 0; i < mediaModel.count; i++) {
+                if (mediaModel.get(i).hash === hash) {
+                    playingIndex = i
+                    break
+                }
+            }
+        }
+        if (playingIndex < 0 || !listview.visible) {
+            locateBtnVisible = false
+            return
+        }
+        var itemY = playingIndex * 56 + listview.originY
+        var viewTop = listview.contentY
+        var viewBottom = viewTop + listview.height
+        var scrollable = (mediaModel.count * 56) > listview.height
+        locateBtnVisible = scrollable
+                && (itemY < viewTop || itemY + 56 > viewBottom)
+    }
+
+    function locateCurrentPlaying() {
+        if (playingIndex < 0 || playingIndex >= mediaModel.count)
+            return
+        listview.positionViewAtIndex(playingIndex, ListView.Center)
+        updateLocateButton()
+    }
+
     //标题栏
     Row {
         id: headerView
@@ -239,6 +273,7 @@ Rectangle {
                     listview.removeModelGroup()
                 }
                 dragForSort = false
+                musicListView.updateLocateButton()
             }
             onExited: {
                 mediaModel.setProperty(lastDragIndex, "dragFlag", false)
@@ -370,17 +405,30 @@ Rectangle {
                 dragGroup = []
                 globalVariant.currentSelectMediaMeta = null
             }
+            musicListView.updateLocateButton()
         }
         onContentYChanged: {
 //            console.log("onContentYChanged..................")
             if (dropArea.dragForSort)
                 dropArea.updateHoverIndex()
+            musicListView.updateLocateButton()
         }
+        onHeightChanged: musicListView.updateLocateButton()
 
         Connections {
             target: globalVariant
             function onClearSelectGroup() {
                 listview.removeModelGroup()
+            }
+            function onCurPlayingHashChanged() {
+                musicListView.updateLocateButton()
+            }
+        }
+
+        Connections {
+            target: mediaModel
+            function onCountChanged() {
+                musicListView.updateLocateButton()
             }
         }
 
@@ -396,8 +444,29 @@ Rectangle {
         }
     }
 
+    // 定位当前播放歌曲悬浮按钮，仅当当前播放歌曲不在列表可视区域时显示
+    FloatingButton {
+        id: locatePlayingBtn
+        anchors.right: parent.right
+        anchors.rightMargin: 24
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 16
+        width: 40
+        height: 40
+        visible: musicListView.locateBtnVisible
+        icon.name: "album"
+        icon.width: 20
+        icon.height: 20
+        ToolTip {
+            visible: locatePlayingBtn.hovered
+            text: qsTr("Locate current song")
+        }
+        onClicked: musicListView.locateCurrentPlaying()
+    }
+
     Component.onCompleted: {
         forceActiveFocus();
+        updateLocateButton();
     }
 
     Keys.onPressed: function(event) {
