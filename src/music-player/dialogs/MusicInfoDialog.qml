@@ -30,18 +30,16 @@ DialogWindow {
     header: DialogTitleBar {
         enableInWindowBlendBlur: false
         content: Loader {
+            anchors.fill: parent
             sourceComponent: Label {
-                property Palette textColor: Palette {
-                    normal: Qt.rgba(0, 0, 0, 1)
-                    normalDark: Qt.rgba(247.0 / 255.0, 247.0 / 255.0, 247.0 / 255.0, 1)
-                }
                 anchors.centerIn: parent
+                anchors.horizontalCenterOffset: 24
                 textFormat: Text.PlainText
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font: DTK.fontManager.t7
                 text: musicData === undefined ? " " : musicData.title       //musicTitle
-                color:ColorSelector.textColor
+                color: palette.windowText
             }
         }
     }
