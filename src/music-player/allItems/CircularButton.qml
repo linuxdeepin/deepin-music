@@ -19,7 +19,7 @@ Button {
         width: parent.width
         height: parent.height
         anchors.centerIn: parent
-        radius: width/ 2
+        radius: width / 2
         color: control.ColorSelector.backgroundColor
         BoxShadow {
             anchors.fill: parent
@@ -30,29 +30,9 @@ Button {
             cornerRadius: parent.radius
             spread: 0
             hollow: true
-        }
-
-        /*InWindowBlur {
-            id: blur
-            anchors.fill: parent
-            radius: 24
-            offscreen: true
-        }
-        ItemViewport {
-            id: roundBlur
-            width: parent.width; height: parent.height
-            anchors.centerIn: blur
-            fixed: false
-            sourceItem: blur
-            radius: width / 2
-            hideSource: false
-        }
-        Rectangle {
-            radius: roundBlur.radius
-            anchors.fill: roundBlur
-            color: Qt.rgba(0, 0, 0, 0.1)
-        }*/
     }
+
+        }
     contentItem: DciIcon {
         name: iconName
         anchors.centerIn: parent

@@ -100,6 +100,8 @@ ToolFloatingPanel {
                 id: mask
                 anchors.fill: parent
                 radius: 8
+                color: "black"
+                antialiasing: true
                 visible: songTitle.length === 0 ? false : true
             }
             OpacityMask {
