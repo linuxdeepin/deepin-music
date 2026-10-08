@@ -9,13 +9,18 @@ import audio.global 1.0
 import org.deepin.dtk 1.0
 import "../allItems"
 
-ItemDelegate {
+Control {
+    readonly property int leadingColumnWidth: 96
     property bool playing: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
     property bool activeMeta:(globalVariant.curPlayingHash === hash) ? true : false
     property bool isDragged: false
+    property bool checked: inMulitSelect
 
     id: sublistDelegate
     hoverEnabled: true
+    padding: 0
+    background: Item {}
+    contentItem: Item {}
 
     // 拖拽支持
     Drag.active: mouseArea.drag.active
@@ -40,6 +45,7 @@ ItemDelegate {
     MouseArea {
         id: mouseArea
         anchors.fill: sublistDelegate
+        hoverEnabled: true
         acceptedButtons: Qt.RightButton | Qt.LeftButton
         drag.target: sublistDelegate
 
@@ -102,48 +108,77 @@ ItemDelegate {
     Component {
         id: hoverbuttons
         Row {
+            width: 74
+            height: 32
             spacing: 10
-            ActionButton {
+            Item {
                 id: addButton
-                icon.name: sublistDelegate.checked ? "list_add_checked" : "list_add"
-                icon.width: 20; icon.height: 20
-                onClicked: {
-                    var tmpHash = [];
-                    tmpHash.push(model.hash);
-                    importMenu.mediaHashList = tmpHash
-                    importMenu.itemIndex = index
-                    importMenu.popup();
+                width: 32
+                height: 32
+
+                DciIcon {
+                    anchors.centerIn: parent
+                    width: 16
+                    height: 16
+                    sourceSize: Qt.size(16, 16)
+                    name: sublistDelegate.checked ? "list_add_checked" : "list_add"
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        var tmpHash = []
+                        tmpHash.push(model.hash)
+                        importMenu.mediaHashList = tmpHash
+                        importMenu.itemIndex = index
+                        importMenu.popup()
+                    }
                 }
             }
-            ActionButton {
+            Item {
                 id: moreButton
-                icon.name: sublistDelegate.checked ? "list_more_checked" : "list_more"
-                icon.width: 20; icon.height: 20
-                anchors.verticalCenter: addButton.verticalCenter
-                onClicked: {
-                    musicMoreMenu.mediaData = model;
-                    musicMoreMenu.itemIndex = index
-                    musicMoreMenu.popup();
+                width: 32
+                height: 32
+
+                DciIcon {
+                    anchors.centerIn: parent
+                    width: 16
+                    height: 16
+                    sourceSize: Qt.size(16, 16)
+                    name: sublistDelegate.checked ? "list_more_checked" : "list_more"
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        musicMoreMenu.mediaData = model
+                        musicMoreMenu.itemIndex = index
+                        musicMoreMenu.popup()
+                    }
                 }
             }
         }
     }
 
     Rectangle {
+        id: rowSurface
         width: parent.width
         height: parent.height
         anchors.centerIn: parent
         radius: 8
-        color: sublistDelegate.hovered ? Qt.rgba(0, 0, 0, 0.08) : Qt.rgba(0, 0, 0, 0)
+        color: sublistDelegate.checked
+               ? sublistDelegate.palette.highlight
+               : (mouseArea.containsMouse
+                  ? Qt.rgba(0, 0, 0, 0.08)
+                  : Qt.rgba(0, 0, 0, 0))
         Row {
+            anchors.fill: parent
             Rectangle {
                 id: columnNumber
-                width: 56; height: 56
+                width: sublistDelegate.leadingColumnWidth; height: 56
                 color: Qt.rgba(0, 0, 0, 0)
                 Row {
-                    anchors.centerIn: parent
+                    anchors.fill: parent
                     Rectangle {
-                        width: 36
+                        width: 44
                         height: 56
                         color: Qt.rgba(0, 0, 0, 0)
                         Label {
@@ -154,46 +189,68 @@ ItemDelegate {
                             leftPadding: 10
 
                             elide: Text.ElideRight
-                            visible: (!activeMeta) && !sublistDelegate.hovered
+                            color: sublistDelegate.checked
+                                   ? sublistDelegate.palette.highlightedText
+                                   : sublistDelegate.palette.text
+                            visible: (!activeMeta) && !mouseArea.containsMouse
                             text: (index+1 < 10) ? "0%1".arg(index + 1) : index+1
                         }
-                        ActionButton {
+                        Item {
                             id: playActionButton
-                            icon.name:  sublistDelegate.hovered ? (playing && activeMeta ? "list_pussed" : "list_play")
-                                                                : (sublistDelegate.checked ? globalVariant.playingIconName : globalVariant.playingIconName + "_blue") //"list_playing"
-                            icon.width: 20
-                            icon.height: 20
+                            width: 32
+                            height: 32
                             anchors.centerIn: parent
-                            visible: sublistDelegate.hovered || activeMeta
-                            ColorSelector.hovered: !sublistDelegate.checked
-                            ColorSelector.pressed: false
-                            palette.windowText: sublistDelegate.hovered ? Qt.rgba(247, 247, 247, 1) : undefined
-                            onClicked:{
-                                if(playing && activeMeta) {
-                                    Presenter.pause();
-                                } else {
-                                    Presenter.playAlbum(album, hash);
+                            visible: mouseArea.containsMouse || activeMeta
+
+                            DciIcon {
+                                anchors.centerIn: parent
+                                width: 16
+                                height: 16
+                                sourceSize: Qt.size(16, 16)
+                                name: mouseArea.containsMouse
+                                      ? (playing && activeMeta ? "list_pussed" : "list_play")
+                                      : (sublistDelegate.checked
+                                         ? globalVariant.playingIconName
+                                         : globalVariant.playingIconName + "_blue")
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    if (playing && activeMeta)
+                                        Presenter.pause()
+                                    else
+                                        Presenter.playAlbum(album, hash)
                                 }
                             }
                         }
                     }
 
                     Rectangle {
-                        width: 20
+                        width: 52
                         height: 56
                         color: Qt.rgba(0, 0, 0, 0)
-                        ActionButton {
+                        Item {
                             id: heartbutton
-                            anchors.verticalCenter: parent.verticalCenter
-                            icon.width: 20; icon.height: 20
-                            icon.name: model.favourite ? "heart_check" : "heart"
-                            palette.windowText: favourite ? "#F75B5B" : undefined
-                            onClicked: {
-                                if(favourite === false){
-                                    Presenter.addMetasToPlayList(hash, "fav")
-                                }else {
-                                    Presenter.removeFromPlayList(hash, "fav")
-                                    globalVariant.sendFloatingMessageBox(qsTr("My Favorites"), 2);
+                            width: 32
+                            height: 32
+                            anchors.centerIn: parent
+
+                            DciIcon {
+                                anchors.centerIn: parent
+                                width: 16
+                                height: 16
+                                sourceSize: Qt.size(16, 16)
+                                name: model.favourite ? "heart_check" : "heart"
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    if (favourite === false) {
+                                        Presenter.addMetasToPlayList(hash, "fav")
+                                    } else {
+                                        Presenter.removeFromPlayList(hash, "fav")
+                                        globalVariant.sendFloatingMessageBox(qsTr("My Favorites"), 2)
+                                    }
                                 }
                             }
                         }
@@ -202,7 +259,7 @@ ItemDelegate {
             }
             Rectangle {
                 id: columnMusic
-                width: sublistDelegate.width - 342 - 56; height: 56
+                width: sublistDelegate.width - 342 - sublistDelegate.leadingColumnWidth; height: 56
                 color: Qt.rgba(0, 0, 0, 0)
                 Row {
                     spacing: 10
@@ -223,9 +280,11 @@ ItemDelegate {
                     }
                     Loader {
                         id: buttonsLoader;
+                        width: 74
+                        height: 32
                         anchors.verticalCenter: musicNameLabel.verticalCenter
                         sourceComponent: hoverbuttons
-                        visible: sublistDelegate.hovered || (importMenu.visible && importMenu.itemIndex === index) ||
+                        visible: mouseArea.containsMouse || (importMenu.visible && importMenu.itemIndex === index) ||
                               (musicMoreMenu.visible && musicMoreMenu.itemIndex === index)
                     }
 
@@ -237,6 +296,9 @@ ItemDelegate {
                 leftPadding: 10
                 elide: Text.ElideRight
                 text: (artist === "") ? "undefind": artist
+                color: sublistDelegate.checked
+                       ? sublistDelegate.palette.highlightedText
+                       : sublistDelegate.palette.text
                 verticalAlignment: Qt.AlignVCenter
                 anchors.verticalCenter: columnMusic.verticalCenter
             }
@@ -245,6 +307,9 @@ ItemDelegate {
                 id: musictimeLabel
                 width: 142; height: 36
                 elide: Text.ElideRight
+                color: sublistDelegate.checked
+                       ? sublistDelegate.palette.highlightedText
+                       : sublistDelegate.palette.text
                 text:{
                     var sec = Math.floor((length/1000)%60);
                     if (sec < 10){

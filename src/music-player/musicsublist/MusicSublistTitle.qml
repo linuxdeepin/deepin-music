@@ -9,18 +9,20 @@ import org.deepin.dtk 1.0
 import "../allItems"
 
 Rectangle{
+    readonly property bool darkTheme: DTK.themeType === ApplicationHelper.DarkType
     property string pageHash: ""
     property int titleWidth
     property int titleHeight
     property var currentData
     id: titleRectangle
     width: titleWidth; height: titleHeight
+    color: palette.window
+    onDarkThemeChanged: canvas.requestPaint()
 //    color: "transparent"
     SublistTitleBackground{
         id: titleBackground
         width: titleWidth; height: titleHeight
-        imageUrl: !titleRectangle.currentData ? "" : "file:///" + titleRectangle.currentData.coverUrl
-        visible: titleButton1.visible
+            imageUrl: !titleRectangle.currentData ? "" : "file:///" + titleRectangle.currentData.coverUrl
     }
     SublistTitleButton {
         id: titleButton1
@@ -37,6 +39,7 @@ Rectangle{
 //        color: "transparent"
         background: Rectangle {
             anchors.fill: parent
+            color: titleRectangle.palette.window
             Image {
                 id: img
                 width: parent.width
@@ -60,9 +63,10 @@ Rectangle{
                 onPaint: {
                     var ctx = getContext("2d");
                     var linerGradient = ctx.createLinearGradient(0, 0, 0, height);
-                    linerGradient.addColorStop(0, Qt.rgba(248, 248, 248, 0.1))
-                    linerGradient.addColorStop(0.5, Qt.rgba(248, 248, 248, 0.5))
-                    linerGradient.addColorStop(1, Qt.rgba(248, 248, 248, 0.95))
+                    var mask = titleRectangle.darkTheme ? 0 : 0.973;
+                    linerGradient.addColorStop(0, Qt.rgba(mask, mask, mask, 0.1))
+                    linerGradient.addColorStop(0.5, Qt.rgba(mask, mask, mask, 0.5))
+                    linerGradient.addColorStop(1, Qt.rgba(mask, mask, mask, 0.95))
                     ctx.clearRect(0, 0, width, height)
                     ctx.fillStyle = linerGradient
                     ctx.fillRect(0, 0, width, height);
@@ -84,6 +88,7 @@ Rectangle{
                     icon.name: "list_play";
                     width: 20; height: 20
                     hoverEnabled: false;
+                    palette.windowText: "#FFFFFF"
                     onClicked: {
                         if (pageHash === "album") {
                             Presenter.playAlbum(currentData.name);
@@ -96,7 +101,7 @@ Rectangle{
             Label {
                 id: buttonLable
                 text: !currentData ? "" : currentData.name
-                color: "#000000"
+                color: titleRectangle.palette.windowText
                 font: DTK.fontManager.t2
             }
         }
