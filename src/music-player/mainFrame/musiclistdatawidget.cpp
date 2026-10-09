@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,7 +16,9 @@
 
 #include <DLabel>
 #include <DPushButton>
+#include <DStyleOptionButton>
 #include <DToolButton>
+#include <QStylePainter>
 #include <DComboBox>
 #include <DLabel>
 #include <DFrame>
@@ -41,6 +43,32 @@
 #include "subsonglistwidget.h"
 #include "addmusicwidget.h"
 #include "musicsettings.h"
+
+namespace {
+
+// “播放所有”按钮使用自定义的红色调色板（Light/Dark）与白色文字。chameleon 平台样式
+// 会基于 QPalette::ButtonText 加工悬浮/按压态的文字颜色，浅色主题下会把白色压暗成灰色。
+// 这里在绘制时附加 SuggestButton 特性，使标签走 HighlightedText 分支（白色保持不变），
+// 同时不覆盖 Light/Dark，从而保留原有的红色背景与悬浮/按压反馈。
+class PlayAllButton : public DPushButton
+{
+    using DPushButton::DPushButton;
+
+protected:
+    void paintEvent(QPaintEvent *event) override
+    {
+        Q_UNUSED(event)
+        QStylePainter painter(this);
+        DStyleOptionButton option;
+        initStyleOption(&option);
+        option.init(this);
+        option.features |= QStyleOptionButton::ButtonFeature(DStyleOptionButton::SuggestButton);
+        option.palette.setBrush(QPalette::ButtonText, option.palette.highlightedText());
+        painter.drawControl(QStyle::CE_PushButton, option);
+    }
+};
+
+} // namespace
 
 MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     DWidget(parent)
@@ -756,7 +784,7 @@ void MusicListDataWidget::initUI()
 
 void MusicListDataWidget::initBtPlayAll(QHBoxLayout *layout)
 {
-    m_btPlayAll = new DPushButton(this);
+    m_btPlayAll = new PlayAllButton(this);
     auto playAllPalette = m_btPlayAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
     playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
