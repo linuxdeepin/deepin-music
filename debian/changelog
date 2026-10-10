@@ -1,3 +1,11 @@
+deepin-music (7.0.69) unstable; urgency=medium
+
+  * [skip CI] i18n: Translate deepin-music_en_US.ts in ru
+  * [skip CI] i18n: Translate deepin-music_en_US.ts in pl
+  * fix: resolve waveform race on track switch
+
+ -- Wang Yu <wangyu@uniontech.com>  Sat, 10 Oct 2026 10:54:51 +0800
+
 deepin-music (7.0.68) unstable; urgency=medium
 
   * chore: migrate linglong deps to declarative buildext.apt
