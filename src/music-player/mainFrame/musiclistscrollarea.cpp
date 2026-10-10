@@ -40,6 +40,7 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 //    setPalette(leftFramePalette);
 
     QWidget *widget = new QWidget(this);
+    widget->setAutoFillBackground(true);
     setWidget(widget);
     if (CommonService::getInstance()->isTabletEnvironment()) {
         setFixedWidth(300);
@@ -137,30 +138,25 @@ MusicListScrollArea::MusicListScrollArea(QWidget *parent) : DScrollArea(parent)
 
 void MusicListScrollArea::slotTheme(int type)
 {
-    if (type == 0)
-        type = DGuiApplicationHelper::instance()->themeType();
-    if (type == 1) {
-        DPalette leftFramePalette = palette();
-        leftFramePalette.setColor(DPalette::Background, QColor("#FFFFFF"));
-        setPalette(leftFramePalette);
+    Q_UNUSED(type)
 
-        DPalette dataBaseLabelPalette = dataBaseLabel->palette();
-        QColor WindowTextColor("#757F92");
-        dataBaseLabelPalette.setColor(DPalette::WindowText, WindowTextColor);
-        DApplicationHelper::instance()->setPalette(dataBaseLabel, dataBaseLabelPalette);
-        DApplicationHelper::instance()->setPalette(customizeLabel, dataBaseLabelPalette);
-    } else {
-        auto leftFramePalette = palette();
-        leftFramePalette.setColor(DPalette::Background, QColor("#262626"));
-        setPalette(leftFramePalette);
+    // 使用 DTK 当前调色板，避免写死色值导致左侧列表与系统主题不统一
+    DPalette palette = DApplicationHelper::instance()->palette(this);
+    DPalette sidebarPalette = palette;
+    sidebarPalette.setColor(DPalette::Background, palette.color(DPalette::Base));
+    DApplicationHelper::instance()->setPalette(this, sidebarPalette);
+    if (widget())
+        DApplicationHelper::instance()->setPalette(widget(), sidebarPalette);
 
-        DPalette dataBaseLabelPalette = dataBaseLabel->palette();
-        // 根据设计重新设置颜色
-        QColor WindowTextColor("#EDEDED");
-        dataBaseLabelPalette.setColor(DPalette::WindowText, WindowTextColor);
-        DApplicationHelper::instance()->setPalette(dataBaseLabel, dataBaseLabelPalette);
-        DApplicationHelper::instance()->setPalette(customizeLabel, dataBaseLabelPalette);
-    }
+    // 分组标题颜色取自 DTK 当前调色板，避免写死色值；使用窗口文本色保证
+    // 深色主题下与列表项文字同样清晰可读
+    const QColor headerColor = palette.color(QPalette::WindowText);
+    DPalette headerPalette = dataBaseLabel->palette();
+    headerPalette.setColor(QPalette::WindowText, headerColor);
+    DApplicationHelper::instance()->setPalette(dataBaseLabel, headerPalette);
+    DApplicationHelper::instance()->setPalette(customizeLabel, headerPalette);
+    dataBaseLabel->setForegroundRole(QPalette::WindowText);
+    customizeLabel->setForegroundRole(QPalette::WindowText);
 }
 
 void MusicListScrollArea::slotListViewClicked(const QModelIndex &index)

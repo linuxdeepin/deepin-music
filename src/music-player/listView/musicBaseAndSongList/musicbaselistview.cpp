@@ -171,10 +171,14 @@ void MusicBaseListView::showContextMenu(const QPoint &pos)
 
 void MusicBaseListView::setThemeType(int type)
 {
+    Q_UNUSED(type)
+    // 列表项文字颜色统一使用 DTK 调色板角色，避免写死色值与系统主题不一致
     for (int i = 0; i < model->rowCount(); i++) {
         auto curStandardItem = dynamic_cast<DStandardItem *>(model->itemFromIndex(model->index(i, 0)));
-        curStandardItem->setForeground(type == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
+        if (curStandardItem)
+            curStandardItem->setTextColorRole(QPalette::Text);
     }
+    viewport()->update();
 }
 
 void MusicBaseListView::dragEnterEvent(QDragEnterEvent *event)
