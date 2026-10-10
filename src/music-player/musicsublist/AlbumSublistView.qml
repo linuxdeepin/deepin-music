@@ -10,28 +10,26 @@ import QtQuick.Controls 2.0
 import org.deepin.dtk 1.0
 import "../musicmousemenu"
 import "../dialogs"
+import "../musicList"
 Rectangle {
+    readonly property int albumLeadingColumnWidth: 72
+    readonly property int tableHeaderHeight: 48
     property double scalingRatio: 168 / 810   //计算宽度占比
     property var albumData //AlbumInfo 对象
     property ListModel mediaListModels: MusicSublistModel{ meidaDataMap: albumData.musicinfos} //从ArtistInfo中解析musicinfos
+    property var mediaModel: mediaListModels
+    property string viewListHash: "album"
     property Menu importMenu: ImportMenu{}
     property Menu musicMoreMenu: MusicMoreMenu{pageHash: "album"}
     property Menu selectMenu: MulitSelectMenu{pageHash: "album"}
-    property point scalePoint: [0, 0]
-    property double xScale: 1.0
-    property double yScale: 1.0
+
+    Loader { id: importMenuLoader }
+    Loader { id: moreMenuLoader }
+    Loader { id: selectMenuLoader }
 
     id: rootrectangle
     objectName: "albumSublist"
     color: "transparent"
-
-    transform: Scale {
-        id: scaleId
-        origin.x: scalePoint.x
-        origin.y: scalePoint.y
-        xScale: rootrectangle.xScale
-        yScale: rootrectangle.yScale
-    }
 
     MusicSublistTitle {
         id: musicSublistTitle
@@ -44,25 +42,33 @@ Rectangle {
         id: headerView
         anchors.top: musicSublistTitle.bottom
         anchors.left: parent.left; anchors.leftMargin: 20
-        width: rootrectangle.width - 40; height: 36
+        width: rootrectangle.width - 40; height: rootrectangle.tableHeaderHeight
         Rectangle {
-            width: 56; height: 36
+            width: rootrectangle.albumLeadingColumnWidth; height: parent.height
             color: "transparent"
         }
         Label {
-            width: headerView.width - 342 - 56; height: 36
-            leftPadding: 6
+            width: parent.width - 2 * parent.width * scalingRatio
+                   - rootrectangle.albumLeadingColumnWidth - 102
+            height: parent.height
+            leftPadding: 10
             text: qsTr("Title")
             verticalAlignment: Qt.AlignVCenter
         }
         Label {
-            width: 200; height: 36
+            width: parent.width * scalingRatio; height: parent.height
             text: qsTr("Artist")
             leftPadding: 10
             verticalAlignment: Qt.AlignVCenter
         }
         Label {
-            width: 142; height: 36
+            width: parent.width * scalingRatio; height: parent.height
+            text: qsTr("Album")
+            verticalAlignment: Qt.AlignVCenter
+        }
+        Label {
+            width: 102; height: parent.height
+            leftPadding: 10
             text: qsTr("Duration")
             verticalAlignment: Qt.AlignVCenter
         }
@@ -75,10 +81,10 @@ Rectangle {
         property int lastIndex: 0
         property int dragToIndex: 0
         width: rootrectangle.width
-        height: rootrectangle.height - musicSublistTitle.height - 36
+        height: rootrectangle.height - musicSublistTitle.height - rootrectangle.tableHeaderHeight
         anchors.left: musicSublistTitle.left
         anchors.top: musicSublistTitle.bottom
-        anchors.topMargin: 36
+        anchors.topMargin: rootrectangle.tableHeaderHeight
         ScrollBar.vertical: ScrollBar {
             id:albumSublistScrollBar
             stepSize:  mediaListModels.count > 1 ? 1 / mediaListModels.count : 0.1
@@ -87,7 +93,7 @@ Rectangle {
         clip: true
         focus: true
         property MusicInfoDialog infoDialog: MusicInfoDialog{musicData: listview.model.get(0)}
-        delegate: AlbumSublistDelegate{
+        delegate: AllMusicListDelegate {
             width: listview.width - 40
             height: 56
             anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
@@ -95,6 +101,10 @@ Rectangle {
             normalBackgroundVisible: index % 2 === 0
             autoExclusive: false
             checked: mediaListModels.get(index) ? mediaListModels.get(index).inMulitSelect : false
+            delegateListHash: "album"
+            playbackAlbumName: rootrectangle.albumData.name
+            showCoverImage: false
+            indexPlaybackState: true
         }
 
         // 拖拽放置区域

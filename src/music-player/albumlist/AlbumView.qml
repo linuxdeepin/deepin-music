@@ -28,7 +28,6 @@ Rectangle {
     Component {
         id: albumSublistView
         AlbumSublistView {
-            scalePoint: currentItemPos
             albumData: {
                 for(var i = 0; i < albumModels.count; i++){
                     if(albumName === albumModels.get(i).name){
@@ -118,20 +117,14 @@ Rectangle {
             }
         }
         popEnter: Transition {
-            // slide_in_left
-            NumberAnimation { property: "scale"; from: 0.8; to: 1; duration: 300; easing.type: Easing.InOutQuad }
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 300; easing.type: Easing.InOutQuad }
         }
 
         popExit: Transition {
-            // slide_out_right
-            NumberAnimation { property: "scale"; from: 1; to: 0.8; duration: 300; easing.type: Easing.InOutQuad }
             NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; duration: 200; easing.type: Easing.OutExpo }
         }
 
         pushEnter: Transition {
-            // slide_in_right
-            NumberAnimation { property: "scale"; from: 1.2; to: 1; duration: 300; easing.type: Easing.InOutQuad }
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 300; easing.type: Easing.InOutQuad }
         }
 

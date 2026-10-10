@@ -34,8 +34,8 @@ Rectangle {
             id: artistName
             width: 479; height: 46
             elide: Text.ElideRight
-            color: "#000000"
             text: !currentData || (currentData.name === "") ? "undefine" : (currentData.name || "")
+            color: backgroundButton1.palette.windowText
             font: DTK.fontManager.t2
         }
         Row {
@@ -45,7 +45,7 @@ Rectangle {
             Label {
                 elide: Text.ElideRight
                 text: !currentData ? "" : (currentData.artist || "")
-                color: "#000000"
+                color: backgroundButton1.palette.windowText
             }
             Label {
                 anchors.bottom: parent.bottom
@@ -53,7 +53,7 @@ Rectangle {
                 verticalAlignment: Text.AlignBottom
                 text: !currentData ? "" : (currentData.musicCount === 1 ? qsTr("1 song") : qsTr("%1 songs").arg(currentData.musicCount))
                 font: DTK.fontManager.t8
-                color: "#7C7C7C"
+                color: backgroundButton1.palette.placeholderText
             }
         }
 

@@ -60,6 +60,7 @@ Rectangle {
         width: opacityMask.width - 2; height: opacityMask.width - 6
         source: opacityMask
         radius: 24
+        opacity: DTK.themeType === ApplicationHelper.DarkType ? 0.35 : 1.0
         transparentBorder: true
     }
     OpacityMask {

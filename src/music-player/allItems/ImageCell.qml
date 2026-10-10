@@ -59,52 +59,63 @@ Rectangle {
         radius: 3
     }
 
-    ActionButton {
+    Item {
         id: playActionButton
+        width: 32
+        height: 32
         anchors.centerIn: image
-        icon.name: globalVariant.playingIconName
-        icon.width: 20
-        icon.height: 20
+        property alias iconName: playIcon.name
         visible: control.isCurPlay
-        palette.windowText: "white"
-        onClicked:{
-            if(control.m_isPlaying && control.isCurPlay){
-                icon.name = "list_play"
-                Presenter.pause();
-            }else{
-                icon.name = "list_pussed"
-                if(control.pageHash === "album"){
-                    Presenter.playAlbum(curMediaData.name);
-                }else if(control.pageHash === "artistSublist"){
-                    Presenter.playArtist(curMediaData.artist, curMediaData.hash);
-                }else if(control.pageHash === "fav"){
-                    Presenter.playPlaylist(pageHash, curMediaData.hash);
-                }else if(control.pageHash === "play"){
-                    if(globalVariant.curPlayingHash !== curMediaData.hash)
-                        Presenter.setActivateMeta(curMediaData.hash)
-                    Presenter.play()
-                }else{
-                    Presenter.playPlaylist(control.pageHash, curMediaData.hash);
+
+        DciIcon {
+            id: playIcon
+            anchors.centerIn: parent
+            width: 16
+            height: 16
+            sourceSize: Qt.size(16, 16)
+            name: globalVariant.playingIconName
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                if (control.m_isPlaying && control.isCurPlay) {
+                    playActionButton.iconName = "list_play"
+                    Presenter.pause()
+                } else {
+                    playActionButton.iconName = "list_pussed"
+                    if (control.pageHash === "album") {
+                        Presenter.playAlbum(curMediaData.name)
+                    } else if (control.pageHash === "artistSublist") {
+                        Presenter.playArtist(curMediaData.artist, curMediaData.hash)
+                    } else if (control.pageHash === "fav") {
+                        Presenter.playPlaylist(pageHash, curMediaData.hash)
+                    } else if (control.pageHash === "play") {
+                        if (globalVariant.curPlayingHash !== curMediaData.hash)
+                            Presenter.setActivateMeta(curMediaData.hash)
+                        Presenter.play()
+                    } else {
+                        Presenter.playPlaylist(control.pageHash, curMediaData.hash)
+                    }
                 }
             }
-       }
+        }
     }
 
     function itemHoveredChanged(value) {
         if(value === true){
             playActionButton.visible = true;
             if(control.m_isPlaying && control.isCurPlay){
-                playActionButton.icon.name = "list_pussed";
+                playActionButton.iconName = "list_pussed";
             }else{
-                playActionButton.icon.name = "list_play";
+                playActionButton.iconName = "list_play";
             }
         } else {
             playActionButton.visible = control.isCurPlay;
-            playActionButton.icon.name = Qt.binding(function(){return globalVariant.playingIconName});
+            playActionButton.iconName = Qt.binding(function(){return globalVariant.playingIconName});
             return;
         }
     }
-    function setplayActionButtonIcon(value){playActionButton.icon.name = value}
+    function setplayActionButtonIcon(value){playActionButton.iconName = value}
     onIsCurPlayChanged: {
         playActionButton.visible = control.isCurPlay
     }
