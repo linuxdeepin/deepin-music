@@ -168,7 +168,7 @@ void MusicSongListView::init()
         DStandardItem *item = new DStandardItem(QIcon::fromTheme("music_famousballad"), displayName);
 
         item->setData(data.uuid, Qt::UserRole);
-        item->setForeground(DGuiApplicationHelper::instance()->themeType() == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
+        item->setTextColorRole(QPalette::Text);
         m_model->appendRow(item);
     }
     setMinimumHeight(m_model->rowCount() * ItemHeight);
@@ -237,7 +237,7 @@ void MusicSongListView::addNewSongList()
 
     QString displayName = newDisplayName();
     DStandardItem *item = new DStandardItem(icon, displayName);
-    item->setForeground(DGuiApplicationHelper::instance()->themeType() == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
+    item->setTextColorRole(QPalette::Text);
     m_model->appendRow(item);
 #ifdef DTKWIDGET_CLASS_DSizeMode
     if (DGuiApplicationHelper::instance()->sizeMode() == DGuiApplicationHelper::SizeMode::CompactMode) {
@@ -298,7 +298,7 @@ void MusicSongListView::changeCdaSongList(int stat)
 
     QString displayName = tr("CD playlist");
     DStandardItem *item = new DStandardItem(icon, displayName);
-    item->setForeground(DGuiApplicationHelper::instance()->themeType() == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
+    item->setTextColorRole(QPalette::Text);
 
     m_model->insertRow(0, item);
     setMinimumHeight(m_model->rowCount() * ItemHeight);
@@ -851,7 +851,7 @@ void MusicSongListView::dropItem(int preRow)
     m_model->removeRow(preRow);
     QIcon icon = QIcon::fromTheme("music_famousballad");
     DStandardItem *item = new DStandardItem(icon, curText);
-    item->setForeground(DGuiApplicationHelper::instance()->themeType() == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
+    item->setTextColorRole(QPalette::Text);
     m_model->insertRow(curRow, item);
     item->setData(uuid, Qt::UserRole);
     setCurrentIndex(m_model->index(curRow, 0));
@@ -992,10 +992,14 @@ QString MusicSongListView::newDisplayName()
 
 void MusicSongListView::setThemeType(int type)
 {
+    Q_UNUSED(type)
+    // 列表项文字颜色统一使用 DTK 调色板角色，避免写死色值与系统主题不一致
     for (int i = 0; i < m_model->rowCount(); i++) {
         auto curStandardItem = dynamic_cast<DStandardItem *>(m_model->itemFromIndex(m_model->index(i, 0)));
-        curStandardItem->setForeground(type == 1 ? QColor("#414D68") : QColor("#C0C6D4"));
+        if (curStandardItem)
+            curStandardItem->setTextColorRole(QPalette::Text);
     }
+    viewport()->update();
     emit sigThemeTypeChanged(type);
 }
 
