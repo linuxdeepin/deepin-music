@@ -1,5 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,16 +17,14 @@ QStringList VlcCommon::args()
     } else {
         qCDebug(dmMusic) << "VLC args not found, using default args";
         args_list << "--intf=dummy"
-                  << "--no-media-library"
-                  << "--no-stats"
-                  << "--no-osd"
-                  << "--no-loop"
-                  << "--no-video-title-show"
-                  << "--drop-late-frames"
-                  // Disable VLC's TagLib metadata plugin: dmusic parses tags with
-                  // TagLib 2, while this plugin links TagLib 1, causing a
-                  // same-process symbol conflict that crashes on playback.
-                  << "--no-taglib";
+                  << "--no-media-library"     // 禁用媒体库
+                  << "--no-stats"             // 禁用统计信息
+                  << "--no-spu"               // 禁用子画面
+                  << "--no-osd"               // 禁用屏幕显示（OSD）
+                  << "--no-loop"              // 禁止全部循环
+                  << "--no-video-title-show"  // 禁用在视频上显示媒体标题
+                  << "--drop-late-frames"     // 丢弃延迟的帧
+                  << "--no-video";            // 禁用视频输出
     }
 
     qCDebug(dmMusic) << "VLC return args:" << args_list;
