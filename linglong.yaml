@@ -33,8 +33,26 @@ build: |
       -DVERSION=${VERSION}
   cmake --build build -j`nproc`
   cmake --build build --target install > install.log 2>&1
-  # update for libdmusic.so
-  ldconfig -C "$LINGLONG_LD_SO_CACHE"
+  # 只生成动态加载的兼容链接；版本库由 buildext 或 base/runtime 提供。
+  MUSIC_LIBDIR="${PREFIX}/lib/${TRIPLET}"
+  mkdir -p "${MUSIC_LIBDIR}"
+  for LIB in libvlccore libvlc libSDL2-2.0 libavcodec libavformat libavutil libswresample; do
+    LIB_TARGET=
+    for VERSIONED in "/runtime/lib/${TRIPLET}/${LIB}.so."* \
+                     "/usr/lib/${TRIPLET}/${LIB}.so."*; do
+      [ -f "${VERSIONED}" ] || continue
+      case "${LIB}" in
+        libvlccore|libvlc|libSDL2-2.0) LIB_TARGET=${VERSIONED##*/} ;;
+        *) LIB_TARGET=${VERSIONED} ;;
+      esac
+      break
+    done
+    if [ -z "${LIB_TARGET}" ]; then
+      echo "Missing runtime library: ${LIB}" >&2
+      exit 1
+    fi
+    ln -sf "${LIB_TARGET}" "${MUSIC_LIBDIR}/${LIB}.so"
+  done
 
 buildext:
   apt:
