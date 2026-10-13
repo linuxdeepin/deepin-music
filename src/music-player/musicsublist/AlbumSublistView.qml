@@ -8,7 +8,6 @@ import QtQuick.Window 2.11
 import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
 import org.deepin.dtk 1.0
-import "../musicmousemenu"
 import "../dialogs"
 import "../musicList"
 Rectangle {
@@ -19,9 +18,8 @@ Rectangle {
     property ListModel mediaListModels: MusicSublistModel{ meidaDataMap: albumData.musicinfos} //从ArtistInfo中解析musicinfos
     property var mediaModel: mediaListModels
     property string viewListHash: "album"
-    property Menu importMenu: ImportMenu{}
-    property Menu musicMoreMenu: MusicMoreMenu{pageHash: "album"}
-    property Menu selectMenu: MulitSelectMenu{pageHash: "album"}
+    readonly property bool showExtendedColumns: width > 500
+    readonly property int extendedColumnCount: showExtendedColumns ? 2 : 0
 
     Loader { id: importMenuLoader }
     Loader { id: moreMenuLoader }
@@ -48,7 +46,7 @@ Rectangle {
             color: "transparent"
         }
         Label {
-            width: parent.width - 2 * parent.width * scalingRatio
+            width: parent.width - rootrectangle.extendedColumnCount * parent.width * scalingRatio
                    - rootrectangle.albumLeadingColumnWidth - 102
             height: parent.height
             leftPadding: 10
@@ -60,11 +58,13 @@ Rectangle {
             text: qsTr("Artist")
             leftPadding: 10
             verticalAlignment: Qt.AlignVCenter
+            visible: rootrectangle.showExtendedColumns
         }
         Label {
             width: parent.width * scalingRatio; height: parent.height
             text: qsTr("Album")
             verticalAlignment: Qt.AlignVCenter
+            visible: rootrectangle.showExtendedColumns
         }
         Label {
             width: 102; height: parent.height
@@ -105,6 +105,7 @@ Rectangle {
             playbackAlbumName: rootrectangle.albumData.name
             showCoverImage: false
             indexPlaybackState: true
+            showExtendedColumns: rootrectangle.showExtendedColumns
         }
 
         // 拖拽放置区域

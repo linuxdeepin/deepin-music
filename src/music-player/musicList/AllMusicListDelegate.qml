@@ -11,7 +11,7 @@ import audio.global 1.0
 import "../allItems"
 
 ItemDelegate{
-    property double scalingratio: 168 / 810   //计算宽度占比
+    property double scalingRatio: 168 / 810   //计算宽度占比
     property string delegateListHash: ""
     property string playbackAlbumName: ""
     property bool playbackByArtist: false
@@ -364,10 +364,10 @@ ItemDelegate{
                     width: 40
                     height: parent.height
 
-                        Item {
-                            width: 32
-                            height: 32
-                            anchors.centerIn: parent
+                    Item {
+                        width: 32
+                        height: 32
+                        anchors.centerIn: parent
                         ActionButton {
                             anchors.fill: parent
                             visible: favourite
@@ -465,7 +465,7 @@ ItemDelegate{
             id: columnMusic
             // 窗口窄时，Title 列占据更多空间
             width: parent.width
-                   - rootRectangle.extendedColumnCount * parent.width * scalingratio
+                   - rootRectangle.extendedColumnCount * parent.width * scalingRatio
                    - rootRectangle.leadingColumnWidth - 102
             height: 56
             color: Qt.rgba(0, 0, 0, 0)
@@ -486,15 +486,15 @@ ItemDelegate{
                 }
                 Label {
                     id: musicNameLabel;
-                    // Keep the two visible 16px icons 10px apart. Match the
-                    // tighter trailing gutter used by the album list view.
-                    width: rootRectangle.hovered || buttonsLoader.visible
-                           ? columnMusic.width - (rootRectangle.showCoverImage ? 122 : 72)
-                           : columnMusic.width - (rootRectangle.showCoverImage ? 80 : 30)
+                    // Always reserve the action area so hovering only reveals
+                    // the buttons without changing the title column geometry.
+                    width: columnMusic.width
+                           - (rootRectangle.showCoverImage ? 122 : 72)
+                           - (rootRectangle.showArtistColumn ? 0 : 10)
                     height: 17
                     elide: Text.ElideRight
                     text: title
-                    anchors.verticalCenter: imagecell.verticalCenter
+                    anchors.verticalCenter: parent.verticalCenter
                     verticalAlignment: Qt.AlignVCenter
                     palette.text: DTK.themeType === ApplicationHelper.DarkType ? "#B2F7F7F7" : "#000000"
                     color: checked ? palette.highlightedText :
@@ -505,7 +505,7 @@ ItemDelegate{
                     id: buttonsLoader;
                     width: 42
                     height: 32
-                    anchors.verticalCenter: musicNameLabel.verticalCenter
+                    anchors.verticalCenter: parent.verticalCenter
                     sourceComponent: hoverbuttons
                     visible: rootRectangle.hovered ||
                              (importMenuLoader.status === Loader.Ready && importMenuLoader.item.visible && importMenuLoader.item.itemIndex === index) ||
@@ -515,7 +515,7 @@ ItemDelegate{
         }
         Label {
             id: singerLabel
-            width: parent.width * scalingratio
+            width: parent.width * scalingRatio
             height: 56
             leftPadding: 10
             elide: Text.ElideRight
@@ -527,7 +527,7 @@ ItemDelegate{
 
         Label {
             id: ablumLabel
-            width: parent.width * scalingratio
+            width: parent.width * scalingRatio
             height: 56
             elide: Text.ElideRight
             text: (album === "") ? "undefind": album
