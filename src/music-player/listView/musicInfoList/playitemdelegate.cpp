@@ -215,6 +215,15 @@ void PlayItemDelegate::drawTabletIconMode(QPainter &painter, const QStyleOptionV
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
+    // 绘制阴影
+    QRect shadowRect(option.rect.x() - 10, option.rect.y(), ImgWidthAndHeightTablet, ImgWidthAndHeightTablet);
+    QPainterPath roundRectShadowPath;
+    roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
+    painter.save();
+    painter.setClipPath(roundRectShadowPath);
+    painter.drawPixmap(shadowRect, m_shadowImg);
+    painter.restore();
+
     // 绘制专辑图片
     painter.save();
     QIcon icon;
@@ -521,6 +530,15 @@ void PlayItemDelegate::drawIconMode(QPainter &painter, const QStyleOptionViewIte
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
+    // 绘制阴影
+    QRect shadowRect(option.rect.x() + xoffset - 10, option.rect.y() + yoffset, imgWidthAndHeight() + 8, imgWidthAndHeight() + 8);
+    QPainterPath roundRectShadowPath;
+    roundRectShadowPath.addRoundRect(shadowRect, 8, 8);
+    painter.save();
+    painter.setClipPath(roundRectShadowPath);
+    painter.drawPixmap(shadowRect, m_shadowImg);
+    painter.restore();
+
     // 绘制专辑图片
     painter.save();
     QIcon icon;
@@ -816,7 +834,7 @@ PlayItemDelegate::PlayItemDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
 {
     setObjectName("PlayItemStyleProxy");
-    m_shadowImg = DHiDPIHelper::loadNxPixmap(":/mpimage/light/shadow.svg");
+    m_shadowImg = DHiDPIHelper::loadNxPixmap(":/icons/deepin/builtin/actions/shadow_176px.svg");
     m_shadowImg = m_shadowImg.copy(5, 5, m_shadowImg.width() - 10, m_shadowImg.height() - 10);
     DStyle d;
     m_selectedPix = d.standardIcon(DStyle::SP_IndicatorChecked).pixmap(QSize(14, 14));
