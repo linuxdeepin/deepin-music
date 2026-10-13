@@ -1,3 +1,9 @@
+deepin-music (7.0.70) unstable; urgency=medium
+
+  * fix: create runtime library symlinks for linglong package
+
+ -- Wang Yu <wangyu@uniontech.com>  Tue, 13 Oct 2026 10:52:09 +0800
+
 deepin-music (7.0.69) unstable; urgency=medium
 
   * [skip CI] i18n: Translate deepin-music_en_US.ts in ru
