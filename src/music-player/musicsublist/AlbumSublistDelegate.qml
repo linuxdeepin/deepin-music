@@ -31,14 +31,7 @@ Control {
     }
     Drag.hotSpot.x: -15
     Drag.hotSpot.y: -15
-    Drag.onActiveChanged: {
-        console.warn("[AlbumSublistDelegate] Drag.active changed:", Drag.active, "index:", index)
-    }
-    Drag.onDragStarted: {
-        console.warn("[AlbumSublistDelegate] Drag started, index:", index, "delegateModelGroup:", listview.delegateModelGroup)
-    }
     Drag.onDragFinished: {
-        console.warn("[AlbumSublistDelegate] Drag finished, index:", index)
         isDragged = true
     }
 

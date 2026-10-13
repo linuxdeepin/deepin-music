@@ -73,7 +73,15 @@ Rectangle {
             width: 16
             height: 16
             sourceSize: Qt.size(16, 16)
+            theme: DTK.themeType
+            visible: false
             name: globalVariant.playingIconName
+        }
+        ColorOverlay {
+            anchors.fill: playIcon
+            source: playIcon
+            color: "white"
+            cached: true
         }
         MouseArea {
             anchors.fill: parent

@@ -22,7 +22,7 @@ Rectangle{
     SublistTitleBackground{
         id: titleBackground
         width: titleWidth; height: titleHeight
-            imageUrl: !titleRectangle.currentData ? "" : "file:///" + titleRectangle.currentData.coverUrl
+        imageUrl: !titleRectangle.currentData ? "" : "file:///" + titleRectangle.currentData.coverUrl
     }
     SublistTitleButton {
         id: titleButton1
