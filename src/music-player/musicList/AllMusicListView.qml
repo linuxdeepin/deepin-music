@@ -13,9 +13,15 @@ import "../musicmousemenu"
 import "../dialogs"
 
 Rectangle {
+    signal scrollStateChanged(bool scrolled)
+
     property ListModel mediaModel
     property string viewListHash: ""
     property double scalingRatio: 168 / 810  //计算宽度占比
+    property bool showTrackNumber: true
+    property bool showArtistColumn: true
+    property bool playbackByArtist: false
+    property int headerHeight: 36
     Loader { id: importMenuLoader }
     Loader { id: moreMenuLoader }
     Loader { id: selectMenuLoader }
@@ -24,42 +30,47 @@ Rectangle {
     color: "transparent"
     // 判断是否显示扩展列（Artist, Album）
     property bool showExtendedColumns: musicListView.width > 500
+    readonly property int leadingColumnWidth: showTrackNumber ? 56 : 40
+    readonly property int extendedColumnCount: showExtendedColumns
+                                                ? (showArtistColumn ? 2 : 1)
+                                                : 0
 
     //标题栏
     Row {
         id: headerView
-        width: musicListView.width - 40; height: 36
+        width: musicListView.width - 40; height: musicListView.headerHeight
         leftPadding: 20
         clip: true  // 防止内容溢出重叠
         Rectangle {
-            width: 56; height: 36
+            width: musicListView.leadingColumnWidth; height: parent.height
             color: "transparent"
         }
         Label {
             // 窗口窄时，Title 列占据更多空间
-            width: showExtendedColumns 
-                   ? parent.width - 2 * parent.width * scalingRatio - 158
-                   : parent.width - 158
-            height: 36
+            width: parent.width
+                   - musicListView.extendedColumnCount * parent.width * scalingRatio
+                   - musicListView.leadingColumnWidth - 102
+            height: parent.height
             leftPadding: 10
             text: qsTr("Title")
             verticalAlignment: Qt.AlignVCenter
         }
         Label {
-            width: parent.width * scalingRatio; height: 36
+            width: parent.width * scalingRatio; height: parent.height
             leftPadding: 10
             text: qsTr("Artist")
             verticalAlignment: Qt.AlignVCenter
-            visible: showExtendedColumns  // 窗口窄时隐藏
+            visible: showExtendedColumns && musicListView.showArtistColumn
         }
         Label {
-            width: parent.width * scalingRatio; height: 36
+            width: parent.width * scalingRatio; height: parent.height
             text: qsTr("Album")
             verticalAlignment: Qt.AlignVCenter
             visible: showExtendedColumns  // 窗口窄时隐藏
         }
         Label {
-            width: 102; height: 36
+            width: 102; height: parent.height
+            leftPadding: 10
             text: qsTr("Duration")
             verticalAlignment: Qt.AlignVCenter
         }
@@ -80,7 +91,7 @@ Rectangle {
 
         id: listview
         width: parent.width
-        height: parent.height - 38
+        height: parent.height - musicListView.headerHeight
         anchors.top: headerView.bottom;
         ScrollBar.vertical: ScrollBar {}
         model: mediaModel
@@ -95,6 +106,9 @@ Rectangle {
             backgroundVisible: true
             normalBackgroundVisible: index % 2 === 0
             delegateListHash: viewListHash
+            showTrackNumber: musicListView.showTrackNumber
+            showArtistColumn: musicListView.showArtistColumn
+            playbackByArtist: musicListView.playbackByArtist
         }
 
         property bool isShiftModifier: false;
@@ -372,6 +386,7 @@ Rectangle {
             }
         }
         onContentYChanged: {
+            musicListView.scrollStateChanged(contentY > originY)
 //            console.log("onContentYChanged..................")
             if (dropArea.dragForSort)
                 dropArea.updateHoverIndex()

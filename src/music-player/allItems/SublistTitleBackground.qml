@@ -10,8 +10,10 @@ import org.deepin.dtk 1.0
 
 Rectangle {
     property url imageUrl
+    readonly property bool darkTheme: DTK.themeType === ApplicationHelper.DarkType
     id: titleBackground
     color: "transparent"
+    onDarkThemeChanged: canvasImage.requestPaint()
     Canvas {
         id: canvasImage
         width: titleBackground.width; height: titleBackground.height
@@ -29,9 +31,10 @@ Rectangle {
             var ImageData = ctx.getImageData(0,0,canvasImage.width, 224)
             ctx.drawImage(ImageData, 0, 224/3, canvasImage.width,224/3, 0, 0,canvasImage.width, canvasImage.height);
             var liner = ctx.createLinearGradient(0, 0, 0, 224);
-            liner.addColorStop(0, Qt.rgba(255,255,255,0.0))
-            liner.addColorStop(0.5, Qt.rgba(255,255,255,0.5))
-            liner.addColorStop(0.95, Qt.rgba(255,255,255,0.95))
+            var mask = darkTheme ? 0 : 1;
+            liner.addColorStop(0, Qt.rgba(mask, mask, mask, 0.0))
+            liner.addColorStop(0.5, Qt.rgba(mask, mask, mask, 0.5))
+            liner.addColorStop(0.95, Qt.rgba(mask, mask, mask, 0.95))
             ctx.fillStyle = liner
             ctx.fillRect(0,0,canvasImage.width,canvasImage.height);
             ctx.strokeRect(0,0,canvasImage.width,canvasImage.height);
@@ -41,6 +44,6 @@ Rectangle {
         anchors.fill: canvasImage
         source: canvasImage
         radius: 64
-        transparentBorder: true
+        transparentBorder: false
     }
 }
