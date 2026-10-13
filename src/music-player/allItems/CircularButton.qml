@@ -30,9 +30,8 @@ Button {
             cornerRadius: parent.radius
             spread: 0
             hollow: true
-    }
-
         }
+    }
     contentItem: DciIcon {
         name: iconName
         anchors.centerIn: parent
