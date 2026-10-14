@@ -101,6 +101,19 @@ int main(int argc, char *argv[])
     }
 #endif
 
+#ifdef Q_OS_LINUX
+    // 检测 Fantasy II-M GPU 驱动，规避其内部 double-free 导致的崩溃 (PMS 370167)
+    // 当检测到 Fantasy GPU 驱动存在时，强制使用软件渲染绕过 GPU 驱动的 GL 渲染路径
+    if (qEnvironmentVariableIsEmpty("QT_QUICK_BACKEND")) {
+        const QString fantasyDriverPath =
+            QStringLiteral("/opt/extensions/cn.fantasy.driver.fantgpu.fh2m/lib/fantgpu-fh2m/libGLESv2_FT_MESA.so.1");
+        if (QFileInfo::exists(fantasyDriverPath)) {
+            qputenv("QT_QUICK_BACKEND", "software");
+            qCInfo(dmMusic) << "Fantasy GPU driver detected, switching to software rendering (PMS 370167)";
+        }
+    }
+#endif
+
     DmGlobal::checkWaylandMode();
 
     QSurfaceFormat format;
