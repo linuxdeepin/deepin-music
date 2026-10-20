@@ -2,366 +2,54 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.0
 import QtQuick 2.11
-import QtQuick.Window 2.11
-import QtQuick.Layouts 1.11
-import QtQuick.Controls 2.0
-import org.deepin.dtk 1.0
-import "../dialogs"
 import "../musicList"
+
 Rectangle {
-    readonly property int albumLeadingColumnWidth: 72
-    readonly property int tableHeaderHeight: 48
-    property double scalingRatio: 168 / 810   //计算宽度占比
-    property var albumData //AlbumInfo 对象
-    property ListModel mediaListModels: MusicSublistModel{ meidaDataMap: albumData.musicinfos} //从ArtistInfo中解析musicinfos
-    property var mediaModel: mediaListModels
-    property string viewListHash: "album"
-    readonly property bool showExtendedColumns: width > 500
-    readonly property int extendedColumnCount: showExtendedColumns ? 2 : 0
-
-    Loader { id: importMenuLoader }
-    Loader { id: moreMenuLoader }
-    Loader { id: selectMenuLoader }
-
     id: rootrectangle
+
+    property var albumData
+    property ListModel mediaListModels: MusicSublistModel {
+        meidaDataMap: albumData.musicinfos
+    }
+
     objectName: "albumSublist"
     color: "transparent"
 
     MusicSublistTitle {
         id: musicSublistTitle
-        anchors.left: rootrectangle.left; anchors.top: rootrectangle.top
-        titleWidth: rootrectangle.width; titleHeight: 244
-        currentData: rootrectangle.albumData  //AlbumInfo 对象
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        titleWidth: rootrectangle.width
+        titleHeight: 244
+        currentData: rootrectangle.albumData
         pageHash: "album"
     }
-    Row {
-        id: headerView
+
+    AllMusicListView {
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.top: musicSublistTitle.bottom
-        anchors.left: parent.left; anchors.leftMargin: 20
-        width: rootrectangle.width - 40; height: rootrectangle.tableHeaderHeight
-        Rectangle {
-            width: rootrectangle.albumLeadingColumnWidth; height: parent.height
-            color: "transparent"
-        }
-        Label {
-            width: parent.width - rootrectangle.extendedColumnCount * parent.width * scalingRatio
-                   - rootrectangle.albumLeadingColumnWidth - 102
-            height: parent.height
-            leftPadding: 10
-            text: qsTr("Title")
-            verticalAlignment: Qt.AlignVCenter
-        }
-        Label {
-            width: parent.width * scalingRatio; height: parent.height
-            text: qsTr("Artist")
-            leftPadding: 10
-            verticalAlignment: Qt.AlignVCenter
-            visible: rootrectangle.showExtendedColumns
-        }
-        Label {
-            width: parent.width * scalingRatio; height: parent.height
-            text: qsTr("Album")
-            verticalAlignment: Qt.AlignVCenter
-            visible: rootrectangle.showExtendedColumns
-        }
-        Label {
-            width: 102; height: parent.height
-            leftPadding: 10
-            text: qsTr("Duration")
-            verticalAlignment: Qt.AlignVCenter
-        }
-    }
+        anchors.bottom: parent.bottom
+        mediaModel: rootrectangle.mediaListModels
+        viewListHash: "album"
+        headerHeight: 48
+        playbackAlbumName: rootrectangle.albumData ? rootrectangle.albumData.name : ""
+        showCoverImage: false
+        indexPlaybackState: true
+        showAlbumColumn: false
+        acceptExternalDrops: true
+        allowLocalReorder: true
 
-    ListView{
-        id: listview
-        property var delegateModelGroup: new Array
-        property var dragGroup: new Array
-        property int lastIndex: 0
-        property int dragToIndex: 0
-        width: rootrectangle.width
-        height: rootrectangle.height - musicSublistTitle.height - rootrectangle.tableHeaderHeight
-        anchors.left: musicSublistTitle.left
-        anchors.top: musicSublistTitle.bottom
-        anchors.topMargin: rootrectangle.tableHeaderHeight
-        ScrollBar.vertical: ScrollBar {
-            id:albumSublistScrollBar
-            stepSize:  mediaListModels.count > 1 ? 1 / mediaListModels.count : 0.1
-        }
-        model: mediaListModels
-        clip: true
-        focus: true
-        property MusicInfoDialog infoDialog: MusicInfoDialog{musicData: listview.model.get(0)}
-        delegate: AllMusicListDelegate {
-            width: listview.width - 40
-            height: 56
-            anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
-            backgroundVisible: true
-            normalBackgroundVisible: index % 2 === 0
-            autoExclusive: false
-            checked: mediaListModels.get(index) ? mediaListModels.get(index).inMulitSelect : false
-            delegateListHash: "album"
-            playbackAlbumName: rootrectangle.albumData.name
-            showCoverImage: false
-            indexPlaybackState: true
-            showExtendedColumns: rootrectangle.showExtendedColumns
-        }
-
-        // 拖拽放置区域
-        DropArea {
-            property int lastDragIndex: 0
-            property int toIndex: 0
-            property int hoverIndex: 0
-            property bool dragForSort: false
-
-            id: dropArea
-            anchors.fill: parent
-
-            onEntered: function(drag) {
-                drag.accepted = true
-                for(var j = 0; j < drag.keys.length; j++) {
-                    if (drag.keys[j] === "music-list/index-list") {
-                        dragForSort = true
-                        break
-                    }
-                }
-            }
-            onPositionChanged: function(drag) {
-                updateHoverIndex(drag)
-
-                if (drag.y < 20 && !listview.atYBeginning) {
-                    scrollUpTimer.start()
-                } else {
-                    scrollUpTimer.stop()
-                }
-
-                if (drag.y > listview.height - 20 && !listview.atYEnd) {
-                    scrollDownTimer.start()
-                } else {
-                    scrollDownTimer.stop()
-                }
-            }
-            onDropped: function(drop) {
-                if (dragForSort) {
-                    scrollDownTimer.stop()
-                    scrollUpTimer.stop()
-
-                    listview.delegateModelGroup.sort()
-
-                    var temp = 0
-                    for (var i = 0; i < listview.delegateModelGroup.length; i++){
-                        if (listview.delegateModelGroup[i] <= toIndex) {
-                            mediaListModels.move(listview.delegateModelGroup[i] - temp, toIndex, 1)
-                            temp++
-                        } else {
-                            toIndex++
-                            mediaListModels.move(listview.delegateModelGroup[i], toIndex, 1)
-                        }
-                        mediaListModels.setProperty(toIndex, "inMulitSelect", false);
-                        mediaListModels.setProperty(toIndex - 1, "dragFlag", false);
-                    }
-                    listview.removeModelGroup()
-                }
-                dragForSort = false
-            }
-            onExited: {
-                if (lastDragIndex >= 0)
-                    mediaListModels.setProperty(lastDragIndex, "dragFlag", false)
-                scrollDownTimer.stop()
-                scrollUpTimer.stop()
-                dragForSort = false
-            }
-
-            function updateHoverIndex(drag) {
-                hoverIndex = listview.indexAt(drag.x, drag.y + listview.contentY)
-
-                if (drag.y + listview.contentY < hoverIndex * 56 + 56 / 2)
-                    hoverIndex--
-                if (hoverIndex < 0)
-                    hoverIndex = -1
-
-                if (hoverIndex !== lastDragIndex) {
-                    if (hoverIndex >= 0)
-                        mediaListModels.setProperty(hoverIndex, "dragFlag", true)
-                    if (lastDragIndex >= 0)
-                        mediaListModels.setProperty(lastDragIndex, "dragFlag", false)
-                }
-
-                toIndex = hoverIndex
-                lastDragIndex = hoverIndex
-                listview.dragToIndex = hoverIndex
-            }
-        }
-
-        Timer {
-            id: scrollDownTimer
-            interval: 40
-            repeat: true
-            running: false
-
-            onTriggered: {
-                if(!listview.atYEnd) {
-                    listview.contentY += 10
-                }
-            }
-        }
-        Timer {
-            id: scrollUpTimer
-            interval: 40
-            repeat: true
-            running: false
-
-            onTriggered: {
-                if(!listview.atYBeginning) {
-                    listview.contentY -= 10
-                }
-            }
-        }
-
-
-        MouseArea{
-            anchors.fill: parent
-            acceptedButtons:Qt.NoButton
-            z: -1  // 确保不阻挡拖拽
-            onWheel: function(wheel) {
-                if(wheel.angleDelta.y>1){
-                    albumSublistScrollBar.decrease()
-                } else{
-                    albumSublistScrollBar.increase()
-                }
-                if(wheel.angleDelta.y < 1 && albumSublistScrollBar.position > 0){
-                    musicSublistTitle.titleHeight = 80;
-                    musicSublistTitle.suspensionTitle(true);
-                }else {
-                    musicSublistTitle.titleHeight = 244;
-                    musicSublistTitle.suspensionTitle(false);
-                }
-            }
-        }
-
-        function removeModelGroup(){
-            for(var i = delegateModelGroup.length - 1; i >= 0; i--){
-                mediaListModels.setProperty(delegateModelGroup[i], "inMulitSelect", false);
-                delegateModelGroup.pop(i);
-            }
-        }
-        function keysShiftModifier(){
-            if(listview.lastIndex <= 0) listview.lastIndex = 0;
-            if(listview.lastIndex >= mediaListModels.count) listview.lastIndex = mediaListModels.count -1;
-            if(isShiftModifier){
-                var inMulitSelect = mediaListModels.get(listview.lastIndex).inMulitSelect;
-                mediaListModels.setProperty(listview.lastIndex, "inMulitSelect", (!inMulitSelect));
-                if((!inMulitSelect) === false){
-                    listview.delegateModelGroup.pop();
-                }else{
-                    listview.delegateModelGroup.push(listview.lastIndex);
-                }
-            }else{
-                listview.checkOne(listview.lastIndex);
-                listview.currentIndex = listview.lastIndex;
-            }
-        }
-
-        function checkOne(idx){
-            listview.removeModelGroup();
-            mediaListModels.setProperty(idx, "inMulitSelect", true);
-            listview.delegateModelGroup.push(idx);
-            listview.lastIndex = idx;
-        }
-
-        function checkMulti(idx){
-            listview.removeModelGroup();
-            var beging = (listview.lastIndex >= idx) ? idx : listview.lastIndex
-            var end = (listview.lastIndex >= idx) ? listview.lastIndex: idx
-            for(var i = beging; i <= end; i++){
-                mediaListModels.setProperty(i, "inMulitSelect", true);
-                listview.delegateModelGroup.push(i);
-            }
-            listview.lastIndex = idx;
-        }
-
-        function getSelectGroupHashList(){
-            var hashList = [];
-            for(var j = 0; j < listview.delegateModelGroup.length; j++){
-                if(mediaListModels.get(listview.delegateModelGroup[j]).inMulitSelect){
-                    var tmpHash  = mediaListModels.get(listview.delegateModelGroup[j]).hash;
-                    hashList.push(tmpHash);
-                    removeSong.musicTitle = mediaListModels.get(listview.delegateModelGroup[j]).title;
-                }
-            }
-            return hashList;
-        }
-
-        DeleteSonglistDialog {id: removeSong; listHash: "album"}
-        function delectSelectMusices(){
-            var tmpSelect = getSelectGroupHashList();
-            removeSong.deleteHashList = tmpSelect;
-            removeSong.show();
-        }
-        property bool isShiftModifier: false;
-        property int keyChanged: 0; //如果方向改变,该值也会改变
-        Keys.onPressed: {
-            switch (event.key){
-            case Qt.Key_Up:
-                listview.lastIndex--;
-                if(isShiftModifier && keyChanged === 2) listview.lastIndex++
-                keyChanged = 1;
-                listview.keysShiftModifier();
-                break;
-            case Qt.Key_Down:
-                listview.lastIndex++;
-                if(isShiftModifier && keyChanged === 1) listview.lastIndex--
-                keyChanged = 2;
-                listview.keysShiftModifier();
-                break;
-            case Qt.Key_A:
-                if (event.modifiers & Qt.ControlModifier) {
-                    listview.lastIndex = 0;
-                    listview.checkMulti(mediaListModels.count -1);
-                }
-                break;
-            case Qt.Key_Shift:
-                listview.isShiftModifier = true;
-                break;
-            case Qt.Key_Delete:
-                listview.delectSelectMusices();
-                break;
-            case Qt.Key_L:
-                if (event.modifiers & Qt.ControlModifier) {
-                    infoDialog.musicData = mediaListModels.get(lastIndex);
-                    infoDialog.show();
-                }
-                break;
-            default:
-                break;
-            }
-            event.accepted = true;
-        }
-        Keys.onReleased: {
-            if(event.key === Qt.Key_Shift){
-                listview.isShiftModifier = false;
-            }
-        }
-        Connections {
-            target: globalVariant
-            function onClearSelectGroup() {listview.removeModelGroup()}
-        }
-    }
-
-    DropArea {
-        anchors.fill: parent
-        onDropped: {
-            var list = []
-            for (var i = 0; i < drop.urls.length; i++)
-                list.push(drop.urls[i])
-            Presenter.importMetas(list, globalVariant.curListPage)
+        onScrollStateChanged: function(scrolled) {
+            musicSublistTitle.titleHeight = scrolled ? 80 : 244
+            musicSublistTitle.suspensionTitle(scrolled)
         }
     }
 
     onAlbumDataChanged: {
-        if (albumData && albumData.musicinfos !== undefined) {
+        if (albumData && albumData.musicinfos !== undefined)
             mediaListModels.meidaDataMap = albumData.musicinfos
-        }
     }
 }

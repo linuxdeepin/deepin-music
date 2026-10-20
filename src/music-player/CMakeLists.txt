@@ -54,8 +54,6 @@ endif()
 file(GLOB_RECURSE APP_QML_FILES CONFIGURE_DEPENDS
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/*.qml)
-# AlbumSublist.qml was intentionally absent from the legacy QRC and is not loaded at runtime.
-list(REMOVE_ITEM APP_QML_FILES musicsublist/AlbumSublist.qml)
 if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
     qt_policy(SET QTP0004 NEW)
 endif()

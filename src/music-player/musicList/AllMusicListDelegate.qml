@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.11
-import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
 import Qt5Compat.GraphicalEffects
 import org.deepin.dtk 1.0
@@ -18,6 +17,7 @@ ItemDelegate{
     property bool showCoverImage: true
     property bool showTrackNumber: true
     property bool showArtistColumn: true
+    property bool showAlbumColumn: true
     property bool indexPlaybackState: false
     readonly property bool activeMeta: globalVariant.curPlayingHash === hash
     readonly property bool playing: globalVariant.curPlayingStatus === DmGlobal.Playing
@@ -25,7 +25,8 @@ ItemDelegate{
                                               ? (indexPlaybackState ? 72 : 56)
                                               : 40
     readonly property int extendedColumnCount: showExtendedColumns
-                                                ? (showArtistColumn ? 2 : 1)
+                                                ? (showArtistColumn ? 1 : 0)
+                                                  + (showAlbumColumn ? 1 : 0)
                                                 : 0
     property bool isDragged: false
     property int hoverY: height
@@ -56,10 +57,15 @@ ItemDelegate{
             playCurrent()
     }
 
-    function unfavoriteIconColor() {
-        if (rootRectangle.checked)
-            return rootRectangle.palette.highlightedText
-        return rootRectangle.palette.windowText
+    function toggleFavorite() {
+        if (mmType === DmGlobal.MimeTypeCDA)
+            return
+        if (!favourite) {
+            Presenter.addMetasToPlayList(hash, "fav")
+        } else {
+            Presenter.removeFromPlayList(hash, "fav")
+            globalVariant.sendFloatingMessageBox(qsTr("My Favorites"), 2)
+        }
     }
 
     anchors.horizontalCenter: listview.contentItem.horizontalCenter
@@ -99,9 +105,20 @@ ItemDelegate{
 
                 switch(mouse.modifiers){
                 case Qt.ControlModifier:
-                    mediaModel.setProperty(index, "inMulitSelect", (!inMulitSelect));
-                    listview.delegateModelGroup.push(index);
-                    listview.dragGroup.push(coverUrl)
+                    var groupIndex = listview.delegateModelGroup.indexOf(index)
+                    if (inMulitSelect) {
+                        mediaModel.setProperty(index, "inMulitSelect", false)
+                        if (groupIndex >= 0) {
+                            listview.delegateModelGroup.splice(groupIndex, 1)
+                            listview.dragGroup.splice(groupIndex, 1)
+                        }
+                    } else {
+                        mediaModel.setProperty(index, "inMulitSelect", true)
+                        if (groupIndex < 0) {
+                            listview.delegateModelGroup.push(index)
+                            listview.dragGroup.push(coverUrl)
+                        }
+                    }
                     break;
                 case Qt.ShiftModifier:
                     listview.checkMulti(index);
@@ -268,50 +285,12 @@ ItemDelegate{
                     text: (index+1 < 10) ? "0%1".arg(index + 1) : index+1      //index+1
                     anchors.verticalCenter: parent.verticalCenter
                 }
-                Item {
-                    id: heartbutton
-                    width: 32
-                    height: 32
+                FavoriteButton {
                     anchors.verticalCenter: numlabel.verticalCenter
-                    ActionButton {
-                        anchors.fill: parent
-                        visible: favourite
-                        hoverEnabled: false
-                        icon.name: "heart_check"
-                        icon.width: 16
-                        icon.height: 16
-                        palette.windowText: "#F75B5B"
-                    }
-                    DciIcon {
-                        id: numberedFavoriteIcon
-                        anchors.centerIn: parent
-                        width: 16; height: 16
-                        sourceSize: Qt.size(16, 16)
-                        theme: DTK.themeType
-                        palette: DTK.makeIconPalette(rootRectangle.palette)
-                        visible: false
-                        name: "heart"
-                    }
-                    ColorOverlay {
-                        anchors.fill: numberedFavoriteIcon
-                        source: numberedFavoriteIcon
-                        color: rootRectangle.unfavoriteIconColor()
-                        visible: !favourite
-                        cached: true
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            if (mmType !== DmGlobal.MimeTypeCDA) {
-                                if (favourite === false) {
-                                    Presenter.addMetasToPlayList(hash, "fav")
-                                } else {
-                                    Presenter.removeFromPlayList(hash, "fav")
-                                    globalVariant.sendFloatingMessageBox(qsTr("My Favorites"), 2)
-                                }
-                            }
-                        }
-                    }
+                    favorite: favourite
+                    selected: rootRectangle.checked
+                    controlPalette: rootRectangle.palette
+                    onClicked: rootRectangle.toggleFavorite()
                 }
             }
 
@@ -364,49 +343,12 @@ ItemDelegate{
                     width: 40
                     height: parent.height
 
-                    Item {
-                        width: 32
-                        height: 32
+                    FavoriteButton {
                         anchors.centerIn: parent
-                        ActionButton {
-                            anchors.fill: parent
-                            visible: favourite
-                            hoverEnabled: false
-                            icon.name: "heart_check"
-                            icon.width: 16
-                            icon.height: 16
-                            palette.windowText: "#F75B5B"
-                        }
-                        DciIcon {
-                            id: indexedFavoriteIcon
-                            anchors.centerIn: parent
-                            width: 16; height: 16
-                            sourceSize: Qt.size(16, 16)
-                            theme: DTK.themeType
-                            palette: DTK.makeIconPalette(rootRectangle.palette)
-                            visible: false
-                            name: "heart"
-                        }
-                        ColorOverlay {
-                            anchors.fill: indexedFavoriteIcon
-                            source: indexedFavoriteIcon
-                            color: rootRectangle.unfavoriteIconColor()
-                            visible: !favourite
-                            cached: true
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                if (mmType !== DmGlobal.MimeTypeCDA) {
-                                    if (favourite === false)
-                                        Presenter.addMetasToPlayList(hash, "fav")
-                                    else {
-                                        Presenter.removeFromPlayList(hash, "fav")
-                                        globalVariant.sendFloatingMessageBox(qsTr("My Favorites"), 2)
-                                    }
-                                }
-                            }
-                        }
+                        favorite: favourite
+                        selected: rootRectangle.checked
+                        controlPalette: rootRectangle.palette
+                        onClicked: rootRectangle.toggleFavorite()
                     }
                 }
             }
@@ -415,49 +357,12 @@ ItemDelegate{
                 visible: !rootRectangle.showTrackNumber
                 anchors.fill: parent
 
-                Item {
-                    width: 32
-                    height: 32
+                FavoriteButton {
                     anchors.centerIn: parent
-                    ActionButton {
-                        anchors.fill: parent
-                        visible: favourite
-                        hoverEnabled: false
-                        icon.name: "heart_check"
-                        icon.width: 16
-                        icon.height: 16
-                        palette.windowText: "#F75B5B"
-                    }
-                    DciIcon {
-                        id: unnumberedFavoriteIcon
-                        anchors.centerIn: parent
-                        width: 16; height: 16
-                        sourceSize: Qt.size(16, 16)
-                        theme: DTK.themeType
-                        palette: DTK.makeIconPalette(rootRectangle.palette)
-                        visible: false
-                        name: "heart"
-                    }
-                    ColorOverlay {
-                        anchors.fill: unnumberedFavoriteIcon
-                        source: unnumberedFavoriteIcon
-                        color: rootRectangle.unfavoriteIconColor()
-                        visible: !favourite
-                        cached: true
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            if (mmType !== DmGlobal.MimeTypeCDA) {
-                                if (favourite === false)
-                                    Presenter.addMetasToPlayList(hash, "fav")
-                                else {
-                                    Presenter.removeFromPlayList(hash, "fav")
-                                    globalVariant.sendFloatingMessageBox(qsTr("My Favorites"), 2)
-                                }
-                            }
-                        }
-                    }
+                    favorite: favourite
+                    selected: rootRectangle.checked
+                    controlPalette: rootRectangle.palette
+                    onClicked: rootRectangle.toggleFavorite()
                 }
             }
         }
@@ -533,7 +438,7 @@ ItemDelegate{
             text: (album === "") ? "undefind": album
             anchors.verticalCenter: parent.verticalCenter
             verticalAlignment: Qt.AlignVCenter
-            visible: showExtendedColumns  // 窗口窄时隐藏
+            visible: rootRectangle.showExtendedColumns && rootRectangle.showAlbumColumn
         }
 
         Label {
