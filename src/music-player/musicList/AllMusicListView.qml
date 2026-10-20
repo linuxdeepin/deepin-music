@@ -3,8 +3,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.11
-import QtQuick.Window 2.11
-import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.0
 import org.deepin.dtk 1.0
 import audio.global 1.0
@@ -20,7 +18,13 @@ Rectangle {
     property double scalingRatio: 168 / 810  //计算宽度占比
     property bool showTrackNumber: true
     property bool showArtistColumn: true
+    property bool showAlbumColumn: true
     property bool playbackByArtist: false
+    property string playbackAlbumName: ""
+    property bool showCoverImage: true
+    property bool indexPlaybackState: false
+    property bool acceptExternalDrops: false
+    property bool allowLocalReorder: false
     property int headerHeight: 36
     Loader { id: importMenuLoader }
     Loader { id: moreMenuLoader }
@@ -30,9 +34,12 @@ Rectangle {
     color: "transparent"
     // 判断是否显示扩展列（Artist, Album）
     property bool showExtendedColumns: musicListView.width > 500
-    readonly property int leadingColumnWidth: showTrackNumber ? 56 : 40
+    readonly property int leadingColumnWidth: showTrackNumber
+                                              ? (indexPlaybackState ? 72 : 56)
+                                              : 40
     readonly property int extendedColumnCount: showExtendedColumns
-                                                ? (showArtistColumn ? 2 : 1)
+                                                ? (showArtistColumn ? 1 : 0)
+                                                  + (showAlbumColumn ? 1 : 0)
                                                 : 0
 
     //标题栏
@@ -66,7 +73,7 @@ Rectangle {
             width: parent.width * scalingRatio; height: parent.height
             text: qsTr("Album")
             verticalAlignment: Qt.AlignVCenter
-            visible: showExtendedColumns  // 窗口窄时隐藏
+            visible: showExtendedColumns && musicListView.showAlbumColumn
         }
         Label {
             width: 102; height: parent.height
@@ -108,7 +115,11 @@ Rectangle {
             delegateListHash: viewListHash
             showTrackNumber: musicListView.showTrackNumber
             showArtistColumn: musicListView.showArtistColumn
+            showAlbumColumn: musicListView.showAlbumColumn
             playbackByArtist: musicListView.playbackByArtist
+            playbackAlbumName: musicListView.playbackAlbumName
+            showCoverImage: musicListView.showCoverImage
+            indexPlaybackState: musicListView.indexPlaybackState
         }
 
         property bool isShiftModifier: false;
@@ -144,8 +155,14 @@ Rectangle {
                     infoDialog.show();
                 }
                 break;
-            default:
+            case Qt.Key_Return:
+            case Qt.Key_Enter:
+                if (listview.currentItem)
+                    listview.currentItem.playCurrent()
                 break;
+            default:
+                event.accepted = false
+                return
             }
             event.accepted = true;
         }
@@ -162,24 +179,34 @@ Rectangle {
             property int toIndex: 0
             property int hoverIndex: 0
             property bool dragForSort: false
+            property bool externalDrop: false
+            property real lastDragX: 0
+            property real lastDragY: 0
 
             id: dropArea
             anchors.fill: parent
 
             onEntered: function(drag) {
                 dragForSort = false
+                externalDrop = musicListView.acceptExternalDrops && drag.urls.length > 0
+                if (externalDrop) {
+                    drag.accepted = true
+                    return
+                }
                 for(var j = 0; j < drag.keys.length; j++) {
                     // 检查两个键，因为 Drag.mimeData 可能只传递其中一个
                     // 但只有在自定义排序模式下才允许拖拽排序
                     if ((drag.keys[j] === "music-list/index-list" || drag.keys[j] === "music-list/hash-list") 
-                        && Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom) {
+                        && (musicListView.allowLocalReorder
+                            || Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom)) {
                         dragForSort = true
                         break
                     }
                 }
 
                 // 只有在自定义排序模式下才允许拖拽排序
-                if (Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom
+                if ((musicListView.allowLocalReorder
+                        || Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom)
                         && viewListHash !== "cdarole") {
                     drag.accepted = true
                 } else {
@@ -187,9 +214,12 @@ Rectangle {
                 }
             }
             onPositionChanged: function(drag) {
-                if (dragForSort) {
-                    updateHoverIndex(drag)
-                }
+                if (!dragForSort)
+                    return
+
+                lastDragX = drag.x
+                lastDragY = drag.y
+                updateHoverIndex(lastDragX, lastDragY)
 
                 if (drag.y < 20 && !listview.atYBeginning) {
                     scrollUpTimer.start()
@@ -204,7 +234,16 @@ Rectangle {
                 }
             }
             onDropped: function(drop) {
-                updateHoverIndex(drop)
+                if (externalDrop) {
+                    var urls = []
+                    for (var urlIndex = 0; urlIndex < drop.urls.length; ++urlIndex)
+                        urls.push(drop.urls[urlIndex])
+                    Presenter.importMetas(urls, globalVariant.curListPage)
+                    externalDrop = false
+                    return
+                }
+
+                updateHoverIndex(drop.x, drop.y)
                 
                 if (dragForSort) {
                     scrollDownTimer.stop()
@@ -218,7 +257,8 @@ Rectangle {
                         hashList.push(mediaModel.get(listview.delegateModelGroup[i]).hash);
                     }
                     // 只有在自定义排序模式下才调用 Presenter.moveMetasPlayList
-                    if (Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom) {
+                    if (!musicListView.allowLocalReorder
+                            && Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom) {
                         if (targetIndex + 1 >= mediaModel.count) {
                             Presenter.moveMetasPlayList(hashList, viewListHash, "")
                         } else {
@@ -253,21 +293,24 @@ Rectangle {
                     listview.removeModelGroup()
                 }
                 dragForSort = false
+                externalDrop = false
             }
             onExited: {
-                mediaModel.setProperty(lastDragIndex, "dragFlag", false)
+                if (dragForSort && lastDragIndex >= 0)
+                    mediaModel.setProperty(lastDragIndex, "dragFlag", false)
                 scrollDownTimer.stop()
                 scrollUpTimer.stop()
+                externalDrop = false
                 dragForSort = false
             }
 
-            function updateHoverIndex(drag) {
+            function updateHoverIndex(dragX, dragY) {
                 var contentY = listview.contentY || 0
-                hoverIndex = listview.indexAt(drag.x, drag.y + contentY)
+                hoverIndex = listview.indexAt(dragX, dragY + contentY)
 
                 if (hoverIndex >= 0) {
                     var itemY = hoverIndex * 56
-                    if (drag.y + contentY < itemY + 56 / 2)
+                    if (dragY + contentY < itemY + 56 / 2)
                         hoverIndex--
                 }
                 
@@ -389,7 +432,7 @@ Rectangle {
             musicListView.scrollStateChanged(contentY > originY)
 //            console.log("onContentYChanged..................")
             if (dropArea.dragForSort)
-                dropArea.updateHoverIndex()
+                dropArea.updateHoverIndex(dropArea.lastDragX, dropArea.lastDragY)
         }
 
         Connections {

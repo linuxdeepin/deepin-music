@@ -40,6 +40,7 @@ Rectangle {
         showTrackNumber: false
         showArtistColumn: false
         playbackByArtist: true
+        acceptExternalDrops: true
 
         onScrollStateChanged: function(scrolled) {
             musicSublistTitle.titleHeight = scrolled ? 80 : 244
