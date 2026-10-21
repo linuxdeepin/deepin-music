@@ -22,27 +22,30 @@ MLogger::MLogger(QObject *parent)
     qputenv("DTK_DISABLED_LOGGING_RULES", "1");
 
     // set env
-    m_rules = logRules;
+    m_envRules = logRules;
 
-    // set dconfig
+    // set dconfig：schema 未安装或配置文件缺失时 create 可能返回 nullptr，
+    // 此时降级为仅使用环境变量规则，避免解引用空指针崩溃
     m_config = DConfig::create("org.deepin.music", "org.deepin.music");
-    logRules = m_config->value("log_rules").toByteArray();
-    appendRules(logRules);
-    setRules(m_rules);
-
-    // watch dconfig
-    connect(m_config, &DConfig::valueChanged, this, [this](const QString &key) {
-        if (key == "log_rules") {
-            setRules(m_config->value(key).toByteArray());
-        }
-    });
+    if (m_config) {
+        applyDConfigValue(m_config->value("log_rules").toByteArray());
+        // watch dconfig
+        connect(m_config, &DConfig::valueChanged, this, [this](const QString &key) {
+            if (key == "log_rules") {
+                applyDConfigValue(m_config->value(key).toByteArray());
+            }
+        });
+    } else {
+        setRules(m_envRules);
+    }
 }
 
 MLogger::~MLogger()
 {
-    if (m_config) {
-        m_config->deleteLater();
-    }
+    // MLogger 通常为 main 中的栈对象，应用退出时事件循环已停止，
+    // deleteLater 投递的延迟删除事件不会被处理，因此直接 delete
+    delete m_config;
+    m_config = nullptr;
 }
 
 void MLogger::setRules(const QString &rules)
@@ -50,6 +53,16 @@ void MLogger::setRules(const QString &rules)
     auto tmpRules = rules;
     m_rules = tmpRules.replace(";", "\n");
     QLoggingCategory::setFilterRules(m_rules);
+}
+
+void MLogger::applyDConfigValue(const QByteArray &value)
+{
+    // 以环境变量规则为基底，DConfig 规则追加其后（Qt 规则后生效者优先），
+    // 保证 valueChanged 后环境变量规则不丢失且 DConfig 优先级更高。
+    // 注意：appendRules 只更新 m_rules 不应用，最后必须 setRules 应用生效
+    setRules(m_envRules);
+    appendRules(value);
+    setRules(m_rules);
 }
 
 void MLogger::appendRules(const QString &rules)

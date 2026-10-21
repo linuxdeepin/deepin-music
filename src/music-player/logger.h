@@ -32,9 +32,11 @@ public:
 
 private:
     void appendRules(const QString &rules);
+    void applyDConfigValue(const QByteArray &value);
 
 private:
     QString m_rules;
+    QString m_envRules;
     Dtk::Core::DConfig *m_config;
 };
 #endif  // MUSIC_LOGGER_H
