@@ -405,8 +405,7 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
     qCDebug(dmMusic) << "Resampling audio data for hash:" << hash << "buffer size:" << buffer.size() << "forceQuit:" << forceQuit;
 
     if (buffer.isEmpty()) {
-        qCWarning(dmMusic) << "Buffer is empty, cannot resample for hash:" << hash;
-        qDebug() << __FUNCTION__ << "buffer size ==" << buffer.size();
+        qCWarning(dmMusic) << "Buffer is empty, cannot resample for hash:" << hash << "buffer size:" << buffer.size();
         return;
     }
 
@@ -464,7 +463,6 @@ void AudioDataDetector::resample(const QVector<float> &buffer, const QString &ha
             qCInfo(dmMusic) << "Successfully saved audio wave cache for hash:" << hash << "to:" << filePath;
         } else {
             qCCritical(dmMusic) << "Failed to write audio wave cache file for hash:" << hash << "path:" << filePath;
-            qWarning() << "can not write cache file " << hash << " failed";
         }
     } else {
         qCDebug(dmMusic) << "Force quit mode, skipping cache write for hash:" << hash;

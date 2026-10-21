@@ -51,6 +51,7 @@
 #include "util/shortcut.h"
 #include "util/dbusadpator.h"
 #include "util/log.h"
+#include "logger.h"
 
 DCORE_USE_NAMESPACE;
 DGUI_USE_NAMESPACE;
@@ -60,7 +61,7 @@ QScopedPointer<Presenter, QScopedPointerPodDeleter> presenter;
 #ifdef Q_OS_LINUX
 void sig_term_handler(int signum, siginfo_t *info, void *ptr)
 {
-    qDebug() << "SIGTERM received.";
+    qCDebug(dmMusic) << "SIGTERM received.";
     presenter->saveDataToDB();
     exit(1);
 }
@@ -69,6 +70,10 @@ void sig_term_handler(int signum, siginfo_t *info, void *ptr)
 // 此文件是QML应用的启动文件，一般无需修改
 int main(int argc, char *argv[])
 {
+    // 日志规则自管（DConfig log_rules + 调试模式联动），必须在任何日志打印与
+    // Application 实例化之前创建
+    MLogger logger;
+
     QElapsedTimer startupTimer;
     startupTimer.start();
     const auto logStartupStage = [&startupTimer](const char *stage) {

@@ -751,7 +751,7 @@ void Presenter::importMetas(const QStringList &urls, const QString &playlistHash
 {
     qCDebug(dmMusic) << "Importing metas from URLs:" << urls.size() << "Playlist:" << playlistHash << "Play flag:" << playFalg;
     if (urls.isEmpty()) {
-        qInfo() << "importMetas urls is empty";
+        qCInfo(dmMusic) << "importMetas urls is empty";
         return;
     }
     m_data->m_dataManager->importMetas(urls, playlistHash, playFalg);
