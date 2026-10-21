@@ -17,9 +17,13 @@ mkdir -p "${SCRIPT_DIR}/report"
 echo " ===================CREAT LCOV REPROT==================== "
 lcov --directory "${BUILD_DIR}" --zerocounters
 
-# 关闭 leak 检测 + 超时保护运行测试
+# 关闭 leak 检测 + 超时保护运行测试,并生成 gtest xml 报告
+set +e
 QT_QPA_PLATFORM=offscreen ASAN_OPTIONS="fast_unwind_on_malloc=1:detect_leaks=0" \
-    timeout 120 "${BUILD_DIR}/tests/libdmusic-test/${executable}"
+    timeout 120 "${BUILD_DIR}/tests/libdmusic-test/${executable}" \
+    --gtest_output=xml:"${SCRIPT_DIR}/report/report_${executable}.xml"
+test_exit_code=$?
+set -e
 
 lcov --directory "${BUILD_DIR}" --capture --output-file "${SCRIPT_DIR}/html/${executable}_Coverage.info"
 
@@ -41,4 +45,4 @@ genhtml -o "${SCRIPT_DIR}/html" "${SCRIPT_DIR}/html/${executable}_Coverage_filet
 
 mv "${SCRIPT_DIR}/html/index.html" "${SCRIPT_DIR}/html/cov_${executable}.html"
 
-exit 0
+exit $test_exit_code

@@ -4,10 +4,15 @@ QTEST_FUNCTION_TIMEOUT='800000'
 rm -rf ${HOME}/.cache/deepin/deepin-music/*
 rm -rf ${HOME}/.config/deepin/deepin-music/*
 
+export builddir=build-ut
+export reportdir=build-ut
+export scriptdir="$(cd "$(dirname "$0")" && pwd)"
+export projectdir="$(cd "${scriptdir}/.." && pwd)"
+
 # 项目根目录和构建目录
-PROJECT_ROOT="$(cd .. && pwd)"
-BUILD_DIR="${PROJECT_ROOT}/build-ut"
-TESTS_DIR="${PROJECT_ROOT}/tests"
+PROJECT_ROOT="${projectdir}"
+BUILD_DIR="${projectdir}/${builddir}"
+TESTS_DIR="${scriptdir}"
 
 # 清理并创建构建目录
 rm -rf "${BUILD_DIR}"
@@ -19,6 +24,16 @@ make -j8 -C "${BUILD_DIR}"
 
 # 运行 libdmusic-test
 cd "${BUILD_DIR}/tests/libdmusic-test"
+set +e
 bash "${TESTS_DIR}/libdmusic-test/ut-build-run.sh"
+test_exit_code=$?
+set -e
 
-exit 0
+# 生成摘要 JSON
+echo "==> Generating summary JSON: ${projectdir}/${reportdir}/ut-summary.json"
+
+export GTEST_XML_DIR="${TESTS_DIR}/libdmusic-test/report"
+export COVERAGE_INFO="${TESTS_DIR}/libdmusic-test/html/libdmusic-test_Coverage_fileter.info"
+python3 "${scriptdir}/gen-ut-summary.py"
+
+exit $test_exit_code
