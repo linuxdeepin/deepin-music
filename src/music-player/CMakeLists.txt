@@ -72,7 +72,9 @@ set(TARGET_LIBS Qt6::Quick PkgConfig::DTK dmusic ${Dtk6Declarative_LIBRARIES} Dt
 target_link_libraries(${BIN_NAME} PRIVATE ${TARGET_LIBS})
 
 # install dconfig meta files
-dtk_add_config_meta_files(APPID deepin-music FILES data/org.deepin.music.json)
+# APPID 与 MLogger/DConfig 的 appId(org.deepin.music) 保持一致，调试模式经由
+# dde-dconfig 读写该配置实现日志级别动态切换
+dtk_add_config_meta_files(APPID org.deepin.music FILES data/org.deepin.music.json)
 
 # Add install rule
 install(TARGETS ${BIN_NAME} DESTINATION ${APP_BIN_INSTALL_DIR})
