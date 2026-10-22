@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,7 +18,7 @@ CusShaderToy {
     property real holeSize
     property real colorSaturation
     property real colorValue
-    pixelShader: "qrc:/lyric/qsbfile/EffectParticle.qsb"
+    pixelShader: shaderRoot + "EffectParticle.qsb"
     iChannel0: View_data {
         id : _image
         visible: true
