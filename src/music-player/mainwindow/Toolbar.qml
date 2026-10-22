@@ -595,13 +595,13 @@ ToolFloatingPanel {
     function updatePlayControlBtnStatus() {
 //        console.log("updatePlayControlBtnStatus, playingCount:" + globalVariant.playingCount, " playlistExist:", globalVariant.playlistExist,
 //                    " nextMetaFromPlay:", Presenter.nextMetaFromPlay(mediaData.hash), " preMetaFromPlay:", Presenter.preMetaFromPlay(mediaData.hash), " playMode:", playMode)
-        if ((globalVariant.playlistExist && globalVariant.playingCount <= 1) ||
+        if (!mediaData || mediaData.hash === "" ||
                 (!Presenter.nextMetaFromPlay(mediaData.hash) && playMode === DmGlobal.RepeatNull && mediaData.mmType !== DmGlobal.MimeTypeCDA))
             nextBtn.enabled = false
         else
             nextBtn.enabled = true
 
-        if ((globalVariant.playlistExist && globalVariant.playingCount <= 1) ||
+        if (!mediaData || mediaData.hash === "" ||
                 (!Presenter.preMetaFromPlay(mediaData.hash) && playMode === DmGlobal.RepeatNull && mediaData.mmType !== DmGlobal.MimeTypeCDA))
             prevBtn.enabled = false
         else

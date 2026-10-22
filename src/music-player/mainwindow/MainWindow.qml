@@ -249,7 +249,8 @@ ApplicationWindow {
                     text: qsTr("Previous")
                     onTriggered: Presenter.playPre()
                     enabled: {
-                        if ((globalVariant.playlistExist && globalVariant.playingCount <= 1) ||
+                        if (!globalVariant.currentMediaMeta ||
+                            globalVariant.currentMediaMeta.hash === "" ||
                             (!Presenter.preMetaFromPlay(globalVariant.currentMediaMeta.hash) && globalVariant.curPlayMode === DmGlobal.RepeatNull))
                             return false
                         else
@@ -260,7 +261,8 @@ ApplicationWindow {
                     text: qsTr("Next")
                     onTriggered: Presenter.playNext()
                     enabled: {
-                        if ((globalVariant.playlistExist && globalVariant.playingCount <= 1) ||
+                        if (!globalVariant.currentMediaMeta ||
+                            globalVariant.currentMediaMeta.hash === "" ||
                             (!Presenter.nextMetaFromPlay(globalVariant.currentMediaMeta.hash) && globalVariant.curPlayMode === DmGlobal.RepeatNull))
                             return false
                         else
