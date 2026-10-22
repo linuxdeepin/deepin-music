@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,6 +7,10 @@ import audio.global 1.0
 
 ShaderEffect {
     id: shader
+
+    readonly property string shaderRoot: Qt.platform.os === "windows"
+                                         ? "qrc:/lyric/qsbfile/compat/"
+                                         : "qrc:/lyric/qsbfile/"
 
     //properties for shader
 
@@ -101,9 +105,9 @@ ShaderEffect {
         }
     }
 
-    vertexShader: "qrc:/lyric/qsbfile/cusVertex.qsv"
+    vertexShader: shaderRoot + "cusVertex.qsv"
 
-    readonly property url defaultPixelShader: "qrc:/lyric/qsbfile/default.qsb"
+    readonly property url defaultPixelShader: shaderRoot + "default.qsb"
 
     property url pixelShader: ""
     fragmentShader: pixelShader ? pixelShader : defaultPixelShader

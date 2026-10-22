@@ -7,5 +7,12 @@
         <file>lyric/qsbfile/EffectLightWave.qsb</file>
         <file>lyric/qsbfile/cusVertex.qsv</file>
         <file>lyric/qsbfile/default.qsb</file>
+        <file>lyric/qsbfile/compat/EffectWaterWave.qsb</file>
+        <file>lyric/qsbfile/compat/EffectParticle.qsb</file>
+        <file>lyric/qsbfile/compat/EffectSun.qsb</file>
+        <file>lyric/qsbfile/compat/EffectLine.qsb</file>
+        <file>lyric/qsbfile/compat/EffectLightWave.qsb</file>
+        <file>lyric/qsbfile/compat/cusVertex.qsv</file>
+        <file>lyric/qsbfile/compat/default.qsb</file>
     </qresource>
 </RCC>
