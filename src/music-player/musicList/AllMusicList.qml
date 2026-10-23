@@ -30,12 +30,16 @@ Rectangle {
             musicinfo: rootRectangle.mediaModels.count === 1 ? qsTr("1 song") : qsTr("%1 songs").arg(rootRectangle.mediaModels.count)
             isDefault: (rootRectangle.mediaModels.count === 0) ? false : true
             pageHash: rootRectangle.listHash
+            Accessible.name: "AllMusicList_ToolButtonItem"
+            Accessible.role: Accessible.Pane
         }
         AllMusicDefaultPage {
             id: defaultPage
             width: toolButtonItem.width; height: rootRectangle.height - toolButtonItem.height
             pageHash: listHash
             visible: (rootRectangle.mediaModels.count === 0) ? true : false
+            Accessible.name: "AllMusicList_DefaultPage"
+            Accessible.role: Accessible.Pane
         }
         Loader {
             id: musicListViewLoader
@@ -48,6 +52,8 @@ Rectangle {
                     height: parent.height
                     mediaModel: rootRectangle.mediaModels
                     viewListHash: rootRectangle.listHash
+                    Accessible.name: "AllMusicList_AllMusicListView"
+                    Accessible.role: Accessible.Pane
                 }
             }
         }

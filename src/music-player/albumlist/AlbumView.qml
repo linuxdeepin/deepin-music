@@ -28,6 +28,8 @@ Rectangle {
     Component {
         id: albumSublistView
         AlbumSublistView {
+            Accessible.name: "AlbumView_AlbumSublistView"
+            Accessible.role: Accessible.Pane
             albumData: {
                 for(var i = 0; i < albumModels.count; i++){
                     if(albumName === albumModels.get(i).name){
@@ -55,6 +57,8 @@ Rectangle {
                 gridAndlistViewModel: (contenWindow.albumModels.count === 0) ? false : true
                 isDefault: (contenWindow.albumModels.count === 0) ? false : true
                 pageHash: "album"
+                Accessible.name: "AlbumView_ToolButtonItem"
+                Accessible.role: Accessible.Pane
             }
             AlbumDefaultPage {
                 id: defaultPage
@@ -64,6 +68,8 @@ Rectangle {
                 anchors.left: toolButtonItem.left
                 anchors.top: toolButtonItem.bottom;
                 visible: (contenWindow.albumModels.count === 0) ? true : false
+                Accessible.name: "AlbumView_DefaultPage"
+                Accessible.role: Accessible.Pane
             }
 
             AlbumListView {
@@ -74,6 +80,8 @@ Rectangle {
                 anchors.top: toolButtonItem.bottom;
                 visible: false;
                 albumModels: contenWindow.albumModels
+                Accessible.name: "AlbumView_ListView"
+                Accessible.role: Accessible.Pane
                 onItemDoubleClicked:{
                     contenWindow.itemDoubleClicked(albumData);
                 }
@@ -86,6 +94,8 @@ Rectangle {
                 anchors.top: toolButtonItem.bottom;
                 visible: (contenWindow.albumModels.count === 0) ? false : true;
                 albumModel: contenWindow.albumModels
+                Accessible.name: "AlbumView_GridView"
+                Accessible.role: Accessible.Pane
                 onItemDoubleClicked: function(albumData){
                     currentItemPos.x = gridview.view.currentItem.x + gridview.view.currentItem.width / 2
                     currentItemPos.y = gridview.view.currentItem.y + gridview.view.currentItem.height / 2 - 20

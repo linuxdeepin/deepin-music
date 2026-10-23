@@ -70,6 +70,8 @@ ItemDelegate{
                     isCurHover: itemDelegate.hovered
                     curMediaData: model
                     width: 40; height: 40
+                    Accessible.name: "AlbumListDelegate_Imagecell"
+                    Accessible.role: Accessible.Pane
                 }
                 Label {
                     id: albumNameLabel

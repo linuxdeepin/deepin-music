@@ -184,6 +184,8 @@ ItemDelegate{
                 isCurPlay: (globalVariant.curPlayingHash === hash) ? true : false
                 isCurHover: rootRectangle.hovered
                 curMediaData: model
+                Accessible.name: "CurrentPlayListDelegate_Imagecell"
+                Accessible.role: Accessible.Pane
             }
             Rectangle {
                 id: musicInfoRect
