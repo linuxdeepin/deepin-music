@@ -19,6 +19,8 @@ CusShaderToy {
     property real colorSaturation
     property real colorValue
     pixelShader: shaderRoot + "EffectWaterWave.qsb"
+    Accessible.name: "EffectWaterWave"
+    Accessible.role: Accessible.Pane
     iChannel1: Image {
         source: "qrc:/dsg/img/bk.png"
         cache: false

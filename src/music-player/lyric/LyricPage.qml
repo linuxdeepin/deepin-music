@@ -75,6 +75,8 @@ Rectangle{
                 anchors.centerIn: parent
                 ShaderView {
                     id: shaderView
+                    Accessible.name: "ShaderView"
+                    Accessible.role: Accessible.Pane
                 }
             }
         }
@@ -160,6 +162,8 @@ Rectangle{
                             id: lyricRect
                             currentPosition: lrcRectItem.currentPosition
                             wordLyricsData: lrcRectItem.wordLyricsData
+                            Accessible.name: "LyricRect"
+                            Accessible.role: Accessible.Pane
                         }
                     }
                     Rectangle {

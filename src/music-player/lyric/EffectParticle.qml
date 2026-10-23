@@ -19,6 +19,8 @@ CusShaderToy {
     property real colorSaturation
     property real colorValue
     pixelShader: shaderRoot + "EffectParticle.qsb"
+    Accessible.name: "EffectParticle"
+    Accessible.role: Accessible.Pane
     iChannel0: View_data {
         id : _image
         visible: true

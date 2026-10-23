@@ -19,6 +19,8 @@ import "effectpublic"
     property real colorSaturation
     property real colorValue
     pixelShader: shaderRoot + "EffectLightWave.qsb"
+    Accessible.name: "EffectLightWave"
+    Accessible.role: Accessible.Pane
     
     iChannel0: View_data {
         id : _image

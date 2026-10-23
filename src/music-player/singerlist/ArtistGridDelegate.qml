@@ -70,6 +70,8 @@ Rectangle {
                 background_height:cirWidget.height/2 + cirWidget.height/2
                 isCurHover: cirWidgetControl.hovered
                 isCurPlay: activeMeta
+                Accessible.name: "ArtistGridDelegate_CircularImg"
+                Accessible.role: Accessible.Pane
 
                 CircularButton {
                     width: 40
@@ -77,6 +79,8 @@ Rectangle {
                     anchors.centerIn: parent
                     iconName: playing && activeMeta ? "details_pussed" : "details_play"
                     visible: cirWidgetControl.hovered
+                    Accessible.name: "ArtistGridDelegate_CircularButton"
+                    Accessible.role: Accessible.Button
                     onClicked: {
                         if(playing && activeMeta){
                             Presenter.pause();
@@ -101,6 +105,8 @@ Rectangle {
                     width: 24; height: 24
                     iconName: "details_more"
                     visible: cirWidgetControl.hovered
+                    Accessible.name: "ArtistGridDelegate_MoreButton"
+                    Accessible.role: Accessible.Button
                     property Palette color: Palette {
                         normal: Qt.rgba(0, 0, 0, 0.1)
                         hovered: Qt.rgba(0, 0, 0, 0.15)

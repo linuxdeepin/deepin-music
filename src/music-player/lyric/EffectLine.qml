@@ -20,6 +20,8 @@ CusShaderToy {
     property real colorSaturation
     property real colorValue
     pixelShader: shaderRoot + "EffectLine.qsb"
+    Accessible.name: "EffectLine"
+    Accessible.role: Accessible.Pane
 
     iChannel1: View_data {
         id : _image

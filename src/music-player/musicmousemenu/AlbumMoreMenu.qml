@@ -20,12 +20,14 @@ Menu {
         text: qsTr("View details")
         visible: ("albumSublist" === currentPageHash) ? false : true
         height: visible ? 30 : 0
+        Accessible.name: "AlbumMoreMenu_ViewDetails"
         onTriggered: {
             moreMenu.viewAlbumDatails(moreMenu.albumData);
         }
     }
     MenuItem {
         text: qsTr("Play all")
+        Accessible.name: "AlbumMoreMenu_PlayAll"
         onTriggered: {
             Presenter.playAlbum(albumData.name);
         }

@@ -35,6 +35,8 @@ Rectangle {
         height: 30
         anchors.centerIn: parent
         visible: false
+        Accessible.name: "WaveItem"
+        Accessible.role: Accessible.Pane
     }
     Canvas {
         id: shapeMask
@@ -121,6 +123,8 @@ Rectangle {
                 width: timeText.width > 50 ? timeText.width + 10 : 50
                 height: 25
                 fillColor: DTK.palette.highlight
+                Accessible.name: "TimeLabel"
+                Accessible.role: Accessible.Pane
                 Text {
                     id: timeText
                     height: parent.height - 8
@@ -142,6 +146,8 @@ Rectangle {
                 height: 10
                 fillColor: DTK.palette.highlight
                 anchors.horizontalCenter: parent.horizontalCenter
+                Accessible.name: "WaveformRect_Triangle"
+                Accessible.role: Accessible.Pane
             }
         }
     }
