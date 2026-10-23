@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -24,6 +24,7 @@ Menu{
     MenuItem {
         id: playMenuItem
         text: qsTr("Play")
+        Accessible.name: "PlayMenuItem"
         onTriggered: {
             Presenter.playPlaylist(playlistMenu.pageHash);
         }
@@ -31,6 +32,7 @@ Menu{
     MenuSeparator {}
     MenuItem {
         text: qsTr("Add songs");
+        Accessible.name: "AddSongs"
         onTriggered: {
             globalVariant.curListPage = playlistMenu.pageHash
             globalVariant.globalFileDlgOpen()
@@ -40,6 +42,7 @@ Menu{
         visible: !["fav", "all", "album", "artist"].includes(pageHash)
         height: visible ? 36: 0
         text: qsTr("Rename")
+        Accessible.name: "Rename"
         onTriggered: {
             globalVariant.renamePlaylist(playlistMenu.pageHash);
         }
@@ -54,6 +57,7 @@ Menu{
         visible: !["fav", "all", "album", "artist"].includes(pageHash)
         height: visible ? 36: 0
         text: qsTr("Delete");
+        Accessible.name: "DeletePlaylist"
         onTriggered: {
             removeSong.show();
         }

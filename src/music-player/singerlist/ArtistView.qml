@@ -26,6 +26,8 @@ Rectangle {
     Component {
         id: artistSublistView
         ArtistSublistView {
+            Accessible.name: "ArtistView_ArtistSublistView"
+            Accessible.role: Accessible.Pane
             artistData: {
                 for(var i = 0; i < artistModels.count; i++){
                     if(artistDataName === artistModels.get(i).name){
@@ -53,6 +55,8 @@ Rectangle {
                 musicinfo: qsTr("%1 artists - %2 songs").arg(contenWindow.artistModels.count).arg(contenWindow.artistModels.musicCount)
                 isDefault: (contenWindow.artistModels.count === 0) ? false : true
                 pageHash: "artist"
+                Accessible.name: "ArtistView_ToolButtonItem"
+                Accessible.role: Accessible.Pane
             }
             ArtistDefaultPage {
                 id: defaultPage
@@ -60,6 +64,8 @@ Rectangle {
                 anchors.left: toolButtonItem.left; /*anchors.leftMargin: 20*/
                 anchors.top: toolButtonItem.bottom;
                 visible: (contenWindow.artistModels.count === 0) ? true : false
+                Accessible.name: "ArtistView_DefaultPage"
+                Accessible.role: Accessible.Pane
             }
             Rectangle {
                 id: viewParent;
@@ -80,10 +86,15 @@ Rectangle {
                     anchors.left: viewParent.left
                     anchors.leftMargin: (viewParent.width - width) / 2
                     cellWidth: 208; cellHeight: 230
-                    ScrollBar.vertical: ScrollBar {}
+                    Accessible.name: "ArtistView_GridView"
+                    ScrollBar.vertical: ScrollBar {
+                        Accessible.name: "ArtistView_ScrollBar"
+                    }
                     model: artistModels
                     delegate: ArtistGridDelegate{
                         id: musicSingerGridItem
+                        Accessible.name: "ArtistView_ArtistGridItem"
+                        Accessible.role: Accessible.Pane
                         onItemDoubleClicked: {
                             contenWindow.itemDoubleClicked(artistData);
                         }

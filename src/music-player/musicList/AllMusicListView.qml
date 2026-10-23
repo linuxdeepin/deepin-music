@@ -94,13 +94,14 @@ Rectangle {
         property var dragGroup: new Array
         property int lastIndex: 0
         property int dragToIndex: 0
+        Accessible.name: "AllMusicListView_ListView"
         property MusicInfoDialog infoDialog: MusicInfoDialog{musicData: listview.model.get(0)}
 
         id: listview
         width: parent.width
         height: parent.height - musicListView.headerHeight
         anchors.top: headerView.bottom;
-        ScrollBar.vertical: ScrollBar {}
+        ScrollBar.vertical: ScrollBar { Accessible.name: "AllMusicListView_ScrollBar" }
         model: mediaModel
         clip: true
         focus: true
@@ -120,6 +121,8 @@ Rectangle {
             playbackAlbumName: musicListView.playbackAlbumName
             showCoverImage: musicListView.showCoverImage
             indexPlaybackState: musicListView.indexPlaybackState
+            Accessible.name: "AllMusicListView_ItemDelegate"
+            Accessible.role: Accessible.Button
         }
 
         property bool isShiftModifier: false;

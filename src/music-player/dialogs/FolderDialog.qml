@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,6 +8,8 @@ import Qt.labs.platform 1.0
 FolderDialog {
     id: folderDialog
     folder: StandardPaths.standardLocations(StandardPaths.MusicLocation)[0]
+    Accessible.name: "FolderDialog"
+    Accessible.role: Accessible.Pane
     onAccepted: {
         var list = []
         list.push(folder)

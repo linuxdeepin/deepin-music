@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -56,6 +56,7 @@ FloatingPanel {
             to: 100
             value: volume
             orientation: Qt.Vertical
+            Accessible.name: "ContentSlider"
 
             onValueChanged: {
                 //volume = value

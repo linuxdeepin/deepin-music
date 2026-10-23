@@ -38,7 +38,7 @@ ApplicationWindow {
     DWindow.enableBlurWindow: true
     color: "transparent"
     flags: Qt.Window | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint | (Qt.platform.os === "windows" ? Qt.FramelessWindowHint : Qt.WindowTitleHint)
-    header: WindowTitlebar { id: musicTitle }
+    header: WindowTitlebar { id: musicTitle; Accessible.name: "MusicTitle"; Accessible.role: Accessible.Pane }
     background: Rectangle {
         anchors.fill: parent
         color: "transparent"
@@ -94,6 +94,8 @@ ApplicationWindow {
     Shortcuts {
         id: shortcuts
         enabled: rootWindow.active
+        Accessible.name: "Shortcuts"
+        Accessible.role: Accessible.Pane
     }
 
     MusicContentWindow {
@@ -103,6 +105,8 @@ ApplicationWindow {
         width: parent.width
         height: parent.height/* - musicTitle.height - 20*/
         anchors.left: musicTitle.left/*; anchors.top: musicTitle.bottom*/
+        Accessible.name: "ContentWindow"
+        Accessible.role: Accessible.Pane
     }
 
 
@@ -179,6 +183,8 @@ ApplicationWindow {
         id: toolbox
         width: parent.width
         z: 10
+        Accessible.name: "Toolbox"
+        Accessible.role: Accessible.Pane
     }
 
     Loader {
@@ -242,11 +248,13 @@ ApplicationWindow {
             menu: Menu {
                 MenuItem {
                     text: qsTr("Play/Pause")
+                    Accessible.name: "PlayPause"
                     onTriggered: Presenter.playPause()
                     enabled: globalVariant.playingCount > 0
                 }
                 MenuItem {
                     text: qsTr("Previous")
+                    Accessible.name: "Previous"
                     onTriggered: Presenter.playPre()
                     enabled: {
                         if (!globalVariant.currentMediaMeta ||
@@ -259,6 +267,7 @@ ApplicationWindow {
                 }
                 MenuItem {
                     text: qsTr("Next")
+                    Accessible.name: "Next"
                     onTriggered: Presenter.playNext()
                     enabled: {
                         if (!globalVariant.currentMediaMeta ||
@@ -271,6 +280,7 @@ ApplicationWindow {
                 }
                 MenuItem {
                     text: qsTr("Exit")
+                    Accessible.name: "MainWindow_Exit"
                     onTriggered: Presenter.forceExit();
                 }
             }

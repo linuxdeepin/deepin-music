@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -32,6 +32,8 @@ Rectangle {
             itemWidth: sampleRectWidth
             itemCount: sampleCount
             chromatic: false
+            Accessible.name: "WaveformItem_StripedRectangle_Normal"
+            Accessible.role: Accessible.Pane
         }
     }
 
@@ -53,6 +55,8 @@ Rectangle {
             chromatic: true
             startColor: stripedStartColor
             endColor: stripedEndColor
+            Accessible.name: "WaveformItem_StripedRectangle_Chromatic"
+            Accessible.role: Accessible.Pane
         }
     }
     Item {
