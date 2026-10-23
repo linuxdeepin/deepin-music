@@ -63,6 +63,8 @@ Rectangle{
         sortPageHash: pageHash
         pageSortType: sortType
         pageTitle: title
+        Accessible.name: "DataSort"
+        Accessible.role: Accessible.Button
     }
     ButtonGroup{ buttons: row.children }
     Row {
@@ -75,6 +77,7 @@ Rectangle{
             icon.name: "view_Grid"
             visible: gridAndlistViewModel
             checkable: true;
+            Accessible.name: "GridViewButton"
             onClicked: {
                 m_viewType = 0
                 console.log("gridViewButton is clicked");
@@ -86,6 +89,7 @@ Rectangle{
             icon.name: "view_list"
             visible: gridAndlistViewModel
             checkable: true;
+            Accessible.name: "ListViewButton"
             onClicked: {
                 m_viewType = 1;
                 //console.log("listViewButton is clicked");

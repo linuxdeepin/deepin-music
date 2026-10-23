@@ -23,12 +23,16 @@ Rectangle{
         id: titleBackground
         width: titleWidth; height: titleHeight
         imageUrl: !titleRectangle.currentData ? "" : "file:///" + titleRectangle.currentData.coverUrl
+        Accessible.name: "TitleBackground"
+        Accessible.role: Accessible.Pane
     }
     SublistTitleButton {
         id: titleButton1
         width: 703; height: 184
         anchors.left: titleRectangle.left; anchors.leftMargin: 20;
         anchors.bottom: titleRectangle.bottom; anchors.bottomMargin: 20
+        Accessible.name: "TitleButton1"
+        Accessible.role: Accessible.Pane
     }
     Control {
         id: titleButton2

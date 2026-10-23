@@ -26,6 +26,8 @@ Rectangle {
         titleHeight: 244
         currentData: rootrectangle.artistData
         pageHash: "artist"
+        Accessible.name: "ArtistSublistView_MusicSublistTitle"
+        Accessible.role: Accessible.Pane
     }
 
     AllMusicListView {
@@ -41,6 +43,8 @@ Rectangle {
         showArtistColumn: false
         playbackByArtist: true
         acceptExternalDrops: true
+        Accessible.name: "ArtistMusicList"
+        Accessible.role: Accessible.Pane
 
         onScrollStateChanged: function(scrolled) {
             musicSublistTitle.titleHeight = scrolled ? 80 : 244
