@@ -55,6 +55,7 @@ ColumnLayout {
         Layout.leftMargin: 10
         model: sideModel
         clip: true
+        Accessible.name: "SideListView"
 
         delegate: SideBarItemDelegate{
             id: sidebarItem
@@ -64,6 +65,8 @@ ColumnLayout {
             ButtonGroup.group: group
             type: control.type
             font: DTK.fontManager.t6
+            Accessible.name: "SidebarItem"
+            Accessible.role: Accessible.Button
         }
 
         Keys.onPressed: {

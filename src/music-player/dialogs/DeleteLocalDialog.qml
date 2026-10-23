@@ -77,6 +77,7 @@ DialogWindow {
             Button {
                 text: qsTr("Cancel")
                 Layout.preferredWidth: 185
+                Accessible.name: "DeleteLocalDialog_Cancel"
                 onClicked: {
                     dialog.close();
                 }

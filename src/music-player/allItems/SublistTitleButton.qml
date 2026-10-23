@@ -22,6 +22,8 @@ Rectangle {
             id: image
             backgroundWidth: 184; backgroundHeight: 184
             backgroundImageUrl: !currentData ? "" : "file:///" + currentData.coverUrl
+            Accessible.name: "Image"
+            Accessible.role: Accessible.Pane
         }
     }
 
@@ -66,6 +68,7 @@ Rectangle {
             checked: true
             spacing: 5
             leftPadding: 0
+            Accessible.name: "Palyall"
 
             icon {
                 name: "list_play"

@@ -85,6 +85,8 @@ DialogWindow {
                 // TODO(pengfeixx): The function is not implemented, and the entrance is temporarily removed
                 // iconName: "action_edit"
                 cornersRadius: [radius, radius, 0, 0]
+                Accessible.name: "MusicInfoDialog_Title"
+                Accessible.role: Accessible.Pane
             }
 
             PropertyItemDelegate {
@@ -92,12 +94,16 @@ DialogWindow {
                 title: qsTr("Artist")
                 description: musicData === undefined ? " " : musicData.artist    //musicArtist
                 cornersRadius: [0, 0, 0, 0]
+                Accessible.name: "MusicInfoDialog_Artist"
+                Accessible.role: Accessible.Pane
             }
             PropertyItemDelegate {
                 Layout.fillWidth: true
                 title: qsTr("Album")
                 description: musicData === undefined ? " " : musicData.album       //musicAlbum
                 cornersRadius: [0, 0, radius, radius]
+                Accessible.name: "MusicInfoDialog_Album"
+                Accessible.role: Accessible.Pane
             }
         }
         RowLayout {
@@ -107,18 +113,24 @@ DialogWindow {
                 title: qsTr("Type")
                 description: musicData === undefined ? " " : musicData.filetype      //fileType
                 cornersRadius: [8, 0, 0, radius]
+                Accessible.name: "Type"
+                Accessible.role: Accessible.Pane
             }
             PropertyItemDelegate {
                 Layout.fillWidth: true
                 title: qsTr("Size")
                 description: "%1M".arg((musicData === undefined ? 0 : musicData.size / 1024 / 1024).toFixed(2))
                 cornersRadius: [0, 0, 0, 0]
+                Accessible.name: "Size"
+                Accessible.role: Accessible.Pane
             }
             PropertyItemDelegate {
                 Layout.fillWidth: true
                 title: qsTr("Duration")
                 description: musicData === undefined ? "0:00" : Math.floor(musicData.length / 1000 / 60) + ":" + Math.floor(musicData.length / 1000 % 60)
                 cornersRadius: [0, radius, radius, 0]
+                Accessible.name: "Duration"
+                Accessible.role: Accessible.Pane
             }
         }
         PropertyItemDelegate {
@@ -126,6 +138,8 @@ DialogWindow {
             title: qsTr("Path")
             description: musicData === undefined ? " " : musicData.localPath       //filePath
             cornersRadius: [radius, radius, radius, radius]
+            Accessible.name: "Path"
+            Accessible.role: Accessible.Pane
         }
     }
 }

@@ -120,6 +120,7 @@ DialogWindow {
                             id: switchBtn
                             anchors.verticalCenter: parent.verticalCenter
                             checked: switched
+                            Accessible.name: "SwitchBtn"
                             onCheckedChanged: {
                                 if (checked === true) {
                                     selectComBox.enabled = true
@@ -163,6 +164,7 @@ DialogWindow {
                         enabled: switched
                         currentIndex: curEQ
                         model: comBoxModel
+                        Accessible.name: "SelectComBox"
                         onActivated: function(index) {
                             if(index > 0) {
                                 saveBtn.enabled = false
@@ -192,6 +194,7 @@ DialogWindow {
                             width: 84
                             text: qsTr("Save")
                             enabled: switched && curEQ === 0
+                            Accessible.name: "SaveBtn"
                             onClicked: {
                                 customList = []
                                 customList = curList
@@ -215,6 +218,7 @@ DialogWindow {
                             id: resetBtn
                             width: 84
                             text: qsTr("Reset")
+                            Accessible.name: "ResetBtn"
                             onClicked: {
                                 switchBtn.checked = false
                                 selectComBox.currentIndex = 1
@@ -302,6 +306,7 @@ DialogWindow {
                             value: curList[0]
                             stepSize: 1
                             orientation: Qt.Vertical
+                            Accessible.name: "PreamplifierSlider"
 
                             onHoveredChanged: {
                                 if (preamplifierSlider.hovered == true)
@@ -348,6 +353,7 @@ DialogWindow {
 
                         model: sliderModel
                         delegate: rightSliderDelegate
+                        Accessible.name: "RightSliderListView"
                     }
                 }
             }
@@ -401,6 +407,7 @@ DialogWindow {
                         stepSize: 1
                         value: curList[index + 1]
                         orientation: Qt.Vertical
+                        Accessible.name: "DelegateSlider"
 
                         onHoveredChanged: {
                             if (hovered) {

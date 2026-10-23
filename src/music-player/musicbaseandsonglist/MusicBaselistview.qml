@@ -36,6 +36,8 @@ Rectangle {
                 title: qsTr("Library")
                 type: "library"
                 group: paneListGroup
+                Accessible.name: "MusicbaseSidebar"
+                Accessible.role: Accessible.Pane
                 sideModel: ListModel {
                     ListElement{checked: false; icon: "album"; icon_checked: "album_checked"; displayName: qsTr("Albums"); uuid: "album"; editable: false; dragFlag: false}
                     ListElement{checked: false; icon: "singer"; icon_checked: "singer_checked"; displayName: qsTr("Artists"); uuid: "artist"; editable: false; dragFlag: false}
@@ -49,6 +51,8 @@ Rectangle {
                 group: paneListGroup
                 fillHeight: true
                 sideModel: globalVariant.globalCustomPlaylistModel //全局自定义歌单model
+                Accessible.name: "MusicSonglist"
+                Accessible.role: Accessible.Pane
                 action: FloatingButton {
                     id: addPlaylistBtn
                     width: 21; height: 21
