@@ -72,6 +72,12 @@ else()
 #    set(CMAKE_L_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
 endif()
 
+# 单元测试隔离：启用 UT 模式时移除 address/leak sanitizer（与 VLC RTLD_DEEPBIND 冲突）
+option(ENABLE_UT "Enable unit test mode: disable ASan/Leak sanitizer to avoid VLC dlopen conflict" OFF)
+if(ENABLE_UT AND NOT CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
+    string(REPLACE ",address,leak" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+endif()
+
 find_package(PkgConfig REQUIRED)
 
 # 对齐主工程依赖集：mpris-qt6、taglib、dtk6core；移除主工程已废弃的 udisks2-qt5 与 KF5Codecs
