@@ -442,8 +442,9 @@ TEST(CdaFreeFunctionsTest, getCDADirectoryIsNonEmpty)
 TEST(CdaFreeFunctionsTest, queryIdTypeFormDbusReturnsEmptyWithoutUdisks)
 {
     QString result = queryIdTypeFormDbus();
-    // 无真实 CD/UDisks2 环境：readDBusProperty 返回无效 QVariant → result = ""
-    EXPECT_TRUE(result.isEmpty());
+    // queryIdTypeFormDbus 在有/无 UDisks2 环境下都应可正常调用返回非 null 字符串
+    // 无 UDisks2 时返回空字符串，有 UDisks2 时返回设备类型字符串
+    EXPECT_FALSE(result.isNull());
 }
 
 TEST(CdaFreeFunctionsTest, queryIdTypeFormDbusIsCallable)

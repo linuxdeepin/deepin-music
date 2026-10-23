@@ -19,7 +19,7 @@ rm -rf "${BUILD_DIR}"
 mkdir -p "${BUILD_DIR}"
 
 # 使用 -S -B 参数明确指定源码和构建目录
-cmake -DCMAKE_BUILD_TYPE=Debug -S "${PROJECT_ROOT}" -B "${BUILD_DIR}"
+cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_UT=ON -S "${PROJECT_ROOT}" -B "${BUILD_DIR}"
 make -j8 -C "${BUILD_DIR}"
 
 # 运行 libdmusic-test

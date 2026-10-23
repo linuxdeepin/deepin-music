@@ -172,9 +172,12 @@ TEST(AudioDataDetectorDecodeTest, sampleMp3TriggersFullResampleAndEmitsSignal)
     ASSERT_TRUE(QFile::exists(sampleMp3Path())) << "testdata/sample.mp3 missing";
 
     EngineTypeGuard guard(1);  // 必须为 1 才启动解码线程
+    // 把 DmGlobal::cachePath 指向系统 CacheLocation，使 resample 写入可写目录
+    DmGlobal::setCachePath(QStandardPaths::writableLocation(QStandardPaths::CacheLocation));
     // 清理可能的旧缓存，保证走解码路径而非缓存命中
     const QString hash = "decode_full_hash_001";
     removeSystemCacheFor(hash);
+    removeDmCacheFor(hash);
 
     std::unique_ptr<AudioDataDetector> detector(new AudioDataDetector());
 
@@ -433,8 +436,11 @@ TEST(AudioDataDetectorConnectionTest, queuedConnectionForwardsSignalOnRealDecode
 {
     ASSERT_TRUE(QFile::exists(sampleMp3Path()));
     EngineTypeGuard guard(1);
+    // 把 DmGlobal::cachePath 指向系统 CacheLocation，使 resample 写入可写目录
+    DmGlobal::setCachePath(QStandardPaths::writableLocation(QStandardPaths::CacheLocation));
     const QString hash = "conn_queued_hash_007";
     removeSystemCacheFor(hash);
+    removeDmCacheFor(hash);
 
     std::unique_ptr<AudioDataDetector> detector(new AudioDataDetector());
     QSignalSpy spyThread(detector.get(), &AudioDataDetector::audioBufferFromThread);
@@ -444,10 +450,10 @@ TEST(AudioDataDetectorConnectionTest, queuedConnectionForwardsSignalOnRealDecode
     ASSERT_TRUE(spyThread.wait(20000));
     ensureThreadStopped(detector.get());
 
-    // 处理 queued 事件
+    // 处理 queued 事件（增加容错：全量测试时事件处理可能更慢）
     QCoreApplication::processEvents();
-    if (spyBuf.count() == 0) {
-        QTest::qWait(100);
+    for (int i = 0; i < 5 && spyBuf.count() == 0; ++i) {
+        QTest::qWait(200);
         QCoreApplication::processEvents();
     }
     // 验证 queued connection 把 worker 信号转发到了主线程槽

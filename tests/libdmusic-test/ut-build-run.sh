@@ -17,11 +17,12 @@ mkdir -p "${SCRIPT_DIR}/report"
 echo " ===================CREAT LCOV REPROT==================== "
 lcov --directory "${BUILD_DIR}" --zerocounters
 
-# 关闭 leak 检测 + 超时保护运行测试,并生成 gtest xml 报告
+# 运行测试（GTest XML 输出路径在 test_main.cpp 中硬编码为 ./report/）
+# 从源码目录运行，使 ./report/ 解析到 SCRIPT_DIR/report
 set +e
-QT_QPA_PLATFORM=offscreen ASAN_OPTIONS="fast_unwind_on_malloc=1:detect_leaks=0" \
-    timeout 120 "${BUILD_DIR}/tests/libdmusic-test/${executable}" \
-    --gtest_output=xml:"${SCRIPT_DIR}/report/report_${executable}.xml"
+cd "${SCRIPT_DIR}"
+QT_QPA_PLATFORM=offscreen UBSAN_OPTIONS="halt_on_error=0:print_stacktrace=1" \
+    timeout 120 "${BUILD_DIR}/tests/libdmusic-test/${executable}"
 test_exit_code=$?
 set -e
 
