@@ -41,6 +41,8 @@ ToolFloatingPanel {
     property var modeIcon: ["toolbar_music_sequence", "toolbar_music_repeat", "toolbar_music_repeatcycle", "toolbar_music_shuffle"]
     property var playModeTipText: [qsTr("Sequential play"), qsTr("List loop"), qsTr("Single loop"), qsTr("Shuffle")]
     property int playStatus: DmGlobal.Idle
+    Accessible.name: "ToolbarRoot"
+    Accessible.role: Accessible.Pane
 
     property ListModel pointModel: ListModel{}
     property var pointList: []
@@ -344,6 +346,8 @@ ToolFloatingPanel {
                 totalSecs: minute * 60 + second
                 pointList: toolbarRoot.pointList
                 visible: songTitle.length === 0 ? false : true
+                Accessible.name: "Waveform"
+                Accessible.role: Accessible.Pane
             }
         }
         Rectangle {
@@ -403,6 +407,7 @@ ToolFloatingPanel {
                     checkable: true
                     checked: isLyricShow
                     enabled: songTitle.length === 0 ? false : true
+                    Accessible.name: "LrcBtn"
                     ToolTip {
                         visible: lrcBtn.hovered
                         text: qsTr("Lyrics")
@@ -421,6 +426,7 @@ ToolFloatingPanel {
                     icon.width: 36
                     icon.height: 36
                     checkable: true
+                    Accessible.name: "VolumeBtn"
                     //ColorSelector.pressed: true
                     onClicked: {
                         isVolSliderShow = !isVolSliderShow
@@ -451,6 +457,7 @@ ToolFloatingPanel {
                     icon.width: 36
                     icon.height: 36
                     checkable: true
+                    Accessible.name: "ListBtn"
 
                     ToolTip {
                         visible: listBtn.hovered

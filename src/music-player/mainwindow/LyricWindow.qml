@@ -15,6 +15,8 @@ LyricPage {
 
     signal animationFinished(var lyircShow)
     signal animationStart(var show)
+    Accessible.name: "LyricPage"
+    Accessible.role: Accessible.Pane
 
     ParallelAnimation {
         id: lyricRaiseAnimation

@@ -48,6 +48,7 @@ DialogWindow {
             text: qsTr("Cancel")
             Layout.preferredWidth: parent.width - 20
             Layout.alignment: Qt.AlignHCenter
+            Accessible.name: "CDRemovedDialog_Cancel"
             onClicked: {
                 dialog.close();
             }

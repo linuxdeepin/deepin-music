@@ -62,6 +62,7 @@ DialogWindow {
                 text: qsTr("Minimize to system tray")
                 font: DTK.fontManager.t6
                 checked: true
+                Accessible.name: "MinimizeBtn"
                 onClicked: {
                     closeAction = 0
                 }
@@ -73,6 +74,7 @@ DialogWindow {
                 padding: 5
                 text: qsTr("Exit")
                 font: DTK.fontManager.t6
+                Accessible.name: "CloseBtn"
                 onClicked: {
                     closeAction = 1
                 }
@@ -84,6 +86,7 @@ DialogWindow {
             padding: 5
             text: qsTr("Do not ask again")
             font: DTK.fontManager.t6
+            Accessible.name: "DoNotAskAgain"
             onClicked: {
                 if (checked) {
                     isClose = true
@@ -99,6 +102,7 @@ DialogWindow {
                 Layout.preferredWidth: 180
                 height: 30
                 text: qsTr("Cancel")
+                Accessible.name: "CloseConfirmDialog_Cancel"
                 onClicked: {
                     closeConfirmDialog.close()
                 }
@@ -107,6 +111,7 @@ DialogWindow {
                 Layout.preferredWidth: 180
                 height: 30
                 text: qsTr("Confirm")
+                Accessible.name: "CloseConfirmDialog_Confirm"
                 onClicked: {
                     //console.log("onClicked: closeAction:" + closeAction)
                     Presenter.setValueToSettings("base.close.is_close", isClose)
