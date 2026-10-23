@@ -33,7 +33,8 @@ Rectangle {
         id: listViewLyric;
         anchors.fill: parent;
         clip: true
-        ScrollBar.vertical: ScrollBar { }
+        Accessible.name: "ListViewLyric"
+        ScrollBar.vertical: ScrollBar { Accessible.name: "LyricRect_ScrollBar" }
         currentIndex: curIndex
         model: lrcModel
         delegate: lyricDelegate

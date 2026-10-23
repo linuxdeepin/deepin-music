@@ -43,6 +43,7 @@ DialogWindow {
             text: qsTr("OK")
             Layout.preferredWidth: parent.width
             Layout.alignment: Qt.AlignHCenter
+            Accessible.name: "Ok"
 
             onClicked: {
                 dialog.close();

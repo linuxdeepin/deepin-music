@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,6 +8,8 @@ import "effectpublic"
 
 CusShaderToy {
     id: r
+    Accessible.name: "EffectRing"
+    Accessible.role: Accessible.Pane
 
     //step 6: around
     property real wave

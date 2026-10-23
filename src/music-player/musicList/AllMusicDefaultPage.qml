@@ -68,6 +68,7 @@ Rectangle {
                 id: importMusicFile
                 text: qsTr("Add Songs");
                 width: 178; height: 36
+                Accessible.name: "AllMusicDefaultPage_ImportMusicFile"
                 onClicked: {
                     globalVariant.globalFileDlgOpen()
                 }
@@ -76,6 +77,7 @@ Rectangle {
                 id: importMusicDir
                 text: qsTr("Open Folders");
                 width: 178; height: 36
+                Accessible.name: "AllMusicDefaultPage_ImportMusicDir"
                 onClicked: {
                     openFolderDialog()
                 }

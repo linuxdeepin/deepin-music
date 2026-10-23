@@ -48,11 +48,15 @@ Item {
                 id: around
                 width: parent.width
                 height: parent.height
+                Accessible.name: "ShaderView_EffectLine"
+                Accessible.role: Accessible.Pane
                 Circular_img {
                     id:circular_img
                     anchors.centerIn: around
                     background_width:around.width*1.8/3
                     background_height:around.height*1.8/3
+                    Accessible.name: "ShaderView_EffectLine_CircularImg"
+                    Accessible.role: Accessible.Pane
                 }
             }
         }
@@ -64,11 +68,15 @@ Item {
                 id: around
                 width: parent.width
                 height: parent.height
+                Accessible.name: "ShaderView_EffectLightWave"
+                Accessible.role: Accessible.Pane
                 Circular_img {
                     id:circular_img
                     anchors.centerIn: around
                     background_width:around.width*1.8/3
                     background_height:around.height*1.8/3
+                    Accessible.name: "ShaderView_EffectLightWave_CircularImg"
+                    Accessible.role: Accessible.Pane
                 }
             }
         }
@@ -80,12 +88,16 @@ Item {
                 id: around
                 width: parent.width
                 height: parent.height
+                Accessible.name: "ShaderView_EffectSun"
+                Accessible.role: Accessible.Pane
 
                 Circular_img {
                     id:circular_img
                     anchors.centerIn: around
                     background_width:around.width*1.8/3
                     background_height:around.height*1.8/3
+                    Accessible.name: "ShaderView_EffectSun_CircularImg"
+                    Accessible.role: Accessible.Pane
                 }
             }
         }
@@ -97,11 +109,15 @@ Item {
                 id: around
                 width: parent.width
                 height: parent.height
+                Accessible.name: "ShaderView_EffectWaterWave"
+                Accessible.role: Accessible.Pane
                 Circular_img {
                     id:circular_img
                     anchors.centerIn: around
                     background_width:around.width*1.8/3
                     background_height:around.height*1.8/3
+                    Accessible.name: "ShaderView_EffectWaterWave_CircularImg"
+                    Accessible.role: Accessible.Pane
                 }
             }
         }
@@ -113,11 +129,15 @@ Item {
                 id: around
                 width: parent.width
                 height: parent.height
+                Accessible.name: "ShaderView_EffectParticle"
+                Accessible.role: Accessible.Pane
                 Circular_img {
                     id:circular_img
                     anchors.centerIn: around
                     background_width:around.width*1.8/3
                     background_height:around.height*1.8/3
+                    Accessible.name: "ShaderView_EffectParticle_CircularImg"
+                    Accessible.role: Accessible.Pane
                 }
             }
         }
@@ -136,6 +156,8 @@ Item {
                     anchors.centerIn: around
                     background_width:around.width*1.8/3
                     background_height:around.height*1.8/3
+                    Accessible.name: "ShaderView_CommView_CircularImg"
+                    Accessible.role: Accessible.Pane
                 }
             }
         }

@@ -82,6 +82,7 @@ DialogWindow {
                 Layout.preferredWidth: 185
                 height: 36
                 text: qsTr("Cancel")
+                Accessible.name: "DeleteSonglistDialog_Cancel"
                 onClicked: {
                     dialog.close();
                 }

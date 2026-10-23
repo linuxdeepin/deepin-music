@@ -18,12 +18,14 @@ Menu{
         text: qsTr("View details")
         visible: ("artistSublist" === currentPageHash) ? false : true
         height: visible ? 30 : 0
+        Accessible.name: "ArtistMoreMenu_ViewDetails"
         onTriggered: {
             moreMenu.viewArtistDatails(moreMenu.artistData);
         }
     }
     MenuItem {
         text: qsTr("Play all")
+        Accessible.name: "ArtistMoreMenu_PlayAll"
         onTriggered: {
             Presenter.playArtist(artistData.name);
         }

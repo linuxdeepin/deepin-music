@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -15,6 +15,7 @@ ToolButton{
     width: 54; height: 36
     anchors.right: parent.right
     anchors.verticalCenter: parent.verticalCenter
+    Accessible.name: "SortBtn"
     indicator: ButtonIndicator {}
     icon.name: {
         if (sortPageHash === "artist" || sortPageHash === "artistResult") {
@@ -65,6 +66,7 @@ ToolButton{
                 icon.name:iconName;
                 autoExclusive: true;
                 checked: icon.name == sortBtn.icon.name
+                Accessible.name: "SortMenu_Title"
                 onTriggered: {
                     sortBtn.icon.name = icon.name
                     if (sortPageHash === "album" || sortPageHash === "albumResult") {

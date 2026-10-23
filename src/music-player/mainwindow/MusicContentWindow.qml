@@ -16,10 +16,10 @@ import "../playlist"
 import "../albumlist"
 
 Rectangle {
-    Component { id: allMusicList ;AllMusicList{} }
-    Component { id: albumView ;AlbumView{} }
-    Component { id: artistView ;ArtistView{} }
-    Component { id: favouriteSongsList ;AllMusicList{listHash: "fav"; listTitle: qsTr("My Favorites")} }
+    Component { id: allMusicList ;AllMusicList{ Accessible.name: "MusicContentWindow_AllMusicListComponent"; Accessible.role: Accessible.Pane } }
+    Component { id: albumView ;AlbumView{ Accessible.name: "Component_AlbumView"; Accessible.role: Accessible.Pane } }
+    Component { id: artistView ;ArtistView{ Accessible.name: "Component_ArtistView"; Accessible.role: Accessible.Pane } }
+    Component { id: favouriteSongsList ;AllMusicList{listHash: "fav"; listTitle: qsTr("My Favorites"); Accessible.name: "MusicContentWindow_FavoritesListComponent"; Accessible.role: Accessible.Pane} }
 
     id: contentWindow
     color: "transparent"
@@ -30,6 +30,8 @@ Rectangle {
         width: parent.width > 600 ? 220 : 0  // 窗口太小时隐藏侧边栏
         visible: parent.width > 600
         height: parent.height/* - 70*/
+        Accessible.name: "MusicBaselist"
+        Accessible.role: Accessible.Pane
         anchors {
             left: parent.left
             top: parent.top
@@ -44,7 +46,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.topMargin: 50
         clip: true
-        initialItem: AllMusicList{}
+        initialItem: AllMusicList{ Accessible.name: "MusicContentWindow_AllMusicList"; Accessible.role: Accessible.Pane }
     }
 
     function onSearchResultItemChanged(text, type) {

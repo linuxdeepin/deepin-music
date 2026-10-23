@@ -22,6 +22,7 @@ Menu{
     width: 200
     MenuItem {
         text: (isPlaying && activeMeta) ? qsTr("Pause") : qsTr("Play")
+        Accessible.name: "MusicMoreMenu_PlayPause"
         onTriggered: {
             if(isPlaying && activeMeta){
                 Presenter.pause();
@@ -50,6 +51,7 @@ Menu{
     MenuSeparator {}
     MenuItem {
         text: qsTr("Open in file manager")
+        Accessible.name: "OpenInFileManager"
         onTriggered: {
             Presenter.showMetaFile(mediaData.hash)
         }
@@ -60,6 +62,7 @@ Menu{
     }
     MenuItem {
         text: pageHash === "play" ? qsTr("Remove from play queue") : qsTr("Remove from playlist")
+        Accessible.name: "MusicMoreMenu_Play"
         onTriggered: {
             removeSong.show();
         }
@@ -70,6 +73,7 @@ Menu{
     }
     MenuItem {
         text: qsTr("Delete from local disk")
+        Accessible.name: "MusicMoreMenu_DeleteFromLocalDisk"
         onTriggered: {
             deleteLocal.show();
         }
@@ -82,6 +86,7 @@ Menu{
             model: encodings
             delegate: MenuItem {
                 text: encodings[index]
+                Accessible.name: "Encodings"
                 checked: {
                     if (mediaData !== null && mediaData.codec === encodings[index])
                         return true
@@ -102,6 +107,7 @@ Menu{
     }
     MenuItem {
         text: qsTr("Song info")
+        Accessible.name: "SongInfo"
         onTriggered: {
             infoDialog.show()
         }

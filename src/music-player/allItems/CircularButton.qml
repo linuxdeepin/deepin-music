@@ -8,6 +8,7 @@ import org.deepin.dtk 1.0
 
 Button {
     property string iconName: "details_play"
+    Accessible.name: "CircularButton_Button"
     property Palette backgroundColor: Palette {
         normal: Qt.rgba(255, 255, 255, 0.5)
         hovered: Qt.rgba(255, 255, 255, 0.55)

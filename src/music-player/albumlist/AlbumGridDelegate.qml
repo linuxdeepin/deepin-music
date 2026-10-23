@@ -68,6 +68,8 @@ Rectangle {
                 backgroundImageUrl: "file:///" + coverUrl
                 isCurHover: albumItem.hovered
                 isCurPlay:activeMeta
+                Accessible.name: "AlbumGridDelegate_BackgroundImage"
+                Accessible.role: Accessible.Pane
 
                 CircularButton {
                     width: 44
@@ -75,6 +77,8 @@ Rectangle {
                     anchors.centerIn: parent
                     iconName: playing && activeMeta ? "details_pussed" : "details_play"
                     visible: albumItem.hovered
+                    Accessible.name: "AlbumGridDelegate_CircularButton"
+                    Accessible.role: Accessible.Button
                     onClicked: {
                         if(playing && activeMeta){
 //                            iconName = "details_play"
@@ -102,6 +106,8 @@ Rectangle {
                     width: 24; height: 24
                     iconName: "details_more"
                     visible: albumItem.hovered
+                    Accessible.name: "AlbumGridDelegate_MoreButton"
+                    Accessible.role: Accessible.Button
                     onClicked: {
                         albumMoreMenu.albumData = model
                         albumMoreMenu.popup();

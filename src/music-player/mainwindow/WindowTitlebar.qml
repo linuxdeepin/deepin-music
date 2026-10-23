@@ -73,6 +73,7 @@ TitleBar {
         width: 200
         MenuItem {
             text: qsTr("Add playlist")
+            Accessible.name: "AddPlaylist"
             onTriggered: {
                 var tmpPlaylist = Presenter.addPlayList(qsTr("New playlist"));
                 globalVariant.globalCustomPlaylistModel.onAddPlaylist(tmpPlaylist);
@@ -80,6 +81,7 @@ TitleBar {
             }}
         MenuItem {
             text: qsTr("Add music")
+            Accessible.name: "AddMusic"
             onTriggered: {
                 globalVariant.globalFileDlgOpen()
             }
@@ -99,6 +101,7 @@ TitleBar {
         MenuItem {
             id: settingsControl
             text: qsTr("Settings")
+            Accessible.name: "SettingsControl"
             onTriggered: {
                 if (settingDlgLoader.status === Loader.Null )
                     settingDlgLoader.setSource("../dialogs/SettingsDialog.qml")

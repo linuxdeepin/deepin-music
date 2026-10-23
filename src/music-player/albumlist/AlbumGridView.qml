@@ -30,11 +30,14 @@ Rectangle {
         anchors.leftMargin: (albumGrid.width - width) / 2
         anchors.rightMargin: (albumGrid.width - width) / 2
         cellWidth: 208; cellHeight: 242
-        ScrollBar.vertical: ScrollBar {}
+        Accessible.name: "AlbumGridView_GridView"
+        ScrollBar.vertical: ScrollBar { Accessible.name: "AlbumGridView_ScrollBar" }
         model: albumModel
         delegate: AlbumGridDelegate{
             id: itemDelegate
             playing: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
+            Accessible.name: "AlbumGridView_ItemDelegate"
+            Accessible.role: Accessible.Pane
             onItemDoubleClicked: {
                 albumGridView.currentIndex = index
                 albumGrid.itemDoubleClicked(albumData);
