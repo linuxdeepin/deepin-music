@@ -33,12 +33,16 @@ Rectangle {
         id: artistSublistView
         ArtistSublistView {
             artistData: searchRootRect.artistData
+            Accessible.name: "SearchResult_ArtistSublistView"
+            Accessible.role: Accessible.Pane
         }
     }
     Component {
         id: albumSublistView
         AlbumSublistView {
             albumData: searchRootRect.artistData
+            Accessible.name: "SearchResult_AlbumSublistView"
+            Accessible.role: Accessible.Pane
         }
     }
 
@@ -122,18 +126,22 @@ Rectangle {
                         Layout.leftMargin: 20
                         Layout.rightMargin: 20
                         currentIndex: 0
+                        Accessible.name: "TabArea"
 
                         TabButton {
                             text: qsTr("Music")
                             width: 82
+                            Accessible.name: "Music"
                         }
                         TabButton {
                             text: qsTr("Album")
                             width: 82
+                            Accessible.name: "Album"
                         }
                         TabButton {
                             text: qsTr("Artist")
                             width: 82
+                            Accessible.name: "Artist"
                         }
                     }
                     Item { Layout.fillWidth: true }
@@ -143,6 +151,8 @@ Rectangle {
                         sortPageHash: "musicResult"
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                         pageSortType: 0
+                        Accessible.name: "AllMusicSortMenu"
+                        Accessible.role: Accessible.Button
                     }
                     SortMenu {
                         id: albumMusicSortMenu
@@ -150,6 +160,8 @@ Rectangle {
                         sortPageHash: "albumResult"
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                         pageSortType: 0
+                        Accessible.name: "AlbumMusicSortMenu"
+                        Accessible.role: Accessible.Button
                     }
                     SortMenu {
                         id: artistMusicSortMenu
@@ -157,6 +169,8 @@ Rectangle {
                         sortPageHash: "artistResult"
                         Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                         pageSortType: 0
+                        Accessible.name: "ArtistMusicSortMenu"
+                        Accessible.role: Accessible.Button
                     }
 
                     Component.onCompleted: {
@@ -217,6 +231,8 @@ Rectangle {
                         id: allMusicList
                         mediaModel: songsModel
                         viewListHash: "musicResult"
+                        Accessible.name: "AllMusicList"
+                        Accessible.role: Accessible.Pane
                     }
                     Item {
                         GridView {
@@ -228,12 +244,15 @@ Rectangle {
                             anchors.topMargin: 5
                             cellWidth: 208
                             cellHeight: 230
+                            Accessible.name: "ArtistView"
                             header: Item { width: 1; height: 10 }
-                            ScrollBar.vertical: ScrollBar {}
+                            ScrollBar.vertical: ScrollBar { Accessible.name: "SearchResult_ArtistGridView_ScrollBar" }
                             clip: true
                             model: artistsModel
                             delegate: ArtistGridDelegate{
                                 id: musicSingerGridItem
+                                Accessible.name: "SearchResult_ArtistGridItem"
+                                Accessible.role: Accessible.Pane
                                 onItemDoubleClicked: {
                                     searchRootRect.itemDoubleClicked(artistData);
                                 }
@@ -250,13 +269,16 @@ Rectangle {
                             anchors.topMargin: 5
                             cellWidth: 208
                             cellHeight: 242
+                            Accessible.name: "SearchResult_AlbumGridView"
                             header: Item { width: 1; height: 10 }
-                            ScrollBar.vertical: ScrollBar {}
+                            ScrollBar.vertical: ScrollBar { Accessible.name: "SearchResult_AlbumGridView_ScrollBar" }
                             clip: true
                             model: albumsModel
                             delegate: AlbumGridDelegate{
                                 id: itemDelegate
                                 playing: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
+                                Accessible.name: "SearchResult_AlbumItemDelegate"
+                                Accessible.role: Accessible.Pane
                                 onItemDoubleClicked: {
                                     searchRootRect.itemDoubleClicked(albumData);
                                 }

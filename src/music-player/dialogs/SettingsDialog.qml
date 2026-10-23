@@ -21,7 +21,9 @@ Settings.SettingsDialog {
     id: control
     height: 548
     width: 664
-    config: SettingsConfig {}
+    Accessible.name: "Dialog"
+    Accessible.role: Accessible.Pane
+    config: SettingsConfig { Accessible.name: "SettingsDialog_SettingsConfig"; Accessible.role: Accessible.Pane }
     flags: Qt.Dialog | Qt.WindowCloseButtonHint
     modality: Qt.WindowModal
 
@@ -52,7 +54,7 @@ Settings.SettingsDialog {
                         id: autoPlayOption
                         key: "autoPlay"
                         name: qsTr("Autoplay")
-                        Settings.CheckBox {}
+                        Settings.CheckBox { Accessible.name: "SettingsDialog_AutoPlayCheckBox" }
                         onValueChanged: {
                             Presenter.setValueToSettings("base.play.auto_play", value)
                         }
@@ -64,7 +66,7 @@ Settings.SettingsDialog {
                         id: rememberProgressOption
                         key: "rememberProgress"
                         name: qsTr("Remember playback position on exit")
-                        Settings.CheckBox {}
+                        Settings.CheckBox { Accessible.name: "SettingsDialog_RememberProgressCheckBox" }
                         onValueChanged: {
                             Presenter.setValueToSettings("base.play.remember_progress", value)
                         }
@@ -77,7 +79,7 @@ Settings.SettingsDialog {
                         id: fadeInOutOption
                         key: "fadeInOut"
                         name: qsTr("Enable fade in/out")
-                        Settings.CheckBox {}
+                        Settings.CheckBox { Accessible.name: "SettingsDialog_FadeInOutCheckBox" }
                         onValueChanged: {
                             Presenter.setValueToSettings("base.play.fade_in_out", value)
                         }
@@ -105,6 +107,7 @@ Settings.SettingsDialog {
                                 font: DTK.fontManager.t8
                                 height: 30
                                 checked: Settings.SettingsOption.value === 0 || Presenter.valueFromSettings("base.close.close_action") == 0 ? true : false
+                                Accessible.name: "MinimizeToSystemTray"
                                 onClicked: Settings.SettingsOption.value = 0
                             }
                             RadioButton {
@@ -112,6 +115,7 @@ Settings.SettingsDialog {
                                 font: DTK.fontManager.t8
                                 height: 30
                                 checked: Settings.SettingsOption.value === 1 || Presenter.valueFromSettings("base.close.close_action") == 1 ? true : false
+                                Accessible.name: "SettingsDialog_Exit"
                                 onClicked: Settings.SettingsOption.value = 1
                             }
                             RadioButton {
@@ -119,6 +123,7 @@ Settings.SettingsDialog {
                                 font: DTK.fontManager.t8
                                 height: 30
                                 checked: Settings.SettingsOption.value === 2 || Presenter.valueFromSettings("base.close.close_action") == 2 ? true : false
+                                Accessible.name: "AskMeAlways"
                                 onClicked: Settings.SettingsOption.value = 2
                             }
                         }
@@ -517,6 +522,7 @@ Settings.SettingsDialog {
                     id: cancelBtn
                     Layout.preferredWidth: 175
                     text: qsTr("Cancel")
+                    Accessible.name: "CancelBtn"
                     onClicked: {
                         //console.log("Cancel  clicked curId:", dialog.curId, "  duplicatId:", dialog.duplicatId, " newValue:", dialog.newValue, "  oldValue:", dialog.oldValue)
 
@@ -550,6 +556,7 @@ Settings.SettingsDialog {
                     id: replaceBtn
                     Layout.preferredWidth: 175
                     text: qsTr("Replace")
+                    Accessible.name: "ReplaceBtn"
                     onClicked: {
                         dialog.replaceFlag = true
                         switch(dialog.duplicatId) {
@@ -609,6 +616,7 @@ Settings.SettingsDialog {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             text: qsTr("Restore Defaults")
+            Accessible.name: "RestoreDefaults"
 
             onClicked: {
                 // 调用 Presenter 的重置方法，真正重置后端设置

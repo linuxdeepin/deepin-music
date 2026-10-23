@@ -54,7 +54,8 @@ Rectangle {
         id: listview
         width: rootRectangle.width; height: rootRectangle.height - 36
         anchors.top: headerView.bottom
-        ScrollBar.vertical: ScrollBar {}
+        Accessible.name: "AlbumListView_ListView"
+        ScrollBar.vertical: ScrollBar { Accessible.name: "AlbumListView_ScrollBar" }
         model: albumModels
         clip: true
         focus: true
@@ -62,6 +63,8 @@ Rectangle {
             width: listview.width - 40; height: 56
             backgroundVisible: true
             normalBackgroundVisible: index % 2 === 0
+            Accessible.name: "AlbumListView_AlbumListDelegate"
+            Accessible.role: Accessible.Button
             onDoubleClicked: {
                 //console.log(" listview onItemDoubleClicked: ", albumModels.get(index));
                 rootRectangle.itemDoubleClicked(albumModels.get(index));

@@ -14,6 +14,8 @@ import "../dialogs"
 
 CurrentFloatingPanel {
     property int  headerHeight: 73
+    Accessible.name: "PlaylistRoot"
+    Accessible.role: Accessible.Pane
     property ListModel listmodel: PlayListModel{}
     property Menu playlistMoreMenu: MusicMoreMenu{pageHash:"play"}
     property Menu playlistAddMenu: ImportMenu{pageHash:"play"}
@@ -130,6 +132,7 @@ CurrentFloatingPanel {
                         display: AbstractButton.TextBesideIcon
                         spacing: 1
                         padding: 0
+                        Accessible.name: "DeleteBtn"
                         textColor: Palette {
                             normal: palette.text
                             normalDark: palette.text
@@ -155,7 +158,10 @@ CurrentFloatingPanel {
             width: parent.width
             height: parent.height - headerHeight
             anchors.left: parent.left
-            ScrollBar.vertical: ScrollBar {}
+            Accessible.name: "PlaylistView"
+            ScrollBar.vertical: ScrollBar {
+                Accessible.name: "CurrentPlayList_ScrollBar"
+            }
             clip: true
             focus: true
             model: listmodel
@@ -167,6 +173,8 @@ CurrentFloatingPanel {
                 backgroundVisible: true
                 normalBackgroundVisible: index % 2 === 0
                 autoExclusive: false
+                Accessible.name: "PlaylistDelegate"
+                Accessible.role: Accessible.Button
             }
             footer: Item { width: 1; height: 10 }
 

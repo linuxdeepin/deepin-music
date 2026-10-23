@@ -1,4 +1,4 @@
-// Copyright (C) 2022 UnionTech Technology Co., Ltd.
+// Copyright (C) 2022-2026 UnionTech Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -22,6 +22,7 @@ ColumnLayout {
         checkable: false
         font: DTK.fontManager.t5
         backgroundVisible: false
+        Accessible.name: "TitleBar"
         MouseArea {
             anchors.fill: parent
             onClicked: {
@@ -34,6 +35,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.preferredHeight: contentHeight
         spacing: 5
+        Accessible.name: "Info"
         model: ObjectModel {
             id: itemModel
         }

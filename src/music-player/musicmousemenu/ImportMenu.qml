@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -24,6 +24,7 @@ Menu {
         height: visible ? 30 : 0
         text: qsTr("Play queue")
         visible: ("play" === pageHash) ? false : true
+        Accessible.name: "PlayQueue"
 
         onTriggered: {
             Presenter.addMetasToPlayList(mediaHashList, "play");
@@ -39,6 +40,7 @@ Menu {
         height: visible ? 30 : 0
         text: qsTr("My favorites")
         visible: ("fav" === pageHash) ? false : true
+        Accessible.name: "MyFavorites"
 
         onTriggered: {
             Presenter.addMetasToPlayList(mediaHashList, "fav");
@@ -47,6 +49,7 @@ Menu {
 
     MenuItem {
         text: qsTr("Create new playlist")
+        Accessible.name: "CreateNewPlaylist"
 
         onTriggered: {
             var tmpPlaylist = Presenter.addPlayList(qsTr("New playlist"));
@@ -77,6 +80,7 @@ Menu {
             height: visible ? 30 : 0
             text: model.displayName.replace(/</g, "&lt;")
             visible: (model.uuid === pageHash) ? false : true
+            Accessible.name: "Lt"
 
             onTriggered: {
                 Presenter.addMetasToPlayList(mediaHashList, model.uuid);
