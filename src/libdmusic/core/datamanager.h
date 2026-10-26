@@ -75,7 +75,7 @@ public slots:
     void slotAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta);
     void slotEnqueueMetaTasks(const QList<DMusic::MediaMeta> &metas);
     void slotLazyLoadDatabase();
-    void slotMetaAnalysisReady(DMusic::MediaMeta meta);
+    void slotMetaAnalysisReady(DMusic::MediaMeta meta, quint64 generation);
     void slotMetaBatchFinished();
 
 signals:
