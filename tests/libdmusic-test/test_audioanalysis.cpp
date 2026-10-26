@@ -24,6 +24,7 @@
 #include <QTemporaryFile>
 #include <QBuffer>
 #include <QSignalSpy>
+#include <QTest>
 #include <memory>
 
 #include <taglib/mpegfile.h>
@@ -228,6 +229,90 @@ TEST(MediaMetaWorkerTest, enqueueMetasDeduplicatesByHash)
     worker.enqueueMetas({meta, meta});
     ASSERT_TRUE(spy.wait(1000));
     EXPECT_EQ(spy.count(), 1);
+}
+
+TEST(MediaMetaWorkerTest, deletedMetaCanBeAnalyzedAgain)
+{
+    ASSERT_TRUE(QFile::exists(sampleMp3Path()));
+    MediaMetaWorker worker;
+    QSignalSpy spy(&worker, &MediaMetaWorker::signalMetaAnalysisReady);
+
+    DMusic::MediaMeta meta;
+    meta.localPath = sampleMp3Path();
+    meta.hash = "reimport-cover-hash";
+
+    worker.enqueueMetas({meta});
+    ASSERT_TRUE(spy.wait(1000));
+    EXPECT_EQ(spy.count(), 1);
+
+    worker.clearMetaHash(meta.hash);
+    spy.clear();
+    worker.enqueueMetas({meta});
+    ASSERT_TRUE(spy.wait(1000));
+    EXPECT_EQ(spy.count(), 1);
+}
+
+TEST(MediaMetaWorkerTest, queuedDeletedMetaDoesNotSuppressReimport)
+{
+    ASSERT_TRUE(QFile::exists(sampleMp3Path()));
+    MediaMetaWorker worker;
+    QSignalSpy spy(&worker, &MediaMetaWorker::signalMetaAnalysisReady);
+
+    DMusic::MediaMeta meta;
+    meta.localPath = sampleMp3Path();
+    meta.hash = "queued-reimport-cover-hash";
+
+    worker.enqueueMetas({meta});
+    worker.clearMetaHash(meta.hash);
+    worker.enqueueMetas({meta});
+
+    ASSERT_TRUE(spy.wait(1000));
+    EXPECT_EQ(spy.count(), 1);
+}
+
+TEST(MediaMetaWorkerTest, repeatedDeleteDoesNotProcessStaleReimport)
+{
+    ASSERT_TRUE(QFile::exists(sampleMp3Path()));
+    MediaMetaWorker worker;
+    QSignalSpy spy(&worker, &MediaMetaWorker::signalMetaAnalysisReady);
+
+    DMusic::MediaMeta meta;
+    meta.localPath = sampleMp3Path();
+    meta.hash = "repeated-delete-cover-hash";
+
+    worker.enqueueMetas({meta});
+    worker.clearMetaHash(meta.hash);
+    worker.enqueueMetas({meta});
+    worker.clearMetaHash(meta.hash);
+
+    QTest::qWait(100);
+    EXPECT_EQ(spy.count(), 0);
+}
+
+TEST(MediaMetaWorkerTest, invalidatedGenerationIsNotCurrentAfterReimport)
+{
+    ASSERT_TRUE(QFile::exists(sampleMp3Path()));
+    MediaMetaWorker worker;
+    QSignalSpy spy(&worker, &MediaMetaWorker::signalMetaAnalysisReady);
+
+    DMusic::MediaMeta meta;
+    meta.localPath = sampleMp3Path();
+    meta.hash = "generation-reimport-cover-hash";
+
+    worker.enqueueMetas({meta});
+    ASSERT_TRUE(spy.wait(1000));
+    const quint64 oldGeneration = spy.takeFirst().at(1).toULongLong();
+    ASSERT_TRUE(worker.isCurrentGeneration(meta.hash, oldGeneration));
+
+    worker.invalidateMetaHash(meta.hash);
+    EXPECT_FALSE(worker.isCurrentGeneration(meta.hash, oldGeneration));
+
+    worker.clearMetaHash(meta.hash);
+    worker.enqueueMetas({meta});
+    ASSERT_TRUE(spy.wait(1000));
+    const quint64 newGeneration = spy.takeFirst().at(1).toULongLong();
+    EXPECT_NE(newGeneration, oldGeneration);
+    EXPECT_TRUE(worker.isCurrentGeneration(meta.hash, newGeneration));
 }
 
 TEST(AudioAnalysisParseFileTest, parseMetaCoverDoesNotCrash)

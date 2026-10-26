@@ -774,6 +774,35 @@ TEST(DataManagerRemoveCascadeTest, removeFromAllTriggersSignalClearImportingHash
     EXPECT_FALSE(dm->isExistMeta());  // meta 已从 m_allMetas 删除
 }
 
+TEST(DataManagerRemoveCascadeTest, reimportAfterDeletingMetaRefreshesCover)
+{
+    auto dm = std::unique_ptr<DataManager>(makeDataMgr());
+    dm->prepareStartupAssets();
+
+    QSignalSpy importSpy(dm.get(), &DataManager::signalImportFinished);
+    QSignalSpy analysisSpy(dm.get(), &DataManager::signalMetaAnalysisReady);
+    dm->importMetas({sampleMp3Path()}, "play");
+    ASSERT_TRUE(importSpy.wait(5000));
+    if (analysisSpy.isEmpty()) {
+        ASSERT_TRUE(analysisSpy.wait(5000));
+    }
+
+    const auto metas = dm->getPlaylistMetas("all");
+    ASSERT_EQ(metas.size(), 1);
+    const QString hash = metas.first().hash;
+    dm->removeFromPlayList({hash}, "all", false);
+    ASSERT_FALSE(dm->isExistMeta());
+
+    importSpy.clear();
+    analysisSpy.clear();
+    dm->importMetas({sampleMp3Path()}, "play");
+    ASSERT_TRUE(importSpy.wait(5000));
+    if (analysisSpy.isEmpty()) {
+        ASSERT_TRUE(analysisSpy.wait(5000));
+    }
+    EXPECT_EQ(analysisSpy.count(), 1);
+}
+
 TEST(DataManagerRemoveCascadeTest, removeFromAllWithDelFlagDeletesFile)
 {
     // 用 sample.mp3 的临时副本导入，避免 delFlag=true 删除真实 testdata 文件

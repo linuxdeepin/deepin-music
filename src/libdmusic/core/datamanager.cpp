@@ -261,6 +261,10 @@ public:
         m_mediaMetaWorker->moveToThread(m_mediaMetaThread);
         QObject::connect(m_parent, &DataManager::signalEnqueueMetaTasks,
                          m_mediaMetaWorker, &MediaMetaWorker::enqueueMetas, Qt::QueuedConnection);
+        QObject::connect(m_parent, &DataManager::signalClearImportingHash,
+                         m_mediaMetaWorker, &MediaMetaWorker::clearMetaHash, Qt::QueuedConnection);
+        QObject::connect(m_parent, &DataManager::signalClearImportingHash,
+                         m_mediaMetaWorker, &MediaMetaWorker::invalidateMetaHash, Qt::DirectConnection);
         QObject::connect(m_mediaMetaWorker, &MediaMetaWorker::signalMetaAnalysisReady,
                          m_parent, &DataManager::slotMetaAnalysisReady, Qt::QueuedConnection);
         m_mediaMetaThread->start();
@@ -2687,8 +2691,13 @@ void DataManager::removePendingMetaTasks(const QStringList &hashes)
     }
 }
 
-void DataManager::slotMetaAnalysisReady(DMusic::MediaMeta meta)
+void DataManager::slotMetaAnalysisReady(DMusic::MediaMeta meta, quint64 generation)
 {
+    if (!m_data->m_mediaMetaWorker
+            || !m_data->m_mediaMetaWorker->isCurrentGeneration(meta.hash, generation)) {
+        return;
+    }
+
     int index = metaIndexFromHash(meta.hash);
     if (index < 0) {
         removePendingMetaTasks(QStringList() << meta.hash);
