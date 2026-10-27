@@ -546,6 +546,13 @@ ToolFloatingPanel {
 
         updatePlayControlBtnStatus()
     }
+    function metaAnalysisReady(meta) {
+        if (!mediaData || mediaData.hash !== meta.hash)
+            return
+
+        mediaData = meta
+        imgPath = "file:///" + meta.coverUrl
+    }
     function positionChange(position, length) {
         var time = Math.round(position / 1000)
         curMinute = Math.floor(time / 60)
@@ -641,6 +648,7 @@ ToolFloatingPanel {
 
     Component.onCompleted: {
         Presenter.metaChanged.connect(metaChange)
+        Presenter.metaAnalysisReady.connect(metaAnalysisReady)
         Presenter.positionChanged.connect(positionChange)
         Presenter.playbackStatusChanged.connect(playbackStatusChange)
         Presenter.audioBuffer.connect(audioBufferChange)
