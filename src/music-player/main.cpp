@@ -88,6 +88,22 @@ int main(int argc, char *argv[])
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
     setenv("PULSE_PROP_media.role", "music", 1);
+
+    // Bug 370167: Fantasy II-M GPU 驱动 libGLESv2_FT_MESA.so.1 存在 double-free 缺陷，
+    // 在 GL 渲染时可能导致应用崩溃。检测到 Fantasy GPU 驱动时强制使用软件渲染，绕过驱动缺陷。
+    if (qEnvironmentVariableIsEmpty("QT_QUICK_BACKEND")) {
+        static const char *fantasyGpuPaths[] = {
+            "/opt/extensions/cn.fantasy.driver.fantgpu.fh2m/lib/fantgpu-fh2m/libGLESv2_FT_MESA.so.1",
+            "/opt/extensions/cn.fantasy.driver.fantgpu.fh2m/lib/libGLESv2_FT_MESA.so.1",
+        };
+        for (const char *path : fantasyGpuPaths) {
+            if (QFileInfo::exists(QString::fromLatin1(path))) {
+                qCInfo(dmMusic) << "Fantasy GPU driver detected, enabling software rendering to avoid driver crash";
+                setenv("QT_QUICK_BACKEND", "software", 1);
+                break;
+            }
+        }
+    }
 #endif
 
 #ifdef Q_OS_WIN
