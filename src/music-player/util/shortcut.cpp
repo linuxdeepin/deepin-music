@@ -77,7 +77,8 @@ void Shortcut::show(const int &x, const int &y)
     group2.groupItems <<
                       ShortcutItem(tr("Favorite"), ".") <<
                       ShortcutItem(tr("Unfavorite"),  ".") <<
-                      ShortcutItem(tr("Song info"),   "Ctrl+I");
+                      ShortcutItem(tr("Song info"),   "Ctrl+I") <<
+                      ShortcutItem(tr("Search"),    "Ctrl+F");
 
     group3.groupItems <<
                       ShortcutItem(tr("New playlist"), "Ctrl+Shift+N") <<
