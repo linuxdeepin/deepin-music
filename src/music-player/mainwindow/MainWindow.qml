@@ -78,7 +78,7 @@ ApplicationWindow {
                 width: parent.width - leftBgArea.width
                 height: parent.height
                 anchors.top: parent.top
-                color: DTK.themeType === ApplicationHelper.LightType ? "#f7f7f7" : "#252525"
+                color: DS.Style.control.selectColor(rootWindow, Qt.rgba(0.97, 0.97, 0.97, 1.0), Qt.rgba(0.15, 0.15, 0.15, 1.0))
             }
         }
     }
