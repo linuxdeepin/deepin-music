@@ -77,7 +77,7 @@ Rectangle {
         id: borderRect
         anchors.fill: parent
         color: "transparent"
-        border.color: Qt.rgba(0, 0, 0, 0.06)
+        border.color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(1, 1, 1, 0.10) : Qt.rgba(0, 0, 0, 0.06)
         border.width: 1
         visible: true
         radius: 8
@@ -86,7 +86,7 @@ Rectangle {
         anchors.fill: parent
         shadowOffsetX: 0
         shadowOffsetY: 4
-        shadowColor: Qt.rgba(0, 0, 0, 0.06)
+        shadowColor: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.06)
         shadowBlur: 10
         cornerRadius: 8
         spread: 0
