@@ -1,3 +1,15 @@
+deepin-music (7.0.71) unstable; urgency=medium
+
+  * docs: add Portuguese (pt_BR) help manual
+  * fix: clear meta worker dedup state on song deletion
+  * fix: add AT-SPI accessible name/properties for QML dialogs, lists and modified items
+  * fix: fix play control buttons disabled on multi-track queue
+  * fix: update QSB shader files for platform compatibility
+  * fix(music): harden MLogger, adapt debug-config for dynamic log rules, and polish detail pages
+  * feat(test): add ut-summary.json generation for test results and coverage
+
+ -- re2zero <yangwu@uniontech.com>  Wed, 28 Oct 2026 11:14:14 +0800
+
 deepin-music (7.0.70) unstable; urgency=medium
 
   * fix: create runtime library symlinks for linglong package
