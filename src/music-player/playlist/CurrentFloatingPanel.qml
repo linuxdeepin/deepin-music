@@ -1,14 +1,12 @@
 // SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
-// TODO: 兼容使用，BackdropBlitter 正常后替换
 import QtQuick
 import org.deepin.dtk 1.0 as D
 import org.deepin.dtk.style 1.0 as DS
 D.Control {
     id: control
     property D.Palette backgroundColor: DS.Style.floatingPanel.background
-    property D.Palette backgroundNoBlurColor: DS.Style.floatingPanel.backgroundNoBlur
     // blur blurMultiplier
     property real blurMultiplier: 0.0
     // blur radius
@@ -19,7 +17,7 @@ D.Control {
     // corner radius
     property int radius: DS.Style.floatingPanel.radius
     padding: DS.Style.floatingPanel.radius / 2
-    background: D.InWindowBlurImpl {
+    background: D.InWindowBlur {
         id: blur
         implicitHeight: DS.Style.floatingPanel.height
         implicitWidth: DS.Style.floatingPanel.width
@@ -61,7 +59,7 @@ D.Control {
         Rectangle {
             id: backgroundRect
             anchors.fill: parent
-            color: blur.valid ? control.D.ColorSelector.backgroundColor : control.D.ColorSelector.backgroundNoBlurColor
+            color: control.D.ColorSelector.backgroundColor
             radius: control.radius
         }
         Loader {
