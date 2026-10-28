@@ -22,6 +22,7 @@ public slots:
 
 signals:
     void signalAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta);
+    void signalAddMetas(QList<QPair<QStringList, DMusic::MediaMeta>> metasWithHashs);
     void signalImportFinished(QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash);
     void signalMetaBatchFinished();
     void signalEnqueueMetaTasks(QList<DMusic::MediaMeta> metas);

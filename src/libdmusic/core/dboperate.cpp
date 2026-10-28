@@ -73,6 +73,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
     int importedCount = 0, importedFailCount = 0, existCount = 0;
     QSet<QString> allHashs;
     QList<DMusic::MediaMeta> pendingMetas;  // newly imported metas to extract cover and lyrics in background
+    QList<QPair<QStringList, DMusic::MediaMeta>> batchMetas;  // collected metas for batch signal
     for (auto &filePath : filePaths) {
         QFileInfo fileinfo(filePath);
         while (fileinfo.isSymLink()) {  //to find final target
@@ -137,13 +138,17 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
             qCDebug(dmMusic) << "Auto-added meta:" << mediaMeta.title << "to play queue";
         }
         if (!curHashs.isEmpty())
-            emit signalAddOneMeta(curHashs.values(), mediaMeta);
+            batchMetas.append({curHashs.values(), mediaMeta});
         // 自动播放
         if (mediaHash.isEmpty() && playFalg && mediaMeta.length > 0)
             mediaHash = mediaMeta.hash;
 
         importedCount++;
     }
+
+    // Emit batch signal so UI models update in one pass instead of per-song signals.
+    if (!batchMetas.isEmpty())
+        emit signalAddMetas(batchMetas);
 
     // Emit importFinished first so UI shows success / auto-play immediately.
     emit signalImportFinished(allHashs.values(), importedFailCount, importedCount - importedFailCount - existCount, existCount, mediaHash);

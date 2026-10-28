@@ -351,10 +351,13 @@ DataManager::DataManager(QStringList supportedSuffixs, QObject *parent, const QS
     qCDebug(dmMusic) << "Initializing DataManager with supported suffixes:" << supportedSuffixs;
     qRegisterMetaType<DMusic::MediaMeta>("DMusic::MediaMeta");
     qRegisterMetaType<QList<DMusic::MediaMeta>>("QList<DMusic::MediaMeta>");
+    qRegisterMetaType<QPair<QStringList, DMusic::MediaMeta>>("QPair<QStringList,DMusic::MediaMeta>");
+    qRegisterMetaType<QList<QPair<QStringList, DMusic::MediaMeta>>>("QList<QPair<QStringList,DMusic::MediaMeta>>");
     initPlaylist();
 
     connect(this, &DataManager::signalImportMetas, m_data->m_dbOperate, &DBOperate::slotImportMetas, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalAddOneMeta, this, &DataManager::slotAddOneMeta, Qt::QueuedConnection);
+    connect(m_data->m_dbOperate, &DBOperate::signalAddMetas, this, &DataManager::slotAddMetas, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalImportFinished, this, &DataManager::signalImportFinished, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalMetaBatchFinished, this, &DataManager::slotMetaBatchFinished, Qt::QueuedConnection);
     connect(m_data->m_dbOperate, &DBOperate::signalEnqueueMetaTasks, this, &DataManager::slotEnqueueMetaTasks, Qt::QueuedConnection);
@@ -2623,6 +2626,48 @@ void DataManager::slotAddOneMeta(QStringList playlistHashs, MediaMeta meta)
         }
     }
     emit signalAddOneMeta(playlistHashs, curMeta, true);
+}
+
+void DataManager::slotAddMetas(QList<QPair<QStringList, DMusic::MediaMeta>> metasWithHashs)
+{
+    qCDebug(dmMusic) << "Batch adding" << metasWithHashs.size() << "metas";
+    QList<QPair<QStringList, DMusic::MediaMeta>> processedMetas;
+    for (const auto &item : metasWithHashs) {
+        QStringList playlistHashs = item.first;
+        MediaMeta meta = item.second;
+        MediaMeta curMeta = playlistHashs.contains("all") ? meta : metaFromHash(meta.hash);
+
+        int existingIndex = metaIndexFromHash(curMeta.hash);
+        if (existingIndex >= 0) {
+            curMeta = m_data->m_allMetas[existingIndex];
+        }
+
+        for (PlaylistInfo &playlist : m_data->m_allPlaylist) {
+            for (QString hash : playlistHashs) {
+                if (hash == playlist.uuid) {
+                    if (hash == "all") {
+                        if (existingIndex < 0) {
+                            if (!m_data->m_metaHashIndex.contains(curMeta.hash)) {
+                                m_data->m_metaHashIndex.insert(curMeta.hash, m_data->m_allMetas.size());
+                            }
+                            m_data->m_allMetas.append(curMeta);
+                            m_data->m_importedMetas.append(curMeta);
+                            addMetaToAlbum(curMeta);
+                            addMetaToArtist(curMeta);
+                            m_data->m_dirty = true;
+                        }
+                    }
+                    if (!playlist.sortMetas.contains(curMeta.hash)) {
+                        playlist.sortMetas.append(curMeta.hash);
+                        playlist.sortCustomMetas.append(curMeta.hash);
+                        m_data->m_dirty = true;
+                    }
+                }
+            }
+        }
+        processedMetas.append({playlistHashs, curMeta});
+    }
+    emit signalAddMetas(processedMetas);
 }
 
 void DataManager::slotEnqueueMetaTasks(const QList<DMusic::MediaMeta> &metas)

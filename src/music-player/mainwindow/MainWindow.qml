@@ -475,6 +475,25 @@ ApplicationWindow {
             }
         }
     }
+    function onAddMetas(playlistHashsList, metaList) {
+        for (var idx = 0; idx < metaList.length; idx++) {
+            var playlistHashs = playlistHashsList[idx]
+            var meta = metaList[idx]
+            for (var i = 0; i < playlistHashs.length; i++){
+                if (playlistHashs[i] === "fav") {
+                    globalVariant.sendFloatingMessageBox(qsTr("My Favorites"), 1);
+                } else {
+                    for (var j = 0; j < globalVariant.globalCustomPlaylistModel.count; j++) {
+                        if (playlistHashs[i] ===  globalVariant.globalCustomPlaylistModel.get(j).uuid) {
+                            var value = globalVariant.globalCustomPlaylistModel.get(j).displayName;
+                            globalVariant.sendFloatingMessageBox(value, 1);
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }
     function onImportFinished(playlistHashs, failCount, sucessCount, existCount) {
         if (sucessCount <= 0) {
             // 当所有文件都已存在时显示提示
@@ -514,6 +533,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         Presenter.addOneMeta.connect(onAddOneMeta)
+        Presenter.addMetas.connect(onAddMetas)
         Presenter.importFinished.connect(onImportFinished)
         Presenter.quitRequested.connect(onQuitRequested)
         Presenter.raiseRequested.connect(onRaiseRequested)

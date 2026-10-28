@@ -596,6 +596,20 @@ ToolFloatingPanel {
             }
         }
     }
+    function onAddMetas(playlistHashsList, metaList) {
+        for (var idx = 0; idx < metaList.length; idx++) {
+            var playlistHashs = playlistHashsList[idx]
+            var meta = metaList[idx]
+            for (var i = 0; i < playlistHashs.length; i++){
+                if (playlistHashs[i] == "fav") {
+                    if (mediaData.hash === meta.hash) {
+                        favorite = true
+                        break
+                    }
+                }
+            }
+        }
+    }
     function updatePlaylistBtnStatus(checked) {
         listBtn.checked = checked
     }
@@ -646,6 +660,7 @@ ToolFloatingPanel {
         Presenter.audioBuffer.connect(audioBufferChange)
         Presenter.deleteOneMeta.connect(onDeleteOneMeta)
         Presenter.addOneMeta.connect(onAddOneMeta)
+        Presenter.addMetas.connect(onAddMetas)
 
         bMute = Presenter.valueFromSettings("base.play.mute")
         playMode = Presenter.getPlaybackMode()

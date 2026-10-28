@@ -420,6 +420,22 @@ Rectangle {
             }
         }
     }
+    function onAddMetas(playlistHashsList, metaList) {
+        for (var idx = 0; idx < metaList.length; idx++) {
+            var playlistHashs = playlistHashsList[idx]
+            var meta = metaList[idx]
+            for (var i = 0; i < playlistHashs.length; i++){
+                if (playlistHashs[i] == "fav") {
+                    for (var j = 0; j < songsModel.count; j++) {
+                        if (songsModel.get(j)["hash"] == meta.hash) {
+                            songsModel.setProperty(j,"favourite",true)
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }
     function onUpdatedMetaCodec(meta, preAlbum, preArtist) {
         for (var j = 0; j < songsModel.count; j++) {
             if (songsModel.get(j)["hash"] === meta.hash) {
@@ -495,6 +511,7 @@ Rectangle {
         updateSearchResultInfo(pattern, curIndex)
         Presenter.deleteOneMeta.connect(onDeleteOneMeta);
         Presenter.addOneMeta.connect(onAddOneMeta);
+        Presenter.addMetas.connect(onAddMetas);
         Presenter.updatedMetaCodec.connect(onUpdatedMetaCodec)
         Presenter.playlistSortChanged.connect(playlistSortChanged)
     }
