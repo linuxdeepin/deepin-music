@@ -67,9 +67,9 @@ ApplicationWindow {
                     width: 1 / Screen.devicePixelRatio
                     height: parent.height
                     anchors.right: parent.right
-                    color: DTK.themeType === ApplicationHelper.LightType
-                           ? Qt.rgba(0, 0, 0, 0.08)
-                           : Qt.rgba(0, 0, 0, 0.50)
+                    color: DS.Style.control.selectColor(control ? control.palette.window : undefined,
+                           Qt.rgba(0, 0, 0, 0.08),
+                           Qt.rgba(0, 0, 0, 0.50))
                 }
             }
             // 右侧区域纯色背景
@@ -78,7 +78,8 @@ ApplicationWindow {
                 width: parent.width - leftBgArea.width
                 height: parent.height
                 anchors.top: parent.top
-                color: DTK.themeType === ApplicationHelper.LightType ? "#f7f7f7" : "#252525"
+                color: DS.Style.control.selectColor(rootWindow.palette.window,
+                       "#f7f7f7", "#252525")
             }
         }
     }
