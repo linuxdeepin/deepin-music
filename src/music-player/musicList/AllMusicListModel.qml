@@ -64,6 +64,27 @@ ListModel {
             }
         }
     }
+    function onAddMetas(playlistHashsList, metaList) {
+        for (var idx = 0; idx < metaList.length; idx++) {
+            var playlistHashs = playlistHashsList[idx]
+            var meta = metaList[idx]
+            for (var i = 0; i < playlistHashs.length; i++) {
+                if (playlistHashs[i] === dataHash) {
+                    meta.inMulitSelect = false
+                    meta.dragFlag = false
+                    mediaModels.append(meta);
+                }
+                if (playlistHashs[i] === "fav") {
+                    for (var j = 0; j < mediaModels.count; j++) {
+                        if (mediaModels.get(j)["hash"] === meta.hash) {
+                            mediaModels.setProperty(j,"favourite",true)
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }
     function playlistSortChanged(playlistHash) {
         //console.log("playlistSortChanged........", playlistHash)
         mediaModels.loadMediaDatas()
@@ -93,6 +114,7 @@ ListModel {
         Presenter.importFinished.connect(loadMediaDatas);
         Presenter.deleteOneMeta.connect(onDeleteOneMeta);
         Presenter.addOneMeta.connect(onAddOneMeta);
+        Presenter.addMetas.connect(onAddMetas);
         Presenter.playlistSortChanged.connect(playlistSortChanged)
         Presenter.updatedMetaCodec.connect(onUpdatedMetaCodec)
         Presenter.metaAnalysisReady.connect(onMetaAnalysisReady)

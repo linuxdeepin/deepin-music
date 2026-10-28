@@ -160,6 +160,24 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
         }
         emit addOneMeta(playlistHashs, Utils::metaToVariantMap(meta));
     });
+    connect(m_data->m_dataManager, &DataManager::signalAddMetas, this,
+            [ = ](QList<QPair<QStringList, DMusic::MediaMeta>> metasWithHashs) {
+        qCDebug(dmMusic) << "Batch adding" << metasWithHashs.size() << "metas to playlists";
+        QVariantList playlistHashsList;
+        QVariantList metaList;
+        QList<DMusic::MediaMeta> playMetas;
+        for (const auto &item : metasWithHashs) {
+            if (item.first.contains("play")) {
+                playMetas << item.second;
+            }
+            playlistHashsList << QVariant(item.first);
+            metaList << QVariant::fromValue(Utils::metaToVariantMap(item.second));
+        }
+        if (!playMetas.isEmpty()) {
+            m_data->m_playerEngine->addMetasToPlayList(playMetas);
+        }
+        emit addMetas(playlistHashsList, metaList);
+    });
     connect(m_data->m_dataManager, &DataManager::signalImportFinished, this, [ = ](QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash) {
         // 自动播放
         if (!mediaHash.isEmpty()) {
