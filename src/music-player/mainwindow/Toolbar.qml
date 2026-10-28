@@ -546,6 +546,12 @@ ToolFloatingPanel {
 
         updatePlayControlBtnStatus()
     }
+
+    function onMetaAnalysisReady(meta) {
+        if (mediaData && meta.hash === mediaData.hash) {
+            imgPath = "file:///" + meta["coverUrl"]
+        }
+    }
     function positionChange(position, length) {
         var time = Math.round(position / 1000)
         curMinute = Math.floor(time / 60)
@@ -646,6 +652,7 @@ ToolFloatingPanel {
         Presenter.audioBuffer.connect(audioBufferChange)
         Presenter.deleteOneMeta.connect(onDeleteOneMeta)
         Presenter.addOneMeta.connect(onAddOneMeta)
+        Presenter.metaAnalysisReady.connect(onMetaAnalysisReady)
 
         bMute = Presenter.valueFromSettings("base.play.mute")
         playMode = Presenter.getPlaybackMode()
