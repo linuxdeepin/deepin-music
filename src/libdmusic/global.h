@@ -95,6 +95,8 @@ public:
     static QString unknownArtistText();
     // 检测是否开启Wayland
     static bool checkWaylandMode();
+    // 检测 Fantasy GPU 环境并应用软件渲染降级
+    static void checkFantasyGpuWorkaround();
     // 设置Wayland
     static void setWaylandMode(bool mode);
     // 是否开启Wayland
