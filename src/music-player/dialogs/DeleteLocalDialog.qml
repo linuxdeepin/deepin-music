@@ -64,6 +64,8 @@ DialogWindow {
             Layout.fillWidth: true
             WarningButton {
                 text: qsTr("Delete")
+                Accessible.name: qsTr("删除")
+                Accessible.role: Accessible.Button
                 Layout.preferredWidth: 185
                 Layout.alignment: Qt.AlignRight
                 onClicked: {
@@ -77,7 +79,8 @@ DialogWindow {
             Button {
                 text: qsTr("Cancel")
                 Layout.preferredWidth: 185
-                Accessible.name: "DeleteLocalDialog_Cancel"
+                Accessible.name: qsTr("取消")
+                Accessible.role: Accessible.Button
                 onClicked: {
                     dialog.close();
                 }

@@ -65,7 +65,7 @@ ColumnLayout {
             ButtonGroup.group: group
             type: control.type
             font: DTK.fontManager.t6
-            Accessible.name: "SidebarItem"
+            Accessible.name: model.displayName
             Accessible.role: Accessible.Button
         }
 

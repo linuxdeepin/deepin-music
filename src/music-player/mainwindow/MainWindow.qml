@@ -248,13 +248,13 @@ ApplicationWindow {
             menu: Menu {
                 MenuItem {
                     text: qsTr("Play/Pause")
-                    Accessible.name: "PlayPause"
+                    Accessible.name: qsTr("播放/暂停")
                     onTriggered: Presenter.playPause()
                     enabled: globalVariant.playingCount > 0
                 }
                 MenuItem {
                     text: qsTr("Previous")
-                    Accessible.name: "Previous"
+                    Accessible.name: qsTr("上一曲")
                     onTriggered: Presenter.playPre()
                     enabled: {
                         if (!globalVariant.currentMediaMeta ||
@@ -267,7 +267,7 @@ ApplicationWindow {
                 }
                 MenuItem {
                     text: qsTr("Next")
-                    Accessible.name: "Next"
+                    Accessible.name: qsTr("下一曲")
                     onTriggered: Presenter.playNext()
                     enabled: {
                         if (!globalVariant.currentMediaMeta ||
@@ -280,7 +280,7 @@ ApplicationWindow {
                 }
                 MenuItem {
                     text: qsTr("Exit")
-                    Accessible.name: "MainWindow_Exit"
+                    Accessible.name: qsTr("退出")
                     onTriggered: Presenter.forceExit();
                 }
             }
