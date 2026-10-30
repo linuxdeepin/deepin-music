@@ -73,7 +73,7 @@ TitleBar {
         width: 200
         MenuItem {
             text: qsTr("Add playlist")
-            Accessible.name: "AddPlaylist"
+            Accessible.name: qsTr("创建新歌单")
             onTriggered: {
                 var tmpPlaylist = Presenter.addPlayList(qsTr("New playlist"));
                 globalVariant.globalCustomPlaylistModel.onAddPlaylist(tmpPlaylist);
@@ -81,7 +81,7 @@ TitleBar {
             }}
         MenuItem {
             text: qsTr("Add music")
-            Accessible.name: "AddMusic"
+            Accessible.name: qsTr("添加歌曲")
             onTriggered: {
                 globalVariant.globalFileDlgOpen()
             }
@@ -90,6 +90,7 @@ TitleBar {
         Action {
             id: equalizerControl
             text: qsTr("Equalizer")
+            Accessible.name: qsTr("均衡器")
 
             onTriggered: {
                 if (equalizerDlgLoader.status === Loader.Null )
@@ -101,7 +102,7 @@ TitleBar {
         MenuItem {
             id: settingsControl
             text: qsTr("Settings")
-            Accessible.name: "SettingsControl"
+            Accessible.name: qsTr("设置")
             onTriggered: {
                 if (settingDlgLoader.status === Loader.Null )
                     settingDlgLoader.setSource("../dialogs/SettingsDialog.qml")
@@ -114,6 +115,7 @@ TitleBar {
         MenuSeparator { }
         HelpAction { }
         AboutAction {
+            Accessible.name: qsTr("关于")
             aboutDialog: AboutDialog {
                 modality: Qt.WindowModal
                 productName: qsTr("Music")
@@ -138,7 +140,9 @@ TitleBar {
                 }
             }
         }
-        QuitAction {}
+        QuitAction {
+            Accessible.name: qsTr("退出")
+        }
         /*MenuItem {
             id: quitControl
             text: qsTr("Quit")
@@ -238,6 +242,8 @@ TitleBar {
                     opacity: (globalVariant.globalSwitchButtonStatus === 2) ? opat: disableOpat
                     enabled: (globalVariant.globalSwitchButtonStatus === 2) ? true: false
                     hoverEnabled: true
+                    Accessible.name: qsTr("返回")
+                    Accessible.role: Accessible.Button
                     onClicked: {
                         globalVariant.globalSwitchButtonStatus = 1; //切换到上一级页面
                     }
@@ -274,6 +280,8 @@ TitleBar {
                 Layout.preferredWidth: titleRowLayout.showSearchEdit ? 300 : 0
                 Layout.alignment: Qt.AlignCenter
                 placeholder: qsTr("Search")
+                Accessible.name: qsTr("搜索框")
+                Accessible.role: Accessible.EditableText
                 enabled: Presenter.isExistMeta()
                 Keys.onDownPressed: function(event) {
                     var searchResDlg = searchResultLoader.item
@@ -427,6 +435,8 @@ TitleBar {
                 visible: !isLyricShow && titleRowLayout.showSearchEdit  // 窗口窄时隐藏
                 opacity: opat
                 hoverEnabled: true
+                Accessible.name: qsTr("添加歌曲")
+                Accessible.role: Accessible.Button
                 Layout.alignment: Qt.AlignRight
                 Layout.rightMargin: 40
 

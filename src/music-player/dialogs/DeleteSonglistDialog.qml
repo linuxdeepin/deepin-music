@@ -66,6 +66,8 @@ DialogWindow {
                 Layout.preferredWidth: 185
                 height: 36
                 text: removeMusic ? qsTr("Remove") : qsTr("Delete")
+                Accessible.name: removeMusic ? qsTr("移除") : qsTr("删除")
+                Accessible.role: Accessible.Button
                 onClicked: {
                     if(removeMusic){
                         if (listHash === "musicResult")
@@ -82,7 +84,8 @@ DialogWindow {
                 Layout.preferredWidth: 185
                 height: 36
                 text: qsTr("Cancel")
-                Accessible.name: "DeleteSonglistDialog_Cancel"
+                Accessible.name: qsTr("取消")
+                Accessible.role: Accessible.Button
                 onClicked: {
                     dialog.close();
                 }
