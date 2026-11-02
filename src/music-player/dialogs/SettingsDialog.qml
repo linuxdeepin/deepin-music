@@ -28,9 +28,14 @@ Settings.SettingsDialog {
     modality: Qt.WindowModal
 
     onVisibleChanged: {
-        if (visible && Qt.platform.os === "windows") {
-            x = (Screen.width - width) / 2
-            y = (Screen.height - height) / 2
+        if (visible) {
+            if (transientParent) {
+                x = (transientParent.width - width) / 2
+                y = (transientParent.height - height) / 2
+            } else {
+                x = (Screen.width - width) / 2
+                y = (Screen.height - height) / 2
+            }
         }
         if (!visible) {
             Presenter.syncToSettings()
@@ -464,9 +469,14 @@ Settings.SettingsDialog {
         icon: globalVariant.appIconName
 
         onVisibleChanged: {
-            if (visible && Qt.platform.os === "windows") {
-                x = (Screen.width - width) / 2
-                y = (Screen.height - height) / 2
+            if (visible) {
+                if (transientParent) {
+                    x = (transientParent.width - width) / 2
+                    y = (transientParent.height - height) / 2
+                } else {
+                    x = (Screen.width - width) / 2
+                    y = (Screen.height - height) / 2
+                }
             }
         }
 
