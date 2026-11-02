@@ -19,7 +19,7 @@ D.Control {
     // corner radius
     property int radius: DS.Style.floatingPanel.radius
     padding: DS.Style.floatingPanel.radius / 2
-    background: D.InWindowBlurImpl {
+    background: D.InWindowBlur {
         id: blur
         implicitHeight: DS.Style.floatingPanel.height
         implicitWidth: DS.Style.floatingPanel.width
