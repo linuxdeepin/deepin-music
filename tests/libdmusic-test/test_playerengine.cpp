@@ -37,6 +37,7 @@ public:
     DmGlobal::PlaybackStatus state() override { return m_fakeState; }
     void play() override { m_fakeState = DmGlobal::Playing; ++playCallCount; }
     void pause() override { m_fakeState = DmGlobal::Paused; }
+    void resume() override { play(); }
     void stop() override { m_fakeState = DmGlobal::Stopped; m_activeMeta = DMusic::MediaMeta(); }
     int length() override { return m_fakeLength; }
     void setTime(qint64 t) override { m_fakeTime = t; }
@@ -432,6 +433,7 @@ public:
     DmGlobal::PlaybackStatus state() override { return m_state; }
     void play() override { m_state = DmGlobal::Playing; ++m_playCount; }
     void pause() override { m_state = DmGlobal::Paused; }
+    void resume() override { play(); }
     void stop() override { m_state = DmGlobal::Stopped; m_activeMeta = DMusic::MediaMeta(); }
     int length() override { return m_length; }
     void setTime(qint64 t) override { m_time = t; }
