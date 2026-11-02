@@ -85,7 +85,7 @@ Rectangle {
                     anchors.topMargin: 34
                     anchors.left: viewParent.left
                     anchors.leftMargin: (viewParent.width - width) / 2
-                    cellWidth: 208; cellHeight: 230
+                    cellWidth: 208; cellHeight: isCompactMode ? 180 : 230
                     Accessible.name: "ArtistView_GridView"
                     ScrollBar.vertical: ScrollBar {
                         Accessible.name: "ArtistView_ScrollBar"

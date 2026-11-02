@@ -272,7 +272,7 @@ ItemDelegate{
         anchors.verticalCenter: parent.verticalCenter
         Rectangle {
             id: columnNumber
-            width: rootRectangle.leadingColumnWidth; height: 56
+            width: rootRectangle.leadingColumnWidth; height: isCompactMode ? 40 : 56
             color: Qt.rgba(0, 0, 0, 0)
             Row {
                 visible: rootRectangle.showTrackNumber && !rootRectangle.indexPlaybackState
@@ -378,7 +378,7 @@ ItemDelegate{
             width: parent.width
                    - rootRectangle.extendedColumnCount * parent.width * scalingRatio
                    - rootRectangle.leadingColumnWidth - 102
-            height: 56
+            height: isCompactMode ? 40 : 56
             color: Qt.rgba(0, 0, 0, 0)
             Row {
                 anchors.verticalCenter: columnMusic.verticalCenter
@@ -429,7 +429,7 @@ ItemDelegate{
         Label {
             id: singerLabel
             width: parent.width * scalingRatio
-            height: 56
+            height: isCompactMode ? 40 : 56
             leftPadding: 10
             elide: Text.ElideRight
             text: (artist === "") ? "undefind" : artist
@@ -441,7 +441,7 @@ ItemDelegate{
         Label {
             id: ablumLabel
             width: parent.width * scalingRatio
-            height: 56
+            height: isCompactMode ? 40 : 56
             elide: Text.ElideRight
             text: (album === "") ? "undefind": album
             anchors.verticalCenter: parent.verticalCenter
@@ -452,7 +452,7 @@ ItemDelegate{
         Label {
             id: musictimeLabel
             width: 102
-            height: 56
+            height: isCompactMode ? 40 : 56
             leftPadding: 10
             elide: Text.ElideRight
             text:{

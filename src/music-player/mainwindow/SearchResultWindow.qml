@@ -243,7 +243,7 @@ Rectangle {
                             anchors.top: parent.top
                             anchors.topMargin: 5
                             cellWidth: 208
-                            cellHeight: 230
+                            cellHeight: isCompactMode ? 180 : 230
                             Accessible.name: "ArtistView"
                             header: Item { width: 1; height: 10 }
                             ScrollBar.vertical: ScrollBar { Accessible.name: "SearchResult_ArtistGridView_ScrollBar" }
@@ -268,7 +268,7 @@ Rectangle {
                             anchors.top: parent.top
                             anchors.topMargin: 5
                             cellWidth: 208
-                            cellHeight: 242
+                            cellHeight: isCompactMode ? 210 : 242
                             Accessible.name: "SearchResult_AlbumGridView"
                             header: Item { width: 1; height: 10 }
                             ScrollBar.vertical: ScrollBar { Accessible.name: "SearchResult_AlbumGridView_ScrollBar" }

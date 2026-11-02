@@ -25,7 +25,7 @@ Rectangle {
         ColumnLayout {
             id: colum
             anchors.fill: parent
-            spacing: 30
+            spacing: isCompactMode ? 20 : 30
             ButtonGroup { id: paneListGroup }
             SideBarItem{
                 id: musicbaseSidebar

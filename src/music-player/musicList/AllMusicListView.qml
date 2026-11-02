@@ -110,7 +110,7 @@ Rectangle {
             id: itemD
             autoExclusive: false
             width: listview.width - 40
-            height: 56
+            height: isCompactMode ? 40 : 56
             backgroundVisible: true
             normalBackgroundVisible: index % 2 === 0
             delegateListHash: viewListHash

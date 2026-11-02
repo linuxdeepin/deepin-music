@@ -245,6 +245,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("Presenter", presenter.data());
     engine.rootContext()->setContextProperty("EventsFilter", &eventsFilter);
     engine.rootContext()->setContextProperty("ShortcutDialg", &shortcut);
+    engine.rootContext()->setContextProperty("isCompactMode", DGuiApplicationHelper::isCompactMode());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     logStartupStage("qml-components-created");

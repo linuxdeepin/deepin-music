@@ -12,7 +12,7 @@ import "../allItems"
 
 Rectangle {
     property int itemfixedwidth: 208  //ui固定
-    property int itemfixedheight: 196
+    property int itemfixedheight: isCompactMode ? 160 : 196
     property bool playing: (globalVariant.curPlayingStatus === DmGlobal.Playing) ? true : false
     property bool activeMeta:(globalVariant.curPlayingArtist === name) ? true : false
     property int defaultY: -1
@@ -57,7 +57,7 @@ Rectangle {
         id: artistColumn
         width: 148
         anchors.horizontalCenter: parent.horizontalCenter
-        spacing: 6
+        spacing: isCompactMode ? 4 : 6
         Control {
             id: cirWidgetControl
             width: 148; height: 148 //UI固定

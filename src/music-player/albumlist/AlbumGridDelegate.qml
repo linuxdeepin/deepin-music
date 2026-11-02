@@ -11,7 +11,7 @@ import "../allItems"
 
 Rectangle {
     property int itemfixedwidth: 208  //ui固定
-    property int itemfixedheight: 230
+    property int itemfixedheight: isCompactMode ? 190 : 230
     property bool playing: false
     property bool activeMeta:(globalVariant.curPlayingAlbum === name) ? true : false
     property int defaultY: -1
@@ -54,10 +54,10 @@ Rectangle {
     }
     Column {
         id: albumColumn
-        width: 168; height: 230
+        width: 168; height: isCompactMode ? 190 : 230
         anchors.centerIn: rootrectangle
-        topPadding: 10
-        spacing: 10
+        topPadding: isCompactMode ? 6 : 10
+        spacing: isCompactMode ? 6 : 10
         Control {
             id: albumItem
             width: 168; height: 168

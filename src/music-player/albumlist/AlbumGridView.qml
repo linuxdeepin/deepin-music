@@ -29,7 +29,7 @@ Rectangle {
         anchors.topMargin: 5
         anchors.leftMargin: (albumGrid.width - width) / 2
         anchors.rightMargin: (albumGrid.width - width) / 2
-        cellWidth: 208; cellHeight: 242
+        cellWidth: 208; cellHeight: isCompactMode ? 210 : 242
         Accessible.name: "AlbumGridView_GridView"
         ScrollBar.vertical: ScrollBar { Accessible.name: "AlbumGridView_ScrollBar" }
         model: albumModel
