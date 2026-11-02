@@ -28,7 +28,7 @@ ToolFloatingPanel {
     property bool favorite: false
     property bool bMute: false
 
-    property int coverRectWidth: 40
+    property int coverRectWidth: globalVariant.isCompactMode ? 32 : 40
     property int infoRectWidth: 142
     property int playControlRectWidth: 220
     property int contentSpacing: 8
@@ -53,7 +53,7 @@ ToolFloatingPanel {
     property bool showExtendedControls: toolbarRoot.width > 450  // 喜欢、播放模式按钮
 
     id: toolbarRoot
-    height:60
+    height: globalVariant.isCompactMode ? 50 : 60
     width: parent.width
     
     blurMultiplier: 0.0
@@ -205,13 +205,13 @@ ToolFloatingPanel {
                 anchors.verticalCenter: parent.verticalCenter
                     ActionButton {
                         id: likeBtn
-                        width: 36
-                        height: 36
+                        width: globalVariant.isCompactMode ? 32 : 36
+                        height: globalVariant.isCompactMode ? 32 : 36
                         visible: showExtendedControls  // 窗口窄时隐藏
                         anchors.verticalCenter: parent.verticalCenter
                         icon.name: favorite ? "heart_check" : "heart"
-                        icon.width: 20
-                        icon.height: 20
+                        icon.width: globalVariant.isCompactMode ? 16 : 20
+                        icon.height: globalVariant.isCompactMode ? 16 : 20
                         enabled: songTitle.length === 0 ? false : true
                         palette.windowText: favorite ? "#F75B5B" : undefined
                         // contentItem.theme: DTK.themeType
@@ -237,12 +237,12 @@ ToolFloatingPanel {
                     }
                     ActionButton {
                         id: prevBtn
-                        width: 36
-                        height: 36
+                        width: globalVariant.isCompactMode ? 32 : 36
+                        height: globalVariant.isCompactMode ? 32 : 36
                         anchors.verticalCenter: parent.verticalCenter
                         icon.name: "toolbar_previous"
-                        icon.width: 20
-                        icon.height: 20
+                        icon.width: globalVariant.isCompactMode ? 16 : 20
+                        icon.height: globalVariant.isCompactMode ? 16 : 20
                         checkable: true
                         enabled: songTitle.length === 0 ? false : true
 
@@ -258,13 +258,13 @@ ToolFloatingPanel {
                     }
                     ActionButton {
                         id: playPauseBtn
-                        width: 36
-                        height: 36
+                        width: globalVariant.isCompactMode ? 32 : 36
+                        height: globalVariant.isCompactMode ? 32 : 36
                         anchors.verticalCenter: parent.verticalCenter
                         icon.name: playStatus == DmGlobal.Paused || playStatus == DmGlobal.Stopped || playStatus == DmGlobal.Idle?
                                        "toolbar_play" : (playStatus == DmGlobal.Playing ? "toolbar_pause" : "")
-                        icon.width: 36
-                        icon.height: 36
+                        icon.width: globalVariant.isCompactMode ? 28 : 36
+                        icon.height: globalVariant.isCompactMode ? 28 : 36
                         checkable: true
 
                         ToolTip {
@@ -279,12 +279,12 @@ ToolFloatingPanel {
                     }
                     ActionButton {
                         id: nextBtn
-                        width: 36
-                        height: 36
+                        width: globalVariant.isCompactMode ? 32 : 36
+                        height: globalVariant.isCompactMode ? 32 : 36
                         anchors.verticalCenter: parent.verticalCenter
                         icon.name: "toolbar_next"
-                        icon.width: 20
-                        icon.height: 20
+                        icon.width: globalVariant.isCompactMode ? 16 : 20
+                        icon.height: globalVariant.isCompactMode ? 16 : 20
                         checkable: true
                         enabled: songTitle.length === 0 ? false : true
 
@@ -301,13 +301,13 @@ ToolFloatingPanel {
                     }
                     ActionButton {
                         id: playModeBtn
-                        width: 36
-                        height: 36
+                        width: globalVariant.isCompactMode ? 32 : 36
+                        height: globalVariant.isCompactMode ? 32 : 36
                         visible: showExtendedControls  // 窗口窄时隐藏
                         anchors.verticalCenter: parent.verticalCenter
                         icon.name: modeIcon[playMode + 1]
-                        icon.width: 36
-                        icon.height: 36
+                        icon.width: globalVariant.isCompactMode ? 28 : 36
+                        icon.height: globalVariant.isCompactMode ? 28 : 36
 
                         ToolTip {
                             visible: playModeBtn.hovered

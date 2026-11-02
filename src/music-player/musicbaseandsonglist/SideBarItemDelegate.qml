@@ -73,8 +73,8 @@ ItemDelegate {
     }
     Item {
         id: siderIcon
-        width: 20
-        height: 20
+        width: globalVariant.isCompactMode ? 16 : 20
+        height: globalVariant.isCompactMode ? 16 : 20
         anchors.left: item.left; anchors.leftMargin: 10
         anchors.verticalCenter: item.verticalCenter
         DciIcon {
@@ -82,7 +82,7 @@ ItemDelegate {
             anchors.fill: parent
             visible: false
             name: item.checked ? model.icon_checked : model.icon
-            sourceSize: Qt.size(20, 20)
+            sourceSize: Qt.size(globalVariant.isCompactMode ? 16 : 20, globalVariant.isCompactMode ? 16 : 20)
         }
         ColorOverlay {
             anchors.fill: parent

@@ -12,14 +12,14 @@ import "../musicmousemenu"
 Rectangle {
     signal musicBaselistChanged(string type, string displayName)
 
-    width: 220
+    width: globalVariant.isCompactMode ? 200 : 220
     height: parent.height
     color: Qt.rgba(0, 0, 0, 0)
     ScrollView {
         id: musicBaseScrollView
         clip: true
         focus: true
-        width: 220
+        width: globalVariant.isCompactMode ? 200 : 220
         height: 560
 
         ColumnLayout {

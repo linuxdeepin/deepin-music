@@ -39,7 +39,7 @@ TitleBar {
             id: dciIcon
             D.DciIcon {
                 name: globalVariant.appIconName
-                sourceSize { width: 24; height: 24 }
+                sourceSize { width: globalVariant.isCompactMode ? 19 : 24; height: globalVariant.isCompactMode ? 19 : 24 }
                 opacity: opat
                 palette: D.DTK.makeIconPalette(titleBar.palette)
                 mode: titleBar.D.ColorSelector.controlState
@@ -49,7 +49,7 @@ TitleBar {
         Component {
             id: fallbackIcon
             Image {
-                width: 24; height: 24
+                width: globalVariant.isCompactMode ? 19 : 24; height: globalVariant.isCompactMode ? 19 : 24
                 source: "qrc:/dsg/img/deepin-music.svg"
                 opacity: opat
             }
@@ -57,12 +57,12 @@ TitleBar {
     }
     ActionButton {
         icon.name: "go_down"
-        icon.width: 12
-        icon.height: 12
+        icon.width: globalVariant.isCompactMode ? 10 : 12
+        icon.height: globalVariant.isCompactMode ? 10 : 12
         hoverEnabled: true;
         visible: isLyricShow
-        width: 36
-        height: 36
+        width: globalVariant.isCompactMode ? 32 : 36
+        height: globalVariant.isCompactMode ? 32 : 36
         x: 8
         y: 10
         onClicked: lrcHideBtnClicked()

@@ -56,6 +56,31 @@
 DCORE_USE_NAMESPACE;
 DGUI_USE_NAMESPACE;
 
+class CompactModeHelper : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool isCompactMode READ isCompactMode NOTIFY compactModeChanged)
+public:
+    explicit CompactModeHelper(QObject *parent = nullptr)
+        : QObject(parent)
+        , m_compact(DGuiApplicationHelper::instance()->isCompactMode())
+    {
+        connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::sizeModeChanged,
+                this, [this]() {
+            bool newCompact = DGuiApplicationHelper::instance()->isCompactMode();
+            if (m_compact != newCompact) {
+                m_compact = newCompact;
+                emit compactModeChanged();
+            }
+        });
+    }
+    bool isCompactMode() const { return m_compact; }
+signals:
+    void compactModeChanged();
+private:
+    bool m_compact;
+};
+
 QScopedPointer<Presenter, QScopedPointerPodDeleter> presenter;
 
 #ifdef Q_OS_LINUX
@@ -245,6 +270,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("Presenter", presenter.data());
     engine.rootContext()->setContextProperty("EventsFilter", &eventsFilter);
     engine.rootContext()->setContextProperty("ShortcutDialg", &shortcut);
+    engine.rootContext()->setContextProperty("compactModeHelper", new CompactModeHelper(app));
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     logStartupStage("qml-components-created");
