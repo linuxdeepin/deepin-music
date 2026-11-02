@@ -22,6 +22,9 @@
 #include "utils.h"
 #include "audioanalysis.h"
 
+#include "eventlogutils.h"
+#include <QJsonObject>
+
 class PresenterPrivate
 {
 public:
@@ -1208,6 +1211,9 @@ void Presenter::updateMetaCodec(const QString &metaHash, const QString &codecStr
 void Presenter::play()
 {
     qCDebug(dmMusic) << "Playing media";
+    QJsonObject data;
+    data["type"] = QStringLiteral("play");
+    EventLogUtils::get().writeLogs(data);
     if (m_data->m_playerEngine->isEmpty()) {
         qCDebug(dmMusic) << "Playlist is empty, playing all";
         playPlaylist("all");
@@ -1220,24 +1226,36 @@ void Presenter::play()
 void Presenter::playPre()
 {
     qCDebug(dmMusic) << "Playing previous media";
+    QJsonObject data;
+    data["type"] = QStringLiteral("playPre");
+    EventLogUtils::get().writeLogs(data);
     m_data->m_playerEngine->playPreMeta();
 }
 
 void Presenter::playNext()
 {
     qCDebug(dmMusic) << "Playing next media";
+    QJsonObject data;
+    data["type"] = QStringLiteral("playNext");
+    EventLogUtils::get().writeLogs(data);
     m_data->m_playerEngine->playNextMeta(false);
 }
 
 void Presenter::pause()
 {
     qCDebug(dmMusic) << "Pausing media";
+    QJsonObject data;
+    data["type"] = QStringLiteral("pause");
+    EventLogUtils::get().writeLogs(data);
     m_data->m_playerEngine->pause();
 }
 
 void Presenter::playPause()
 {
     qCDebug(dmMusic) << "Playing or pausing media";
+    QJsonObject data;
+    data["type"] = QStringLiteral("playPause");
+    EventLogUtils::get().writeLogs(data);
     if (m_data->m_playerEngine->isEmpty()) {
         qCDebug(dmMusic) << "Playlist is empty, playing all";
         playPlaylist("all");

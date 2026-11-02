@@ -27,7 +27,8 @@ Build-Depends:
  libdtk6declarative-dev,
  qt6-5compat-dev,
  libsdl2-dev,
- libsdl1.2debian
+ libsdl1.2debian,
+ deepin-event-log
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
@@ -51,7 +52,8 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
 # 识别编码格式
  libuchardet0,
  libmpris-qt6,
- libsdl1.2debian
+ libsdl1.2debian,
+ deepin-event-log
 Description: Music software for UOS
  Music is a local music player with beautiful design and simple functions.
 
