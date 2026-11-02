@@ -173,6 +173,15 @@ void VlcPlayer::pause()
     }
 }
 
+void VlcPlayer::resume()
+{
+    qCDebug(dmMusic) << "Resuming playback";
+    init();
+    if (m_qvplayer) {
+        m_qvplayer->resume();
+    }
+}
+
 DmGlobal::PlaybackStatus VlcPlayer::state()
 {
     if (m_qvplayer) {

@@ -133,6 +133,12 @@ void QtPlayer::pause()
     }
 }
 
+void QtPlayer::resume()
+{
+    qCDebug(dmMusic) << "Resume requested";
+    play();
+}
+
 void QtPlayer::stop()
 {
     qCDebug(dmMusic) << "Stop requested";

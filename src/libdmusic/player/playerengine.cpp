@@ -736,7 +736,7 @@ void PlayerEngine::resume()
         forcePlay();
     } else {
         qCDebug(dmMusic) << "Current meta local path is not empty, play resume";
-        m_data->m_player->play();
+        m_data->m_player->resume();
     }
     if (m_data->m_fadeInOut && m_data->m_fadeInAnimation->state() != QPropertyAnimation::Running) {
         qCDebug(dmMusic) << "Fade in out is true, start fade in animation";

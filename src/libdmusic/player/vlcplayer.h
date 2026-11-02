@@ -34,6 +34,7 @@ public:
 public:
     void play() override;
     void pause() override;
+    void resume() override;
     DmGlobal::PlaybackStatus state() override;
     void stop() override;
     int length() override;

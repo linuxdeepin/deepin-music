@@ -25,6 +25,7 @@ public:
     DmGlobal::PlaybackStatus state() override;
     void play() override;
     void pause() override;
+    void resume() override;
     void stop() override;
     int length() override; //播放总时长
     void setTime(qint64 time) override;

@@ -32,6 +32,7 @@ public:
     virtual DmGlobal::PlaybackStatus state() = 0;
     virtual void play() = 0;
     virtual void pause() = 0;
+    virtual void resume() = 0;
     virtual void stop() = 0;
     virtual int length() = 0;
     virtual void setTime(qint64 time) = 0;
