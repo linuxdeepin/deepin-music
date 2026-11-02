@@ -31,8 +31,9 @@ Rectangle {
             var ImageData = ctx.getImageData(0,0,canvasImage.width, 224)
             ctx.drawImage(ImageData, 0, 224/3, canvasImage.width,224/3, 0, 0,canvasImage.width, canvasImage.height);
             var liner = ctx.createLinearGradient(0, 0, 0, 224);
-            var mask = darkTheme ? 0 : 1;
-            liner.addColorStop(0, Qt.rgba(mask, mask, mask, 0.0))
+            var mask = darkTheme ? 0 : 0.973;
+            var alphaStart = darkTheme ? 0.4 : 0.1; // unify gradient params with MusicSublistTitle.qml
+            liner.addColorStop(0, Qt.rgba(mask, mask, mask, alphaStart))
             liner.addColorStop(0.5, Qt.rgba(mask, mask, mask, 0.5))
             liner.addColorStop(0.95, Qt.rgba(mask, mask, mask, 0.95))
             ctx.fillStyle = liner

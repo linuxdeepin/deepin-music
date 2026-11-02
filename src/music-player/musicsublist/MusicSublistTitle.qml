@@ -68,9 +68,10 @@ Rectangle{
                     var ctx = getContext("2d");
                     var linerGradient = ctx.createLinearGradient(0, 0, 0, height);
                     var mask = titleRectangle.darkTheme ? 0 : 0.973;
-                    linerGradient.addColorStop(0, Qt.rgba(mask, mask, mask, 0.1))
+                    var alphaStart = titleRectangle.darkTheme ? 0.4 : 0.1; // unify gradient params with SublistTitleBackground.qml
+                    linerGradient.addColorStop(0, Qt.rgba(mask, mask, mask, alphaStart))
                     linerGradient.addColorStop(0.5, Qt.rgba(mask, mask, mask, 0.5))
-                    linerGradient.addColorStop(1, Qt.rgba(mask, mask, mask, 0.95))
+                    linerGradient.addColorStop(0.95, Qt.rgba(mask, mask, mask, 0.95))
                     ctx.clearRect(0, 0, width, height)
                     ctx.fillStyle = linerGradient
                     ctx.fillRect(0, 0, width, height);
@@ -92,7 +93,7 @@ Rectangle{
                     icon.name: "list_play";
                     width: 20; height: 20
                     hoverEnabled: false;
-                    palette.windowText: "#FFFFFF"
+                    palette.windowText: titleRectangle.palette.windowText
                     onClicked: {
                         if (pageHash === "album") {
                             Presenter.playAlbum(currentData.name);
