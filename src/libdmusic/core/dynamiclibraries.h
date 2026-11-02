@@ -6,6 +6,7 @@
 #define DYNAMICLIBRARIES_H
 
 #include <QLibrary>
+#include <QMutex>
 #include <QMap>
 
 class DynamicLibraries
@@ -15,6 +16,7 @@ public:
     QFunctionPointer resolve(const char *symbol, bool ffmpeg = false);
 
 private:
+    QMutex m_mutex;
     explicit DynamicLibraries();
     ~DynamicLibraries();
     bool loadLibraries();

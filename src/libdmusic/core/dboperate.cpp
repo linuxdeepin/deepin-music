@@ -9,6 +9,7 @@
 #include <QDateTime>
 #include <QStandardPaths>
 #include <QDebug>
+#include <QtConcurrent>
 
 #include "audioanalysis.h"
 #include "utils.h"
@@ -32,22 +33,21 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
                                 const QString &playlistHash, const bool &playFalg)
 {
     qCDebug(dmMusic) << "Starting meta import with" << urls.size() << "URLs, playlist:" << playlistHash;
-    
+
     // 清理已确认成功添加的 hash（这些 hash 已在 m_allMetas 中，不再需要跟踪）
     for (const QString &hash : allMetaHashs) {
         m_importingHashes.remove(hash);
     }
-    
+
     QString mediaHash;
-    // 统计总共需要加载的数量
     QStringList filePaths;
     QStringList allUrls = urls;
-    // 添加默认音乐目录
     if (allUrls.isEmpty()) {
         allUrls.append(DmGlobal::musicPath());
         qCDebug(dmMusic) << "No URLs provided, using default music path:" << DmGlobal::musicPath();
     }
-    
+
+    // Phase 1: Serial file scan (fast, I/O-bound on directory listing)
     for (auto &curUrl : allUrls) {
         if (curUrl.isEmpty()) {
             continue;
@@ -70,89 +70,137 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
     }
     qCDebug(dmMusic) << "Found" << filePaths.size() << "files to process";
 
-    int importedCount = 0, importedFailCount = 0, existCount = 0;
-    QSet<QString> allHashs;
-    QList<DMusic::MediaMeta> pendingMetas;  // newly imported metas to extract cover and lyrics in background
+    // Phase 2: Classify files — determine which need parsing vs already known
+    struct ParseTask {
+        QString filePath;
+        QString hash;
+    };
+    enum FileClass { Skip, ExistsPlaylist, ExistsAll, NeedsParse };
+    struct FileEntry {
+        QString hash;
+        FileClass fileClass;
+    };
+
+    QList<FileEntry> entries;
+    QList<ParseTask> parseTasks;
+
     for (auto &filePath : filePaths) {
         QFileInfo fileinfo(filePath);
-        while (fileinfo.isSymLink()) {  //to find final target
+        while (fileinfo.isSymLink()) {
             fileinfo.setFile(fileinfo.symLinkTarget());
         }
         auto hash = Utils::filePathHash(fileinfo.absoluteFilePath());
-        
-        // 检查是否已在其他导入任务中处理（防止短时间内重复解析）
+
         if (m_importingHashes.contains(hash)) {
             qCDebug(dmMusic) << "File already being imported by another task, skipping:" << filePath;
-            existCount++;
             continue;
         }
-        
-        DMusic::MediaMeta mediaMeta;
-        mediaMeta.hash = hash;
-        QSet<QString> curHashs;
+
+        FileEntry entry;
+        entry.hash = hash;
+
         if (!playlistHash.isEmpty()) {
-            if (metaHashs.contains(mediaMeta.hash)) {
-                existCount++;
-            } else if (!allMetaHashs.contains(mediaMeta.hash)) {
-                // 标记为正在导入，防止其他任务重复处理
+            if (metaHashs.contains(hash)) {
+                entry.fileClass = ExistsPlaylist;
+            } else if (!allMetaHashs.contains(hash)) {
+                entry.fileClass = NeedsParse;
                 m_importingHashes.insert(hash);
-                mediaMeta = AudioAnalysis::creatMediaMeta(filePath, hash);
-                if (mediaMeta.length > 0) {
-                    mediaMeta.hasimage = false;
-                    pendingMetas.append(mediaMeta);  // cover and lyrics extracted by MediaMetaWorker
-                    curHashs << "all" << playlistHash;
-                    allHashs << "all" << playlistHash;
-                    qCDebug(dmMusic) << "Added new meta:" << mediaMeta.title << "to playlist:" << playlistHash;
-                } else {
-                    importedFailCount++;
-                    qCWarning(dmMusic) << "Failed to import file:" << filePath;
-                }
+                parseTasks.append({filePath, hash});
             } else {
-                curHashs << playlistHash;
-                allHashs << playlistHash;
+                entry.fileClass = ExistsAll;
             }
         } else {
-            if (!allMetaHashs.contains(mediaMeta.hash)) {
-                // 标记为正在导入，防止其他任务重复处理
+            if (!allMetaHashs.contains(hash)) {
+                entry.fileClass = NeedsParse;
                 m_importingHashes.insert(hash);
-                mediaMeta = AudioAnalysis::creatMediaMeta(filePath, hash);
-                if (mediaMeta.length > 0) {
-                    mediaMeta.hasimage = false;
-                    pendingMetas.append(mediaMeta);  // cover and lyrics extracted by MediaMetaWorker
-                    curHashs << "all";
-                    allHashs << "all";
-                    qCDebug(dmMusic) << "Added new meta:" << mediaMeta.title << "to all music";
-                } else {
-                    importedFailCount++;
-                    qCWarning(dmMusic) << "Failed to import file:" << filePath;
-                }
+                parseTasks.append({filePath, hash});
+            } else {
+                entry.fileClass = ExistsAll;
+            }
+        }
+        entries.append(entry);
+    }
+
+    // Phase 3: Parallel metadata parsing (CPU-bound, ~384ms/file → multi-threaded)
+    QHash<QString, DMusic::MediaMeta> parsedMap;
+    if (!parseTasks.isEmpty()) {
+        qCDebug(dmMusic) << "Parsing" << parseTasks.size() << "files in parallel";
+        auto parseFunc = [](const ParseTask &task) -> DMusic::MediaMeta {
+            return AudioAnalysis::creatMediaMeta(task.filePath, task.hash);
+        };
+        QList<DMusic::MediaMeta> parsedResults = QtConcurrent::blockingMapped(parseTasks, parseFunc);
+        for (const auto &meta : parsedResults) {
+            parsedMap.insert(meta.hash, meta);
+        }
+        qCDebug(dmMusic) << "Parallel parsing complete," << parsedMap.size() << "results";
+    }
+
+    // Phase 4: Serial post-processing — build results and emit signals
+    int importedCount = 0, importedFailCount = 0, existCount = 0;
+    QSet<QString> allHashs;
+    QList<DMusic::MediaMeta> pendingMetas;
+
+    for (const auto &entry : entries) {
+        DMusic::MediaMeta mediaMeta;
+        mediaMeta.hash = entry.hash;
+        QSet<QString> curHashs;
+
+        switch (entry.fileClass) {
+        case ExistsPlaylist:
+            existCount++;
+            break;
+        case ExistsAll:
+            if (!playlistHash.isEmpty()) {
+                curHashs << playlistHash;
+                allHashs << playlistHash;
             } else {
                 existCount++;
             }
+            break;
+        case NeedsParse: {
+            auto it = parsedMap.find(entry.hash);
+            if (it != parsedMap.end()) {
+                mediaMeta = it.value();
+            }
+            if (mediaMeta.length > 0) {
+                mediaMeta.hasimage = false;
+                pendingMetas.append(mediaMeta);
+                if (!playlistHash.isEmpty()) {
+                    curHashs << "all" << playlistHash;
+                    allHashs << "all" << playlistHash;
+                } else {
+                    curHashs << "all";
+                    allHashs << "all";
+                }
+                qCDebug(dmMusic) << "Added new meta:" << mediaMeta.title;
+            } else {
+                importedFailCount++;
+                qCWarning(dmMusic) << "Failed to import file with hash:" << entry.hash;
+            }
+            break;
         }
-        // 自动添加到播放列表
+        default:
+            break;
+        }
+
         if (mediaMeta.length > 0 && importPlay && !playMetaHashs.contains(mediaMeta.hash)) {
             curHashs << "play";
             allHashs << "play";
-            qCDebug(dmMusic) << "Auto-added meta:" << mediaMeta.title << "to play queue";
         }
         if (!curHashs.isEmpty())
             emit signalAddOneMeta(curHashs.values(), mediaMeta);
-        // 自动播放
         if (mediaHash.isEmpty() && playFalg && mediaMeta.length > 0)
             mediaHash = mediaMeta.hash;
 
         importedCount++;
     }
 
-    // Emit importFinished first so UI shows success / auto-play immediately.
     emit signalImportFinished(allHashs.values(), importedFailCount, importedCount - importedFailCount - existCount, existCount, mediaHash);
 
     if (!pendingMetas.isEmpty()) {
         emit signalEnqueueMetaTasks(pendingMetas);
     }
 
-    // Persist base metadata without waiting for background cover and lyrics extraction.
     emit signalMetaBatchFinished();
 }
 

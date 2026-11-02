@@ -41,6 +41,8 @@ extern "C" {
 #include <QAudioFormat>
 #include <QAudioSource>
 #include <QMediaDevices>
+#include <QMutex>
+#include <QMutexLocker>
 
 #include "dynamiclibraries.h"
 #include "global.h"
@@ -56,6 +58,8 @@ extern "C" {
 
 static QMap<QString, QByteArray> localeCodes;
 static qint64 preAddTime = -1;
+static QMutex preAddTimeMutex;
+static QMutex pinyinMutex;
 
 typedef AVFormatContext *(*format_alloc_context_function)(void);
 typedef int (*format_open_input_function)(AVFormatContext **, const char *, AVInputFormat *, AVDictionary **);
@@ -386,9 +390,12 @@ bool AudioAnalysis::parseMetaFromLocalFile(DMusic::MediaMeta &meta)
     // HACK how to sort by add time
     meta.timestamp = current.toMSecsSinceEpoch() * 1000;
     // 同时添加
-    if (preAddTime >= meta.timestamp) {
-        meta.timestamp += 1;
-        preAddTime = meta.timestamp;
+    {
+        QMutexLocker locker(&preAddTimeMutex);
+        if (preAddTime >= meta.timestamp) {
+            meta.timestamp += 1;
+            preAddTime = meta.timestamp;
+        }
     }
     meta.filetype = fileInfo.suffix().toLower(); //歌曲文件后缀使用小写保存
 
@@ -404,7 +411,10 @@ bool AudioAnalysis::parseMetaFromLocalFile(DMusic::MediaMeta &meta)
         meta.artist = DmGlobal::unknownArtistText();
         qCDebug(dmMusic) << "Using default artist:" << meta.artist;
     }
-    Utils::updateChineseMetaInfo(meta);
+    {
+        QMutexLocker locker(&pinyinMutex);
+        Utils::updateChineseMetaInfo(meta);
+    }
 
     qCInfo(dmMusic) << "Successfully parsed metadata from file:" << curFilePath << "length:" << meta.length << "ms";
     return true;

@@ -12,6 +12,8 @@
 #include "global.h"
 #include "util/log.h"
 
+#include <QMutexLocker>
+
 #ifdef Q_OS_WIN
 static const QString libvlccoreStr = "libvlccore";
 static const QString libvlcStr = "libvlc";
@@ -62,6 +64,7 @@ DynamicLibraries *DynamicLibraries::instance()
 
 QFunctionPointer DynamicLibraries::resolve(const char *symbol, bool ffmpeg)
 {
+    QMutexLocker locker(&m_mutex);
     qCDebug(dmMusic) << "Resolving symbol:" << symbol;
     if (m_funMap.contains(symbol)) {
         qCDebug(dmMusic) << "Symbol already resolved:" << symbol;
