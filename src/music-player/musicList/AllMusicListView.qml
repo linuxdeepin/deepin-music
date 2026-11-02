@@ -312,8 +312,9 @@ Rectangle {
                 hoverIndex = listview.indexAt(dragX, dragY + contentY)
 
                 if (hoverIndex >= 0) {
-                    var itemY = hoverIndex * 56
-                    if (dragY + contentY < itemY + 56 / 2)
+                    var rowHeight = isCompactMode ? 40 : 56
+                    var itemY = hoverIndex * rowHeight
+                    if (dragY + contentY < itemY + rowHeight / 2)
                         hoverIndex--
                 }
                 

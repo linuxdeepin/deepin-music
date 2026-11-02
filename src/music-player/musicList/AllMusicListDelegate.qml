@@ -175,9 +175,9 @@ ItemDelegate{
                 if (listview.dragToIndex < 0)
                     rootRectangle.y = 0 + listview.originY;
                 else
-                    rootRectangle.y = listview.dragToIndex * 56 + listview.originY;
+                    rootRectangle.y = listview.dragToIndex * (isCompactMode ? 40 : 56) + listview.originY;
                 if (index > listview.dragToIndex || Presenter.playlistSortType(viewListHash) === DmGlobal.SortByCustom)
-                    rootRectangle.y = index * 56 + listview.originY;
+                    rootRectangle.y = index * (isCompactMode ? 40 : 56) + listview.originY;
                 mediaModel.setProperty(index, "dragFlag", false)
             }
             listview.dragToIndex = 0

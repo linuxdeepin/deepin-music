@@ -39,6 +39,7 @@ Rectangle {
     width: itemfixedwidth
     height: itemfixedheight
     color: Qt.rgba(0, 0, 0, 0)
+    clip: true
     MouseArea {
         anchors.fill: rootrectangle;
         acceptedButtons: Qt.RightButton | Qt.LeftButton

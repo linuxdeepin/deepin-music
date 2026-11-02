@@ -21,6 +21,7 @@ Rectangle {
     width: itemfixedwidth
     height: itemfixedheight
     color: Qt.rgba(0, 0, 0, 0)
+    clip: true
 
     YAnimator {
         id: artistHoverItemAnimator
