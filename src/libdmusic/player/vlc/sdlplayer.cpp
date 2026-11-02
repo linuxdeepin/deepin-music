@@ -390,12 +390,12 @@ void SdlPlayer::setProgressTag(int prog)
 
 void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned count, int64_t pts)
 {
-    Q_UNUSED(pts)
     SdlPlayer *sdlMediaPlayer = static_cast<SdlPlayer *>(data);
     if (!sdlMediaPlayer) {
         return;
     }
-    
+    sdlMediaPlayer->m_lastPts = pts;
+
     if (sdlMediaPlayer->progressTag) {
         return;
     }
@@ -440,6 +440,11 @@ void SdlPlayer::libvlc_audio_play_cb(void *data, const void *samples, unsigned c
 
     QByteArray ba(curSamples, static_cast<int>(size));
     QMutexLocker locker(&vlc_mutex);
+    if (sdlMediaPlayer->m_maxBufferSize > 0 &&
+        sdlMediaPlayer->_data.size() + static_cast<int>(size) > sdlMediaPlayer->m_maxBufferSize) {
+        int excess = sdlMediaPlayer->_data.size() + static_cast<int>(size) - sdlMediaPlayer->m_maxBufferSize;
+        sdlMediaPlayer->_data.remove(0, excess);
+    }
     sdlMediaPlayer->_data.append(ba);
     locker.unlock();
 
@@ -509,7 +514,7 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
     desiredAS.format = format_from_vlc_to_SDL(format);
     desiredAS.channels = static_cast<uint8_t>(sdlMediaPlayer->_channels);
     desiredAS.silence = 0;
-    desiredAS.samples = qMax(AUDIO_MIN_BUFFER_SIZE, 2 << static_cast<int>(std::log2(desiredAS.freq / AUDIO_MAX_CALLBACKS_PER_SEC)));
+    desiredAS.samples = qMax(AUDIO_MIN_BUFFER_SIZE, 2 << static_cast<int>(std::log2(desiredAS.freq / (AUDIO_MAX_CALLBACKS_PER_SEC / 4))));
     desiredAS.callback = SDL_audio_cbk;
     desiredAS.userdata = sdlMediaPlayer;
 
@@ -531,6 +536,10 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
 
     Delay(40);
     PauseAudio(0);
+
+    sdlMediaPlayer->m_maxBufferSize = static_cast<int>(sdlMediaPlayer->obtainedAS.freq)
+        * sdlMediaPlayer->obtainedAS.channels
+        * static_cast<int>(sdlMediaPlayer->_rate / 8) * 2;
 
     sdlMediaPlayer->resetVolume();
     sdlMediaPlayer->m_sinkInputPath.clear();
@@ -621,9 +630,9 @@ void SdlPlayer::SDL_audio_cbk(void *userdata, uint8_t *stream, int len)
     } else {
         QMutexLocker locker(&vlc_mutex);
         QByteArray d = sdlMediaPlayer->_data;
+        sdlMediaPlayer->_data.remove(0, d.size());
         locker.unlock();
         MixAudio(stream, (uint8_t *)d.data(), size_t(d.size()), sdlMediaPlayer->m_mute ? 0 : sdlMediaPlayer->m_volume * SDL_MIX_MAXVOLUME / 100.0);
-        sdlMediaPlayer->cleanMemCache();
     }
     sdlMediaPlayer->resetVolume();
 }

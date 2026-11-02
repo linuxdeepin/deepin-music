@@ -153,6 +153,8 @@ private:
     bool m_loadSdlLibrary;
 
     QByteArray _data;
+    int m_maxBufferSize = 0;
+    qint64 m_lastPts = 0;
     int progressTag = 0;
     int m_volume = 50.0;
     bool m_mute = false;
