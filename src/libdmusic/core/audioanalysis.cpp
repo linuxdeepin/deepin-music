@@ -767,9 +767,13 @@ void AudioAnalysis::startRecorder()
             qCDebug(dmMusic) << "Created new audio source";
         }
         // TODO:source连接问题待确认
-        // m_data->m_audioDevice = m_data->m_audioSource->start();
-        connect(m_data->m_audioDevice, &QIODevice::readyRead, this, &AudioAnalysis::parseData);
-        qCInfo(dmMusic) << "Audio recorder initialized and started";
+        m_data->m_audioDevice = m_data->m_audioSource->start();
+        if (m_data->m_audioDevice != nullptr) {
+            connect(m_data->m_audioDevice, &QIODevice::readyRead, this, &AudioAnalysis::parseData);
+            qCInfo(dmMusic) << "Audio recorder initialized and started";
+        } else {
+            qCWarning(dmMusic) << "Failed to start audio source, device is null";
+        }
     } else {
         qCDebug(dmMusic) << "Resuming existing audio recorder";
         m_data->m_audioSource->resume();

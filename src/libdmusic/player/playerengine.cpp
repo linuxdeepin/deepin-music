@@ -87,6 +87,9 @@ private:
     QString                     m_playableMetaCacheHash;
     bool                        m_hasNextPlayableMeta    = false;
     bool                        m_hasPreviousPlayableMeta = false;
+    QTimer                     *m_dbusRetryTimer        = nullptr;
+    bool                        m_dbusSleepConnected    = false;
+    bool                        m_wasPlayingBeforeSleep = false;
 };
 
 PlayerEnginePrivate::PlayerEnginePrivate(PlayerEngine *parent, PlayerBase *injectedPlayer)
@@ -187,16 +190,13 @@ PlayerEngine::PlayerEngine(QObject *parent, PlayerBase *injectedPlayer)
     m_data->m_fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
     qCDebug(dmMusic) << "Initializing fade in animation";
 
-    // Listen for systemd-logind suspend/resume signal: pause playback before suspend
-    // to avoid HDMI audio clock drift after wake causing pipewire to fail recovery
-    if (!QDBusConnection::systemBus().connect(
-            QStringLiteral("org.freedesktop.login1"),
-            QStringLiteral("/org/freedesktop/login1"),
-            QStringLiteral("org.freedesktop.login1.Manager"),
-            QStringLiteral("PrepareForSleep"),
-            this, SLOT(onPrepareForSleep(bool)))) {
-        qCWarning(dmMusic) << "Failed to connect to login1 PrepareForSleep";
-    }
+    m_data->m_dbusRetryTimer = new QTimer(this);
+    m_data->m_dbusRetryTimer->setSingleShot(true);
+    m_data->m_dbusRetryTimer->setInterval(5000);
+    connect(m_data->m_dbusRetryTimer, &QTimer::timeout, this, [this]() {
+        initSleepSignalConnection();
+    });
+    initSleepSignalConnection();
 }
 
 PlayerEngine::~PlayerEngine()
@@ -683,17 +683,56 @@ void PlayerEngine::pauseNow()
     m_data->m_player->pause();
 }
 
+void PlayerEngine::initSleepSignalConnection()
+{
+    QDBusConnection bus = QDBusConnection::systemBus();
+    if (!bus.isConnected()) {
+        qCWarning(dmMusic) << "System bus not connected, will retry PrepareForSleep connection";
+        m_data->m_dbusSleepConnected = false;
+        m_data->m_dbusRetryTimer->start();
+        return;
+    }
+
+    if (m_data->m_dbusSleepConnected) {
+        return;
+    }
+
+    bool ok = bus.connect(
+            QStringLiteral("org.freedesktop.login1"),
+            QStringLiteral("/org/freedesktop/login1"),
+            QStringLiteral("org.freedesktop.login1.Manager"),
+            QStringLiteral("PrepareForSleep"),
+            this, SLOT(onPrepareForSleep(bool)));
+    if (ok) {
+        m_data->m_dbusSleepConnected = true;
+        qCInfo(dmMusic) << "Connected to login1 PrepareForSleep signal";
+    } else {
+        qCWarning(dmMusic) << "Failed to connect to login1 PrepareForSleep, will retry";
+        m_data->m_dbusSleepConnected = false;
+        m_data->m_dbusRetryTimer->start();
+    }
+}
+
 void PlayerEngine::onPrepareForSleep(bool active)
 {
     qCInfo(dmMusic) << "PrepareForSleep:" << (active ? "suspending" : "resuming");
     if (active) {
-        // About to suspend: pause immediately (skip fade animation to ensure pause completes before suspend)
+        // About to suspend: save state and pause immediately
         if (playbackStatus() == DmGlobal::Playing) {
+            m_data->m_wasPlayingBeforeSleep = true;
             qCInfo(dmMusic) << "Pausing playback before suspend";
             pauseNow();
+        } else {
+            m_data->m_wasPlayingBeforeSleep = false;
+        }
+    } else {
+        // On wake: restore playback if it was playing before suspend
+        if (m_data->m_wasPlayingBeforeSleep) {
+            m_data->m_wasPlayingBeforeSleep = false;
+            qCInfo(dmMusic) << "Resuming playback after wake";
+            resume();
         }
     }
-    // On wake (active=false) do not auto-resume; let the user start playback manually
 }
 
 void PlayerEngine::playPause()

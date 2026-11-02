@@ -104,6 +104,7 @@ private:
     void cancelTrackSwitchFade();
     void updatePlayableMetaCache(const QString &metaHash);
     void invalidatePlayableMetaCache();
+    void initSleepSignalConnection();
 
 private:
     PlayerEnginePrivate  *m_data = nullptr;
