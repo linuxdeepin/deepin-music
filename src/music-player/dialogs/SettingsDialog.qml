@@ -25,6 +25,10 @@ Settings.SettingsDialog {
     Accessible.role: Accessible.Pane
     config: SettingsConfig { Accessible.name: "SettingsDialog_SettingsConfig"; Accessible.role: Accessible.Pane }
     flags: Qt.Dialog | Qt.WindowCloseButtonHint
+    DWindow.enabled: true
+    DWindow.alphaBufferSize: 8
+    DWindow.enableBlurWindow: true
+    color: "transparent"
     modality: Qt.WindowModal
 
     onVisibleChanged: {
