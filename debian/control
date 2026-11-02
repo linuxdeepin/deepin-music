@@ -51,7 +51,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
 # 识别编码格式
  libuchardet0,
  libmpris-qt6,
- libsdl1.2debian
+ libsdl2-2.0-0
 Description: Music software for UOS
  Music is a local music player with beautiful design and simple functions.
 
