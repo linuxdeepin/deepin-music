@@ -20,10 +20,13 @@ DialogWindow {
     height: deleteSongsLabel.height + 110
     modality: Qt.ApplicationModal
     icon: globalVariant.appIconName
+    transientParent: globalVariant.mainWindow
     Binding on flags {
         when: Qt.platform.os === "windows"
         value: Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
     }
+
+
 
     onVisibleChanged: {
         if (visible && Qt.platform.os === "windows") {

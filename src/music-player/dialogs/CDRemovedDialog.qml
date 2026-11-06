@@ -16,6 +16,7 @@ DialogWindow {
     modality: Qt.ApplicationModal
     color: Qt.rgba(247,247,247,0.80);
     icon: globalVariant.appIconName
+    transientParent: globalVariant.mainWindow
     Binding on flags {
         when: Qt.platform.os === "windows"
         value: Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint
