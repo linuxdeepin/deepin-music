@@ -16,7 +16,7 @@ import "../allItems"
 
 
 ApplicationWindow {
-    property Item globalVariant: GlobalVariant{} //全局变量，对此之后的对象都可见
+    property Item globalVariant: GlobalVariant { mainWindow: rootWindow } //全局变量，对此之后的对象都可见
     property bool isLyricShow : false
     property bool isPlaylistShow : false
     property bool playlistShowRequested: false

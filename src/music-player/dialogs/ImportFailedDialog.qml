@@ -18,6 +18,9 @@ DialogWindow {
     minimumHeight: 160
     modality: Qt.ApplicationModal
     icon: globalVariant.appIconName
+    transientParent: globalVariant.mainWindow
+
+
 
     onVisibleChanged: {
         if (visible && Qt.platform.os === "windows") {

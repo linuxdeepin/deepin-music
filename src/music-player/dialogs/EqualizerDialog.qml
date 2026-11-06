@@ -76,6 +76,7 @@ DialogWindow {
     minimumHeight: 426
     maximumWidth: 572
     maximumHeight: 426
+    transientParent: globalVariant.mainWindow
     Binding on flags {
         when: Qt.platform.os === "windows"
         value: Qt.Dialog | Qt.WindowCloseButtonHint | Qt.MSWindowsFixedSizeDialogHint | Qt.FramelessWindowHint
@@ -446,7 +447,6 @@ DialogWindow {
     }
 
     onVisibleChanged: {
-        // Center window on screen
         if (visible && Qt.platform.os === "windows") {
             x = (Screen.width - width) / 2
             y = (Screen.height - height) / 2
