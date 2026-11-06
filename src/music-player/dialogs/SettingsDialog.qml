@@ -169,7 +169,7 @@ Settings.SettingsDialog {
                 }
                 KeySequenceEdit {
                     id: sequenceEdit
-                    width: parent.width - parent.padding * 2
+                    width: 430
                     height: 36
                     text: qsTr("Play/Pause")
                     placeholderText: ""
@@ -212,7 +212,7 @@ Settings.SettingsDialog {
                     Presenter.setValueToSettings("shortcuts.all.previous", value)
                 }
                 KeySequenceEdit {
-                    width: parent.width - parent.padding * 2
+                    width: 430
                     height: 36
                     text: qsTr("Previous")
                     placeholderText: ""
@@ -256,7 +256,7 @@ Settings.SettingsDialog {
                     Presenter.setValueToSettings("shortcuts.all.next", value)
                 }
                 KeySequenceEdit {
-                    width: parent.width - parent.padding * 2
+                    width: 430
                     height: 36
                     text: qsTr("Next")
                     placeholderText: ""
@@ -301,7 +301,7 @@ Settings.SettingsDialog {
                     Presenter.setValueToSettings("shortcuts.all.volume_up", value)
                 }
                 KeySequenceEdit {
-                    width: parent.width - parent.padding * 2
+                    width: 430
                     height: 36
                     text: qsTr("Volume up")
                     placeholderText: ""
@@ -346,7 +346,7 @@ Settings.SettingsDialog {
                     Presenter.setValueToSettings("shortcuts.all.volume_down", value)
                 }
                 KeySequenceEdit {
-                    width: parent.width - parent.padding * 2
+                    width: 430
                     height: 36
                     text: qsTr("Volume down")
                     placeholderText: ""
@@ -390,7 +390,7 @@ Settings.SettingsDialog {
                     Presenter.setValueToSettings("shortcuts.all.favorite_song", value)
                 }
                 KeySequenceEdit {
-                    width: parent.width - parent.padding * 2
+                    width: 430
                     height: 36
                     text: qsTr("Favorite")
                     placeholderText: ""
