@@ -56,7 +56,7 @@ Rectangle {
         Image {
             id: albumImage
             anchors.horizontalCenter: allmusicDefault.horizontalCenter;
-            source: "qrc:/dsg/img/allMusic_default_256.png"
+            source: "qrc:/dsg/img/allMusic_default.png"
             sourceSize: Qt.size(126, 126);
             cache: false
         }
