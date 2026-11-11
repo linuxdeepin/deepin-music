@@ -183,6 +183,9 @@ SdlPlayer::SdlPlayer(VlcInstance *instance)
 SdlPlayer::~SdlPlayer()
 {
     if (m_loadSdlLibrary) {
+        if (m_pAudioControlTimer) {
+            m_pAudioControlTimer->stop();
+        }
         SDL_Quit_function Quit = (SDL_Quit_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_Quit");
         Quit();
         m_pCheckDataThread->quitThread();
@@ -245,6 +248,7 @@ void SdlPlayer::play()
         return;
 
     // 在播放之前重置sinkinput通道音量，避免被APE引擎设置的通道音量影响
+    // （此处仍在主线程，可以安全做同步 DBus）
     m_sinkInputPath.clear();
     resetVolume();
     VlcMediaPlayer::play();
@@ -258,6 +262,20 @@ void SdlPlayer::play()
             m_pCheckDataChingThread->start();
     });
     switchOnceFlag = -1;
+
+    // 启动主线程定时器：周期性处理 switchToDefaultSink / resetVolume 这类低频 DBus 操作。
+    // 间隔 2 秒足够（这些只是“播放期间维持 sink/音量正确”的兜底逻辑，不是实时需求）。
+    // 重要：这是为了把 DBus 调用彻底从 SDL 实时音频回调中拿出去。
+    if (!m_pAudioControlTimer) {
+        m_pAudioControlTimer = new QTimer(this);
+        m_pAudioControlTimer->setTimerType(Qt::CoarseTimer);
+        connect(m_pAudioControlTimer, &QTimer::timeout, this, [this]() {
+            // 仍在主线程事件循环里执行，绝不会阻塞 SDL 音频线程
+            switchToDefaultSink();
+            resetVolume();
+        });
+    }
+    m_pAudioControlTimer->start(2000);
 }
 
 void SdlPlayer::pause()
@@ -341,6 +359,10 @@ void SdlPlayer::stop()
 {
     if (!_vlcMediaPlayer)
         return;
+    // 停止播放时停掉主线程周期定时器，避免停止后仍做无意义的 DBus 调用
+    if (m_pAudioControlTimer) {
+        m_pAudioControlTimer->stop();
+    }
     VlcMediaPlayer::stop();
     if (m_loadSdlLibrary) {
         cleanMemCache();
@@ -524,8 +546,14 @@ int SdlPlayer::libvlc_audio_setup_cb(void **data, char *format, unsigned *rate, 
             Delay(40);
             PauseAudio(0);
 
-            sdlMediaPlayer->m_sinkInputPath.clear();
-            sdlMediaPlayer->resetVolume();
+            // 注意：libvlc_audio_setup_cb 在 VLC 内部音频线程执行，不是主线程。
+            // 原本在这里同步调 resetVolume 会从子线程做 DBus，与主线程 / CdaThread
+            // 并发访问 QDBusInterface。改成异步派发到主线程，确保所有 DBus 调用
+            // 都在主线程执行，不依赖任何 mutex 即可保证线程安全。
+            QMetaObject::invokeMethod(sdlMediaPlayer, [sdlMediaPlayer]() {
+                sdlMediaPlayer->m_sinkInputPath.clear();
+                sdlMediaPlayer->resetVolume();
+            }, Qt::QueuedConnection);
         } else {
             qCritical() << "PulseAudio ERROR, maybe crashed, state:" << transPaContextState(state);
         }
@@ -612,7 +640,12 @@ void SdlPlayer::SDL_audio_cbk(void *userdata, uint8_t *stream, int len)
 
         return ;
     }
-    switchToDefaultSink();
+    // 注意：以下两个操作已从实时音频回调中移除，避免在 92.88ms 的 RT 周期内做同步 DBus:
+    //   1) switchToDefaultSink() —— 把 sink input 移到默认 sink（PulseAudio 操作）
+    //   2) resetVolume()         —— 重新读 SinkInputs 列表 + 读 Volume + call SetVolume
+    // 它们是低频操作（只在切歌 / 切输出设备时需要），交给主线程的 m_pAudioControlTimer 周期触发即可。
+    // 否则一旦 udisks2 / dde-daemon 在热插拔瞬间响应慢，回调线程会卡数百毫秒，
+    // 92.88ms 缓冲立即 XRUN，且通过 dbusutils.cpp 的全局 mutex 串行化会让整个进程同时被锁住。
 
     //qDebug() << "length: " << len << "      size: " << sdlMediaPlayer->_data.size();
     if (sdlMediaPlayer->_data.size() >= len) {
@@ -628,7 +661,6 @@ void SdlPlayer::SDL_audio_cbk(void *userdata, uint8_t *stream, int len)
         MixAudio(stream, (uint8_t *)d.data(), size_t(d.size()), sdlMediaPlayer->m_mute ? 0 : sdlMediaPlayer->m_volume * SDL_MIX_MAXVOLUME / 100.0);
         sdlMediaPlayer->cleanMemCache();
     }
-    sdlMediaPlayer->resetVolume();
 }
 
 void SdlPlayer::cleanMemCache()
