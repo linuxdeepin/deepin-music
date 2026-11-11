@@ -165,6 +165,11 @@ private:
     CheckDataZeroThread *m_pCheckDataThread = nullptr;
     CheckDataCachingThread *m_pCheckDataChingThread = nullptr;
 
+    // 主线程周期定时器：把 switchToDefaultSink() / resetVolume() 两个 DBus 调用
+    // 从 SDL 实时音频回调 (SDL_audio_cbk) 中拿出去，避免 udisks2/ddedaemon
+    // 在热插拔瞬间响应慢导致 RT 回调被阻塞、音频 XRUN。
+    QTimer *m_pAudioControlTimer = nullptr;
+
     static int  switchOnceFlag;
 };
 
