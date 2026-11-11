@@ -244,6 +244,7 @@ int main(int argc, char *argv[])
 #endif
     engine.rootContext()->setContextProperty("Presenter", presenter.data());
     engine.rootContext()->setContextProperty("EventsFilter", &eventsFilter);
+    engine.rootContext()->setContextProperty("waylandMode", DmGlobal::isWaylandMode());
     engine.rootContext()->setContextProperty("ShortcutDialg", &shortcut);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
