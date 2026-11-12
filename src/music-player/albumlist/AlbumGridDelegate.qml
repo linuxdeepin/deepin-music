@@ -154,7 +154,7 @@ Rectangle {
                 elide: Text.ElideRight
                 text: name
                 font.pixelSize: 12
-                color: "#7C7C7C"
+                color: DTK.themeType === ApplicationHelper.DarkType ? "#9C9C9C" : "#7C7C7C"
             }
         }
     }
