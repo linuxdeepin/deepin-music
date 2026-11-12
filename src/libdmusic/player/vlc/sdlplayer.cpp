@@ -625,7 +625,6 @@ void SdlPlayer::SDL_audio_cbk(void *userdata, uint8_t *stream, int len)
         MixAudio(stream, (uint8_t *)d.data(), size_t(d.size()), sdlMediaPlayer->m_mute ? 0 : sdlMediaPlayer->m_volume * SDL_MIX_MAXVOLUME / 100.0);
         sdlMediaPlayer->cleanMemCache();
     }
-    sdlMediaPlayer->resetVolume();
 }
 
 void SdlPlayer::cleanMemCache()
