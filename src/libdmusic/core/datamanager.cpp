@@ -1715,6 +1715,12 @@ void DataManager::removeFromPlayList(const QStringList listToDel, const QString 
                     }
                 }
             }
+            if (playlistHashs.isEmpty() && metaIndexFromHash(hash) >= 0) {
+                playlistHashs << curHash;
+                if (!allHashs.contains(hash)) {
+                    allHashs << hash;
+                }
+            }
             if (!playlistHashs.isEmpty()) {
                 DMusic::MediaMeta meta = metaFromHash(hash);
                 if (delFlag) {
