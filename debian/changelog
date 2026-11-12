@@ -1,3 +1,9 @@
+deepin-music (7.0.72) unstable; urgency=medium
+
+  * chore: Update version to 7.0.72
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 12 Nov 2026 19:41:19 +0800
+
 deepin-music (7.0.71) unstable; urgency=medium
 
   * docs: add Portuguese (pt_BR) help manual
