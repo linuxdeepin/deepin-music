@@ -14,7 +14,7 @@ import "../dialogs"
 
 CurrentFloatingPanel {
     property int  headerHeight: 73
-    Accessible.name: "PlaylistRoot"
+    Accessible.name: qsTr("播放队列")
     Accessible.role: Accessible.Pane
     property ListModel listmodel: PlayListModel{}
     property Menu playlistMoreMenu: MusicMoreMenu{pageHash:"play"}
@@ -132,7 +132,8 @@ CurrentFloatingPanel {
                         display: AbstractButton.TextBesideIcon
                         spacing: 1
                         padding: 0
-                        Accessible.name: "DeleteBtn"
+                        Accessible.name: qsTr("清空")
+                        Accessible.role: Accessible.Button
                         textColor: Palette {
                             normal: palette.text
                             normalDark: palette.text

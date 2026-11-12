@@ -22,7 +22,7 @@ Menu{
     width: 200
     MenuItem {
         text: (isPlaying && activeMeta) ? qsTr("Pause") : qsTr("Play")
-        Accessible.name: "MusicMoreMenu_PlayPause"
+        Accessible.name: qsTr("播放/暂停")
         onTriggered: {
             if(isPlaying && activeMeta){
                 Presenter.pause();
@@ -43,6 +43,7 @@ Menu{
     ImportMenu {
         id: musicMoreImportMenu;
         title: qsTr("Add to")
+        Accessible.name: qsTr("添加到")
         pageHash: moreMenu.pageHash
         onImportMenuClosed: {
             moreMenu.close();
@@ -62,7 +63,7 @@ Menu{
     }
     MenuItem {
         text: pageHash === "play" ? qsTr("Remove from play queue") : qsTr("Remove from playlist")
-        Accessible.name: "MusicMoreMenu_Play"
+        Accessible.name: pageHash === "play" ? qsTr("从播放队列删除") : qsTr("从播放列表删除")
         onTriggered: {
             removeSong.show();
         }
@@ -73,7 +74,7 @@ Menu{
     }
     MenuItem {
         text: qsTr("Delete from local disk")
-        Accessible.name: "MusicMoreMenu_DeleteFromLocalDisk"
+        Accessible.name: qsTr("从本地删除")
         onTriggered: {
             deleteLocal.show();
         }
@@ -107,7 +108,7 @@ Menu{
     }
     MenuItem {
         text: qsTr("Song info")
-        Accessible.name: "SongInfo"
+        Accessible.name: qsTr("歌曲信息")
         onTriggered: {
             infoDialog.show()
         }

@@ -24,7 +24,7 @@ Menu{
     MenuItem {
         id: playMenuItem
         text: qsTr("Play")
-        Accessible.name: "PlayMenuItem"
+        Accessible.name: qsTr("播放")
         onTriggered: {
             Presenter.playPlaylist(playlistMenu.pageHash);
         }
@@ -32,7 +32,7 @@ Menu{
     MenuSeparator {}
     MenuItem {
         text: qsTr("Add songs");
-        Accessible.name: "AddSongs"
+        Accessible.name: qsTr("添加歌曲")
         onTriggered: {
             globalVariant.curListPage = playlistMenu.pageHash
             globalVariant.globalFileDlgOpen()
@@ -42,7 +42,7 @@ Menu{
         visible: !["fav", "all", "album", "artist"].includes(pageHash)
         height: visible ? 36: 0
         text: qsTr("Rename")
-        Accessible.name: "Rename"
+        Accessible.name: qsTr("重命名")
         onTriggered: {
             globalVariant.renamePlaylist(playlistMenu.pageHash);
         }
@@ -57,7 +57,7 @@ Menu{
         visible: !["fav", "all", "album", "artist"].includes(pageHash)
         height: visible ? 36: 0
         text: qsTr("Delete");
-        Accessible.name: "DeletePlaylist"
+        Accessible.name: qsTr("删除")
         onTriggered: {
             removeSong.show();
         }

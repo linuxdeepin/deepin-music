@@ -12,7 +12,7 @@ import org.deepin.dtk 1.0
 
 ItemDelegate {
     property string type: "library"
-    Accessible.name: "SideBarItemDelegate_ItemDelegate"
+    Accessible.name: model.displayName
     readonly property color foregroundColor: {
         if (checked) {
             return DTK.themeType === ApplicationHelper.DarkType ? "#FFFFFF" : "#FFFFFF"

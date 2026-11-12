@@ -290,8 +290,8 @@ ItemDelegate{
                     favorite: favourite
                     selected: rootRectangle.checked
                     controlPalette: rootRectangle.palette
-                    Accessible.name: "AllMusicListDelegate_FavBtn_TrackNum"
-                    Accessible.role: Accessible.Pane
+                    Accessible.name: qsTr("喜欢")
+                    Accessible.role: Accessible.Button
                     onClicked: rootRectangle.toggleFavorite()
                 }
             }
@@ -350,8 +350,8 @@ ItemDelegate{
                         favorite: favourite
                         selected: rootRectangle.checked
                         controlPalette: rootRectangle.palette
-                        Accessible.name: "AllMusicListDelegate_FavBtn_PlaybackState"
-                        Accessible.role: Accessible.Pane
+                        Accessible.name: qsTr("喜欢")
+                        Accessible.role: Accessible.Button
                         onClicked: rootRectangle.toggleFavorite()
                     }
                 }
@@ -366,8 +366,8 @@ ItemDelegate{
                     favorite: favourite
                     selected: rootRectangle.checked
                     controlPalette: rootRectangle.palette
-                    Accessible.name: "AllMusicListDelegate_FavBtn_NoTrackNum"
-                    Accessible.role: Accessible.Pane
+                    Accessible.name: qsTr("喜欢")
+                    Accessible.role: Accessible.Button
                     onClicked: rootRectangle.toggleFavorite()
                 }
             }
