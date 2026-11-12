@@ -137,15 +137,13 @@ private:
 
     static void SDL_audio_cbk(void *userdata, uint8_t *stream, int len);
 
-    //清空缓存数据
-    void cleanMemCache();
-
     void readSinkInputPath();
 
     void resetVolume();
 
 public:
     unsigned int _rate, _channels, _sampleRate;
+    void cleanMemCache();
 
 private:
     QString m_sinkInputPath;

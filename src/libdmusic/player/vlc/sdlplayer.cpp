@@ -355,6 +355,7 @@ void SdlPlayer::setVolume(int volume)
 #ifdef Q_OS_LINUX
     if (m_loadSdlLibrary) {
         m_volume = volume;
+        cleanMemCache();
     } else {
         VlcMediaPlayer::setVolume(volume);
     }

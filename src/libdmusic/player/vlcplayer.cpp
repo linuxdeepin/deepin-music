@@ -363,6 +363,7 @@ void VlcPlayer::setEqualizer(bool enabled, int curIndex, QList<int> indexbaud)
             }
         }
     }
+    m_qvplayer->cleanMemCache();
 }
 
 QList<MediaMeta> VlcPlayer::getCdaMetaInfo()
