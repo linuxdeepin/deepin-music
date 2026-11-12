@@ -218,14 +218,15 @@ TitleBar {
 
         RowLayout {
             id: titleRowLayout
-            width: parent.width - 20
             anchors {
                 left: parent.left
+                right: parent.right
                 leftMargin: 30
+                rightMargin: 20
             }
 
             // 响应式显示控制 - 使用内容区域自身宽度判断
-            property bool showSearchEdit: titleRowLayout.width > 400
+            property bool showSearchEdit: titleRowLayout.width > 500
             property bool showNavButtons: titleRowLayout.width > 300
 
             RowLayout {
