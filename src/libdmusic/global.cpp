@@ -10,6 +10,7 @@
 #include <QProcessEnvironment>
 #include <QLibraryInfo>
 #include <QDir>
+#include <QFileInfo>
 #include <QDebug>
 #include <QLibrary>
 #include <QCoreApplication>
@@ -141,6 +142,35 @@ bool DmGlobal::checkWaylandMode()
     }
 
     return waylandMode;
+}
+
+
+void DmGlobal::checkFantasyGpuWorkaround()
+{
+    const QString fantasyGpuDir = QStringLiteral("/opt/extensions/cn.fantasy.driver.fantgpu.fh2m/");
+    const QString fantasyGlesLib = QStringLiteral("libGLESv2_FT_MESA.so.1");
+
+    bool dirExists = QDir(fantasyGpuDir).exists();
+    bool libLoadable = QLibrary(fantasyGlesLib).load();
+
+    bool fantasyGpuDetected = dirExists || libLoadable;
+    qCInfo(dmMusic) << "Fantasy GPU workaround check: dirExists=" << dirExists
+                    << "libLoadable=" << libLoadable
+                    << "fantasyGpuDetected=" << fantasyGpuDetected;
+
+    if (!fantasyGpuDetected) {
+        qCInfo(dmMusic) << "Fantasy GPU not detected, no workaround needed";
+        return;
+    }
+
+    if (!qEnvironmentVariableIsEmpty("QT_QUICK_BACKEND")) {
+        qCInfo(dmMusic) << "QT_QUICK_BACKEND already set by user:" << qgetenv("QT_QUICK_BACKEND")
+                        << "respecting user setting, skipping workaround";
+        return;
+    }
+
+    qputenv("QT_QUICK_BACKEND", "software");
+    qCInfo(dmMusic) << "Fantasy GPU detected, applied QT_QUICK_BACKEND=software workaround";
 }
 
 void DmGlobal::setWaylandMode(bool mode)
