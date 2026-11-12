@@ -47,9 +47,9 @@ Settings.SettingsDialog {
                     key: "Play"
                     name: qsTr("Play")
                     background: Settings.ContentBackground {
-                        //border.color: "red"
                         color: palette.base
-                        //radius: 8
+                        border.color: palette.mid
+                        radius: 8
                     }
                     Settings.SettingsOption {
                         id: autoPlayOption
@@ -94,6 +94,8 @@ Settings.SettingsDialog {
                     name: qsTr("Close Main Window")
                     background: Settings.ContentBackground {
                         color: palette.base
+                        border.color: palette.mid
+                        radius: 8
                     }
                     Settings.SettingsOption {
                         id: closeAct
@@ -154,6 +156,8 @@ Settings.SettingsDialog {
             name: qsTr("Shortcuts")
             background: Settings.ContentBackground {
                 color: palette.base
+                border.color: palette.mid
+                radius: 8
             }
             Settings.SettingsOption {
                 property int idd: 0
@@ -615,7 +619,12 @@ Settings.SettingsDialog {
         width: parent.width
         height: 60
 
-        Button {
+        Rectangle {
+            anchors.fill: parent
+            color: palette.window
+        }
+
+        RecommandButton {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             text: qsTr("Restore Defaults")
