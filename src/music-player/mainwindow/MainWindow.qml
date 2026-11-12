@@ -23,6 +23,8 @@ ApplicationWindow {
     property bool deferredUiLoaded: false
     property int windowMiniWidth: 1070
     property int windowMiniHeight: 680
+    property bool _q_showWithoutActivating: false
+    property bool waylandHiddenByTray: false
 
     id: rootWindow
     visible: true
@@ -236,7 +238,22 @@ ApplicationWindow {
             tooltip: qsTr("Music")
 
             onActivated: {
-                if (rootWindow.visibility === Window.Minimized || !rootWindow.visible) {
+                if (waylandMode) {
+                    if (rootWindow.waylandHiddenByTray || !rootWindow.visible ||
+                            !rootWindow.active || rootWindow.visibility === Window.Minimized) {
+                        rootWindow.waylandHiddenByTray = false
+                        rootWindow._q_showWithoutActivating = true
+                        if (rootWindow.visibility === Window.Minimized)
+                            rootWindow.D.DWindow.showNormal()
+                        else
+                            rootWindow.show()
+                        rootWindow._q_showWithoutActivating = false
+                        rootWindow.requestActivate()
+                    } else {
+                        rootWindow.waylandHiddenByTray = true
+                        rootWindow.hide()
+                    }
+                } else if (rootWindow.visibility === Window.Minimized || !rootWindow.visible) {
                     rootWindow.show()
                     rootWindow.raise()
                     rootWindow.requestActivate()
