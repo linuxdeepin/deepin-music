@@ -227,6 +227,12 @@ void SdlPlayer::play()
     VlcMediaPlayer::play();
 #ifdef Q_OS_LINUX
     if (m_loadSdlLibrary) {
+        SDL_GetAudioStatus_function GetAudioStatus = (SDL_GetAudioStatus_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_GetAudioStatus");
+        SDL_PauseAudio_function PauseAudio = (SDL_PauseAudio_function)VlcDynamicInstance::VlcFunctionInstance()->resolveSdlSymbol("SDL_PauseAudio");
+        if (GetAudioStatus() == SDL_AUDIO_PAUSED) {
+            PauseAudio(0);
+            qCDebug(dmMusic) << "Audio unpaused on play";
+        }
         if (!m_pCheckDataThread->isRunning()) {
             m_pCheckDataThread->start();
             qCDebug(dmMusic) << "Started check data thread";
