@@ -672,13 +672,13 @@ TEST(PlayerEngineVolumeSignalTest, setVolumeEmitsVolumeChanged)
     EXPECT_EQ(spy.takeFirst().at(0).toInt(), 70);
 }
 
-TEST(PlayerEngineVolumeSignalTest, setSameVolumeStillEmits)
+TEST(PlayerEngineVolumeSignalTest, setSameVolumeDoesNotEmit)
 {
     InjectedEngine env;
-    env.engine->setVolume(50);          // 与 fake 初始 50 相同 → 仍 emit
+    env.engine->setVolume(50);          // 与 fake 初始 50 相同 → 不 emit
     QSignalSpy spy(env.engine.get(), &PlayerEngine::volumeChanged);
     env.engine->setVolume(50);
-    EXPECT_GE(spy.count(), 1);
+    EXPECT_EQ(spy.count(), 0);
 }
 
 TEST(PlayerEngineVolumeSignalTest, setVolumeZeroMutes)
@@ -698,12 +698,12 @@ TEST(PlayerEngineMuteSignalTest, setMuteEmitsMuteChanged)
     EXPECT_TRUE(spy.takeFirst().at(0).toBool());
 }
 
-TEST(PlayerEngineMuteSignalTest, setSameMuteStillEmits)
+TEST(PlayerEngineMuteSignalTest, setSameMuteDoesNotEmit)
 {
     InjectedEngine env;
     QSignalSpy spy(env.engine.get(), &PlayerEngine::muteChanged);
-    env.engine->setMute(false);         // 与 fake 初始 false 相同 → 仍 emit
-    EXPECT_EQ(spy.count(), 1);
+    env.engine->setMute(false);         // 与 fake 初始 false 相同 → 不 emit
+    EXPECT_EQ(spy.count(), 0);
 }
 
 // ---- setPosition/getPosition：setTime 回环 ----
