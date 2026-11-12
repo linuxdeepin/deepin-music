@@ -73,6 +73,7 @@ public:
 
 public slots:
     void slotAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta);
+    void slotAddMetas(QList<QPair<QStringList, DMusic::MediaMeta>> metasWithHashs);
     void slotEnqueueMetaTasks(const QList<DMusic::MediaMeta> &metas);
     void slotLazyLoadDatabase();
     void slotMetaAnalysisReady(DMusic::MediaMeta meta, quint64 generation);
@@ -83,6 +84,7 @@ signals:
                            const QSet<QString> &playMetaHashs, const QSet<QString> &allMetaHashs,
                            const QString &playlistHash, const bool &playFalg);
     void signalAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta, const bool &addToPlay);
+    void signalAddMetas(QList<QPair<QStringList, DMusic::MediaMeta>> metasWithHashs);
     void signalAddMetaFinished(QStringList playlistHashs);
     void signalImportFinished(QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash);
     void signalMetaBatchFinished();

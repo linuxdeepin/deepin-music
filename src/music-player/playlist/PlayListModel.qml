@@ -53,6 +53,22 @@ ListModel {
             }
         }
     }
+    function onAddMetas(playlistHashsList, metaList) {
+        for (var idx = 0; idx < metaList.length; idx++) {
+            var playlistHashs = playlistHashsList[idx]
+            var meta = metaList[idx]
+            for (var i = 0; i < playlistHashs.length; i++){
+                if (playlistHashs[i] == "fav") {
+                    for (var j = 0; j < playlistModel.count; j++) {
+                        if (playlistModel.get(j)["hash"] === meta.hash) {
+                            playlistModel.setProperty(j,"favourite",true)
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }
     function onUpdatedMetaCodec(meta, preAlbum, preArtist) {
         for (var j = 0; j < playlistModel.count; j++) {
             if (playlistModel.get(j)["hash"] === meta.hash) {
@@ -79,6 +95,7 @@ ListModel {
         Presenter.addMetaFinished.connect(onAddMetaFinished)
         Presenter.importFinished.connect(onAddMetaFinished)
         Presenter.addOneMeta.connect(onAddOneMeta)
+        Presenter.addMetas.connect(onAddMetas)
         Presenter.updatedMetaCodec.connect(onUpdatedMetaCodec)
         Presenter.metaAnalysisReady.connect(onMetaAnalysisReady)
 

@@ -150,6 +150,11 @@ Item {
         Presenter.addOneMeta.connect(function(playlistHashs) {
             refreshPlayingCountIfNeeded(playlistHashs)
         })
+        Presenter.addMetas.connect(function(playlistHashsList, metaList) {
+            for (var idx = 0; idx < playlistHashsList.length; idx++) {
+                refreshPlayingCountIfNeeded(playlistHashsList[idx])
+            }
+        })
         Presenter.addMetaFinished.connect(function(playlistHashs) {
             refreshPlayingCountIfNeeded(playlistHashs)
         })

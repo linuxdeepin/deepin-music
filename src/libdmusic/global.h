@@ -9,8 +9,10 @@
 #include "libdmusic_global.h"
 
 #include <QString>
+#include <QStringList>
 #include <QUrl>
 #include <QMap>
+#include <QPair>
 #include <QObject>
 
 class LIBDMUSICSHARED_EXPORT DmGlobal : public QObject
@@ -203,5 +205,9 @@ struct ArtistInfo {
 };
 
 }
+
+using MetaWithHashs = QPair<QStringList, DMusic::MediaMeta>;
+Q_DECLARE_METATYPE(MetaWithHashs)
+Q_DECLARE_METATYPE(QList<MetaWithHashs>)
 
 #endif // GLOBAL_H

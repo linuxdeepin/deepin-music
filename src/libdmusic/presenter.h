@@ -141,6 +141,7 @@ signals:
     void audioSpectrumData(QVector<int> data);
     void audioBuffer(const QVariantList &buffer, const QString &hash);
     void addOneMeta(QStringList playlistHashs, QVariantMap meta);
+    void addMetas(QVariantList playlistHashsList, QVariantList metaList);
     void addMetaFinished(QStringList playlistHashs);
     void importFinished(QStringList playlistHashs, int failCount, int sucessCount, int existCount);
     void deleteOneMeta(QStringList playlistHashs, QString hash);
