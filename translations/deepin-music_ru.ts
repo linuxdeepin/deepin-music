@@ -354,7 +354,7 @@
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="50"/>
         <source>Minimize to system tray</source>
-        <translation>Свернуть в трей </translation>
+        <translation>Свернуть в системный трей</translation>
     </message>
     <message>
         <location filename="../src/music-player/dialogs/CloseConfirmDialog.qml" line="62"/>
