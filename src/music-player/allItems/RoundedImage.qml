@@ -60,7 +60,7 @@ Rectangle {
         width: opacityMask.width - 2; height: opacityMask.width - 6
         source: opacityMask
         radius: 24
-        opacity: DTK.themeType === ApplicationHelper.DarkType ? 0.35 : 1.0
+        opacity: ColorSelector.controlTheme === ApplicationHelper.DarkType ? 0.35 : 1.0
         transparentBorder: true
     }
     OpacityMask {
@@ -77,7 +77,11 @@ Rectangle {
         id: borderRect
         anchors.fill: parent
         color: "transparent"
-        border.color: Qt.rgba(0, 0, 0, 0.06)
+        property Palette borderColor: Palette {
+            normal: Qt.rgba(0, 0, 0, 0.06)
+            normalDark: Qt.rgba(255, 255, 255, 0.06)
+        }
+        border.color: ColorSelector.borderColor
         border.width: 1
         visible: true
         radius: 8
@@ -86,7 +90,11 @@ Rectangle {
         anchors.fill: parent
         shadowOffsetX: 0
         shadowOffsetY: 4
-        shadowColor: Qt.rgba(0, 0, 0, 0.06)
+        property Palette shadowPaletteColor: Palette {
+            normal: Qt.rgba(0, 0, 0, 0.06)
+            normalDark: Qt.rgba(255, 255, 255, 0.06)
+        }
+        shadowColor: ColorSelector.shadowPaletteColor
         shadowBlur: 10
         cornerRadius: 8
         spread: 0

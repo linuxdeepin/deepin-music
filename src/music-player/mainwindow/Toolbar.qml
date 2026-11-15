@@ -7,6 +7,7 @@ import QtQuick.Window
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import org.deepin.dtk 1.0
+import org.deepin.dtk.style 1.0 as DS
 import "../toolbar"
 import audio.global 1.0
 import "../allItems"
@@ -58,10 +59,7 @@ ToolFloatingPanel {
     
     blurMultiplier: 0.0
     
-    outsideBorderColor: Palette {
-        id: palette
-        normal: Qt.rgba(0, 0, 0, 0.04)
-    }
+    outsideBorderColor: DS.Style.floatingPanel.outsideBorder
 
     anchors {
         left: parent.left
@@ -86,7 +84,11 @@ ToolFloatingPanel {
             height: coverRectWidth
             radius: 8
             anchors.verticalCenter: parent.verticalCenter
-            color: songTitle.length === 0 ? "#d7d7d7" : "transparent"
+            property Palette placeholderColor: Palette {
+                normal: "#d7d7d7"
+                normalDark: "#3D3D3D"
+            }
+            color: songTitle.length === 0 ? coverRect.ColorSelector.placeholderColor : "transparent"
             enabled: songTitle.length === 0 ? false : true
 
             Image {
@@ -128,7 +130,11 @@ ToolFloatingPanel {
                 id: hoverMask
                 width: parent.width
                 height: parent.height
-                color: "#99000000"
+                property Palette hoverMaskColor: Palette {
+                    normal: "#99000000"
+                    normalDark: "#99FFFFFF"
+                }
+                color: ColorSelector.hoverMaskColor
                 radius: 8
                 visible: coverRect.hovered
             }
@@ -176,7 +182,11 @@ ToolFloatingPanel {
                 Text {
                     id: title
                     width: parent.width
-                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.9) : Qt.rgba(0, 0, 0, 0.9)
+                    property Palette titleColor: Palette {
+                        normal: Qt.rgba(0, 0, 0, 0.9)
+                        normalDark: Qt.rgba(247, 247, 247, 0.9)
+                    }
+                    color: ColorSelector.titleColor
                     text: songTitle
                     font.pixelSize: 14
                     elide: Text.ElideRight
@@ -185,7 +195,11 @@ ToolFloatingPanel {
                     id: artist
                     width: parent.width
                     text: artistStr
-                    color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
+                    property Palette artistColor: Palette {
+                        normal: Qt.rgba(0, 0, 0, 0.7)
+                        normalDark: Qt.rgba(247, 247, 247, 0.7)
+                    }
+                    color: ColorSelector.artistColor
                     font {
                         pixelSize: 12
                         weight: Font.Medium
@@ -381,7 +395,11 @@ ToolFloatingPanel {
                             horizontalAlignment: Text.AlignRight
                             enabled: songTitle.length === 0 ? false : true
                             text: enabled ? currentTime : "0:00"
-                            color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
+                            property Palette curTimeColor: Palette {
+                                normal: Qt.rgba(0, 0, 0, 0.7)
+                                normalDark: Qt.rgba(247, 247, 247, 0.7)
+                            }
+                            color: ColorSelector.curTimeColor
                             font: DTK.fontManager.t8
                             verticalAlignment: Qt.AlignVCenter
                         }
@@ -390,7 +408,11 @@ ToolFloatingPanel {
                             anchors.verticalCenter: parent.verticalCenter
                             enabled: songTitle.length === 0 ? false : true
                             text: "/ " + (enabled ? totalTime : "0:00")
-                            color: DTK.themeType === ApplicationHelper.DarkType ? Qt.rgba(247, 247, 247, 0.7) : Qt.rgba(0, 0, 0, 0.7)
+                            property Palette totalTimeColor: Palette {
+                                normal: Qt.rgba(0, 0, 0, 0.7)
+                                normalDark: Qt.rgba(247, 247, 247, 0.7)
+                            }
+                            color: ColorSelector.totalTimeColor
                             font: DTK.fontManager.t8
                             verticalAlignment: Qt.AlignVCenter
                         }

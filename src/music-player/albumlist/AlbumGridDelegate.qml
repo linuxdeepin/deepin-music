@@ -146,8 +146,11 @@ Rectangle {
                 elide: Text.ElideRight
                 text: artist
                 font.pixelSize: 14
-                color: DTK.themeType === ApplicationHelper.DarkType ? "#E5ffffff"
-                                                                    : "#E5000000"
+                property Palette textColor: Palette {
+                    normal: "#E5000000"
+                    normalDark: "#E5ffffff"
+                }
+                color: ColorSelector.textColor
             }
             Label {
                 width: 166; height: 17
