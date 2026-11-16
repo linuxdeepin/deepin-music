@@ -254,6 +254,9 @@ private:
 
     QPropertyAnimation  *m_fadeInAnimation    = nullptr;
     QPropertyAnimation  *m_fadeOutAnimation   = nullptr;
+
+    // 外部暂停请求守卫标志，用于消除 playMeta() 恢复进度 150ms 窗口内的竞态
+    bool m_externalPauseRequested = false;
 };
 
 Q_DECLARE_METATYPE(Player::Error)

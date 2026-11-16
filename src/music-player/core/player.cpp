@@ -230,12 +230,17 @@ void Player::playMeta(MediaMeta meta)
         setActiveMeta(meta);
         m_basePlayer->setMediaMeta(meta);
         m_basePlayer->play();
+        m_externalPauseRequested = false;
 
         //延迟设置进度
         if (INT_LAST_PROGRESS_FLAG && m_ActiveMeta.hash == meta.hash) {
             m_basePlayer->pauseNew(); //此处只暂停，不关闭音频设备，防止后面打开失败
             qint64 lastOffset = m_ActiveMeta.offset;
             QTimer::singleShot(150, this, [ = ]() {//为了记录进度条生效，在加载的时候让音乐播放150ms
+                if (m_externalPauseRequested) {
+                    m_externalPauseRequested = false;
+                    return;
+                }
                 qDebug() << "seek last position:" << lastOffset;
                 m_basePlayer->setTime(lastOffset);
                 m_basePlayer->play();
@@ -329,6 +334,7 @@ void Player::resume()
 
     qDebug() << "resume top";
     m_basePlayer->play();
+    m_externalPauseRequested = false;
     if (m_fadeInOut && m_fadeInAnimation->state() != QPropertyAnimation::Running) {
         m_fadeInAnimation->setEasingCurve(QEasingCurve::InCubic);
         m_fadeInAnimation->setStartValue(0.1000);
@@ -379,6 +385,7 @@ void Player::pause()
 void Player::pauseNow()
 {
     qInfo() << __func__;
+    m_externalPauseRequested = true;
     m_basePlayer->pause();
     //设置音乐播放
     emit signalPlaybackStatusChanged(Player::Paused);
