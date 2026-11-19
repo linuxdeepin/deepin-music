@@ -265,7 +265,8 @@ int main(int argc, char *argv[])
 
     if (auto *window = qobject_cast<QQuickWindow *>(engine.rootObjects().first())) {
         const auto deferredUiTriggered = std::make_shared<bool>(false);
-        const auto triggerDeferredUi = [&startupTimer, window, presenter = presenter.data(), deferredUiTriggered](const char *trigger) {
+        const auto triggerDeferredUi = [&startupTimer, window, presenter = presenter.data(),
+                                        deferredUiTriggered](const char *trigger) {
             if (*deferredUiTriggered) {
                 return;
             }
@@ -292,7 +293,7 @@ int main(int argc, char *argv[])
     // 导入自动播放
     if (!OpenFilePaths.isEmpty()) {
         qCDebug(dmMusic) << "OpenFilePaths: " << OpenFilePaths;
-        presenter->importMetas(OpenFilePaths, "play", true);
+        presenter->importStartupFiles(OpenFilePaths);
     }
 
     QObject::connect(&engine, &QQmlApplicationEngine::quit, presenter.data(), &Presenter::saveDataToDB);

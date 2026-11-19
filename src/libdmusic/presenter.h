@@ -27,6 +27,7 @@ public:
 #ifdef Q_OS_LINUX
     Q_INVOKABLE void setMprisPlayer(const QString &serviceName, const QString &desktopEntry, const QString &identity);
 #endif
+    void importStartupFiles(const QStringList &urls);
     void prepareStartupAssets();
 
     // 播放控制
@@ -156,6 +157,8 @@ signals:
     void raiseRequested();
 
 private:
+    void tryRestoreLastTrack();
+
     PresenterPrivate *m_data;
 };
 Q_DECLARE_METATYPE(Presenter *)

@@ -17,12 +17,13 @@ public:
 public slots:
     void slotImportMetas(const QStringList &urls, const QSet<QString> &metaHashs, bool importPlay,
                          const QSet<QString> &playMetaHashs, const QSet<QString> &allMetaHashs,
-                         const QString &playlistHash = "", const bool &playFalg = false);
+                         const QString &playlistHash = "", const bool &playFalg = false,
+                         bool startupImport = false);
     void slotClearImportingHash(const QString &hash);
 
 signals:
     void signalAddOneMeta(QStringList playlistHashs, DMusic::MediaMeta meta);
-    void signalImportFinished(QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash);
+    void signalImportFinished(QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash, bool startupImport);
     void signalMetaBatchFinished();
     void signalEnqueueMetaTasks(QList<DMusic::MediaMeta> metas);
 

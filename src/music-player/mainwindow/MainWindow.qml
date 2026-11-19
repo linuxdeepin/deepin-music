@@ -90,7 +90,7 @@ ApplicationWindow {
             return
 
         deferredUiLoaded = true
-        toolbox.restorePlaybackStatus()
+        Presenter.restorePlaybackStatus()
     }
 
     Shortcuts {
