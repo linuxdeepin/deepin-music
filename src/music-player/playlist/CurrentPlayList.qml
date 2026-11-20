@@ -20,7 +20,7 @@ CurrentFloatingPanel {
     property Menu playlistMoreMenu: MusicMoreMenu{pageHash:"play"}
     property Menu playlistAddMenu: ImportMenu{pageHash:"play"}
     property Menu selectMenu: MulitSelectMenu{pageHash: "play"}
-    property MusicInfoDialog infoDialog: MusicInfoDialog{musicData: playlistView.model.get(0)}
+    property MusicInfoDialog infoDialog: MusicInfoDialog{}
     signal playlistHided()
     signal playlistEmpty()
 

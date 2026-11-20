@@ -95,7 +95,7 @@ Rectangle {
         property int lastIndex: 0
         property int dragToIndex: 0
         Accessible.name: "AllMusicListView_ListView"
-        property MusicInfoDialog infoDialog: MusicInfoDialog{musicData: listview.model.get(0)}
+        property MusicInfoDialog infoDialog: MusicInfoDialog{}
 
         id: listview
         width: parent.width
