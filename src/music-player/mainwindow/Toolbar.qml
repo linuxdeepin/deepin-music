@@ -86,7 +86,7 @@ ToolFloatingPanel {
             height: coverRectWidth
             radius: 8
             anchors.verticalCenter: parent.verticalCenter
-            color: songTitle.length === 0 ? "#d7d7d7" : "transparent"
+            color: songTitle.length === 0 ? (DTK.themeType === ApplicationHelper.DarkType ? "#3D3D3D" : "#d7d7d7") : "transparent"
             enabled: songTitle.length === 0 ? false : true
 
             Image {

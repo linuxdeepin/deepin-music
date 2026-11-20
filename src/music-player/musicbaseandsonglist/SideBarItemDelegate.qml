@@ -15,13 +15,12 @@ ItemDelegate {
     Accessible.name: "SideBarItemDelegate_ItemDelegate"
     readonly property color foregroundColor: {
         if (checked) {
-            return DTK.themeType === ApplicationHelper.DarkType ? "#FFFFFF" : "#FFFFFF"
+            return palette.highlightedText
         }
-        return DTK.themeType === ApplicationHelper.DarkType ? "#B2F7F7F7" : "#000000"
+        return palette.buttonText
     }
     id: item
     checked: globalVariant !== undefined && globalVariant.curListPage === model.uuid
-    palette.buttonText: foregroundColor
     // 屏蔽空格响应
     Keys.onSpacePressed: { event.accepted=false; }
     Keys.onReleased: { event.accepted=(event.key===Qt.Key_Space); }
