@@ -238,17 +238,15 @@ bool AudioAnalysis::parseFileTagCodec(DMusic::MediaMeta &meta)
             if (detectCodec.isEmpty())
                 detectCodec = allDetectCodecs.value(0);
 
-            QString curStr = QString::fromLocal8Bit(tag->title().toCString());
-            if (curStr.isEmpty())
-                curStr = QString::fromLocal8Bit(tag->artist().toCString());
-            if (curStr.isEmpty())
-                curStr = QString::fromLocal8Bit(tag->album().toCString());
-
-            for (int i = 0; i < curStr.size(); i++) {
-                auto ch = curStr[i];
-                if (Utils::isChinese(ch)) {
-                    detectCodec = "GB18030";
-                    break;
+            QTextCodec *gbCodec = QTextCodec::codecForName("GB18030");
+            if (gbCodec) {
+                QString curStr = gbCodec->toUnicode(detectByte);
+                for (int i = 0; i < curStr.size(); i++) {
+                    auto ch = curStr[i];
+                    if (Utils::isChinese(ch)) {
+                        detectCodec = "GB18030";
+                        break;
+                    }
                 }
             }
         }
