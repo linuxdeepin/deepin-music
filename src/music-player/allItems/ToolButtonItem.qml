@@ -35,6 +35,8 @@ Rectangle{
             icon.name: "headline_play_all"
             icon.width: 28
             icon.height: 28
+            Accessible.name: qsTr("播放全部")
+            Accessible.role: Accessible.Button
             ToolTip {
                 visible: palyBtn.hovered
                 text: qsTr("Play All")
@@ -63,7 +65,7 @@ Rectangle{
         sortPageHash: pageHash
         pageSortType: sortType
         pageTitle: title
-        Accessible.name: "DataSort"
+        Accessible.name: qsTr("排序")
         Accessible.role: Accessible.Button
     }
     ButtonGroup{ buttons: row.children }
@@ -77,7 +79,8 @@ Rectangle{
             icon.name: "view_Grid"
             visible: gridAndlistViewModel
             checkable: true;
-            Accessible.name: "GridViewButton"
+            Accessible.name: qsTr("平铺")
+            Accessible.role: Accessible.CheckBox
             onClicked: {
                 m_viewType = 0
                 console.log("gridViewButton is clicked");
@@ -89,7 +92,8 @@ Rectangle{
             icon.name: "view_list"
             visible: gridAndlistViewModel
             checkable: true;
-            Accessible.name: "ListViewButton"
+            Accessible.name: qsTr("列表")
+            Accessible.role: Accessible.CheckBox
             onClicked: {
                 m_viewType = 1;
                 //console.log("listViewButton is clicked");

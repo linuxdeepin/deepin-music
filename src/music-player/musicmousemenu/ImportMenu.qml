@@ -24,7 +24,7 @@ Menu {
         height: visible ? 30 : 0
         text: qsTr("Play queue")
         visible: ("play" === pageHash) ? false : true
-        Accessible.name: "PlayQueue"
+        Accessible.name: qsTr("播放队列")
 
         onTriggered: {
             Presenter.addMetasToPlayList(mediaHashList, "play");
@@ -40,7 +40,7 @@ Menu {
         height: visible ? 30 : 0
         text: qsTr("My favorites")
         visible: ("fav" === pageHash) ? false : true
-        Accessible.name: "MyFavorites"
+        Accessible.name: qsTr("我喜欢的歌曲")
 
         onTriggered: {
             Presenter.addMetasToPlayList(mediaHashList, "fav");
@@ -49,7 +49,7 @@ Menu {
 
     MenuItem {
         text: qsTr("Create new playlist")
-        Accessible.name: "CreateNewPlaylist"
+        Accessible.name: qsTr("创建新歌单")
 
         onTriggered: {
             var tmpPlaylist = Presenter.addPlayList(qsTr("New playlist"));
@@ -80,7 +80,7 @@ Menu {
             height: visible ? 30 : 0
             text: model.displayName.replace(/</g, "&lt;")
             visible: (model.uuid === pageHash) ? false : true
-            Accessible.name: "Lt"
+            Accessible.name: model.displayName
 
             onTriggered: {
                 Presenter.addMetasToPlayList(mediaHashList, model.uuid);

@@ -213,6 +213,8 @@ ToolFloatingPanel {
                         icon.width: 20
                         icon.height: 20
                         enabled: songTitle.length === 0 ? false : true
+                        Accessible.name: qsTr("喜欢")
+                        Accessible.role: Accessible.Button
                         palette.windowText: favorite ? "#F75B5B" : undefined
                         // contentItem.theme: DTK.themeType
 
@@ -245,6 +247,8 @@ ToolFloatingPanel {
                         icon.height: 20
                         checkable: true
                         enabled: songTitle.length === 0 ? false : true
+                        Accessible.name: qsTr("上一曲")
+                        Accessible.role: Accessible.Button
 
                         ToolTip {
                             visible: prevBtn.hovered
@@ -266,6 +270,8 @@ ToolFloatingPanel {
                         icon.width: 36
                         icon.height: 36
                         checkable: true
+                        Accessible.name: qsTr("播放/暂停")
+                        Accessible.role: Accessible.Button
 
                         ToolTip {
                             visible: playPauseBtn.hovered
@@ -287,6 +293,8 @@ ToolFloatingPanel {
                         icon.height: 20
                         checkable: true
                         enabled: songTitle.length === 0 ? false : true
+                        Accessible.name: qsTr("下一曲")
+                        Accessible.role: Accessible.Button
 
                         ToolTip {
                             visible: nextBtn.hovered
@@ -407,7 +415,8 @@ ToolFloatingPanel {
                     checkable: true
                     checked: isLyricShow
                     enabled: songTitle.length === 0 ? false : true
-                    Accessible.name: "LrcBtn"
+                    Accessible.name: qsTr("歌词")
+                    Accessible.role: Accessible.CheckBox
                     ToolTip {
                         visible: lrcBtn.hovered
                         text: qsTr("Lyrics")
@@ -426,7 +435,8 @@ ToolFloatingPanel {
                     icon.width: 36
                     icon.height: 36
                     checkable: true
-                    Accessible.name: "VolumeBtn"
+                    Accessible.name: qsTr("静音")
+                    Accessible.role: Accessible.CheckBox
                     //ColorSelector.pressed: true
                     onClicked: {
                         isVolSliderShow = !isVolSliderShow
@@ -457,7 +467,8 @@ ToolFloatingPanel {
                     icon.width: 36
                     icon.height: 36
                     checkable: true
-                    Accessible.name: "ListBtn"
+                    Accessible.name: qsTr("播放列表")
+                    Accessible.role: Accessible.CheckBox
 
                     ToolTip {
                         visible: listBtn.hovered
