@@ -46,6 +46,7 @@ Rectangle {
         anchors.fill: parent
         source: image
         maskSource: mask
+        antialiasing: true
     }
 
     // border
