@@ -107,6 +107,7 @@ int main(int argc, char *argv[])
 #endif
 
     DmGlobal::checkWaylandMode();
+    DmGlobal::checkFantasyGpuWorkaround();
 
     QSurfaceFormat format;
 #ifdef Q_OS_LINUX
