@@ -1173,13 +1173,12 @@ void PlayerEngine::setVolume(int volume)
     int curVolume = volume <= 0 ? 0 : volume;
     if (m_data->m_player->getVolume() == curVolume) {
         qCDebug(dmMusic) << "Volume unchanged, no need to set";
-        emit volumeChanged(m_data->m_player->getVolume());
-    } else {
-        qCDebug(dmMusic) << "Setting volume to:" << curVolume;
-        m_data->m_player->setVolume(curVolume);
-        emit volumeChanged(m_data->m_player->getVolume());
-        setMute(curVolume == 0);
+        return;
     }
+    qCDebug(dmMusic) << "Setting volume to:" << curVolume;
+    m_data->m_player->setVolume(curVolume);
+    emit volumeChanged(m_data->m_player->getVolume());
+    setMute(curVolume == 0);
     qCDebug(dmMusic) << "Volume set successfully";
 }
 
@@ -1194,7 +1193,7 @@ void PlayerEngine::setMute(bool mute)
 {
     if (m_data->m_player->getMute() == mute) {
         qCDebug(dmMusic) << "Mute state unchanged:" << mute;
-        emit muteChanged(mute);
+        return;
     } else {
         qCDebug(dmMusic) << "Setting mute state from" << m_data->m_player->getMute() << "to:" << mute;
         m_data->m_player->setMute(mute);
