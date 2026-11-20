@@ -29,7 +29,7 @@ DBOperate::DBOperate(QStringList supportedSuffixs, QObject *parent)
 
 void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &metaHashs, bool importPlay,
                                 const QSet<QString> &playMetaHashs, const QSet<QString> &allMetaHashs,
-                                const QString &playlistHash, const bool &playFalg)
+                                const QString &playlistHash, const bool &playFalg, bool startupImport)
 {
     qCDebug(dmMusic) << "Starting meta import with" << urls.size() << "URLs, playlist:" << playlistHash;
     
@@ -146,7 +146,7 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
     }
 
     // Emit importFinished first so UI shows success / auto-play immediately.
-    emit signalImportFinished(allHashs.values(), importedFailCount, importedCount - importedFailCount - existCount, existCount, mediaHash);
+    emit signalImportFinished(allHashs.values(), importedFailCount, importedCount - importedFailCount - existCount, existCount, mediaHash, startupImport);
 
     if (!pendingMetas.isEmpty()) {
         emit signalEnqueueMetaTasks(pendingMetas);

@@ -1484,7 +1484,8 @@ QVariantList DataManager::allArtistVariantList()
     return allList;
 }
 
-void DataManager::importMetas(const QStringList &urls, const QString &playlistHash, const bool &playFalg)
+void DataManager::importMetas(const QStringList &urls, const QString &playlistHash, const bool &playFalg,
+                              bool startupImport)
 {
     qCDebug(dmMusic) << "Importing metas to playlist:" << playlistHash << "urls count:" << urls.size() << "playFlag:" << playFalg;
     QString targetPlaylistHash = playlistHash;
@@ -1519,7 +1520,7 @@ void DataManager::importMetas(const QStringList &urls, const QString &playlistHa
         }
     }
     qCDebug(dmMusic) << "Emitting import metas signal with" << metaHashs.size() << "existing metas";
-    emit signalImportMetas(urls, metaHashs, importPlay, playMetaHashs, allMetaHashs, targetPlaylistHash, playFalg);
+    emit signalImportMetas(urls, metaHashs, importPlay, playMetaHashs, allMetaHashs, targetPlaylistHash, playFalg, startupImport);
 }
 
 void DataManager::addMetasToPlayList(const QList<QString> &metaHash,

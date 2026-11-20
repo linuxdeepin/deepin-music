@@ -83,6 +83,8 @@ private:
     DataManager                *m_dataManager      = nullptr;
     AudioAnalysis              *m_audioAnalysis    = nullptr;
     LyricAnalysis               m_lyricAnalysis;
+    bool                        m_startupImportPending = false;
+    bool                        m_restoreLastTrackPending = false;
 };
 
 Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtistStr,
@@ -160,12 +162,18 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
         }
         emit addOneMeta(playlistHashs, Utils::metaToVariantMap(meta));
     });
-    connect(m_data->m_dataManager, &DataManager::signalImportFinished, this, [ = ](QStringList playlistHashs, int failCount, int sucessCount, int existCount, QString mediaHash) {
+    connect(m_data->m_dataManager, &DataManager::signalImportFinished, this,
+            [this](const QStringList &playlistHashs, int failCount, int sucessCount, int existCount,
+                   const QString &mediaHash, bool startupImport) {
         // 自动播放
         if (!mediaHash.isEmpty()) {
             if (m_data->m_playerEngine->getMediaMeta().hash != mediaHash)
                 m_data->m_playerEngine->setMediaMeta(mediaHash);
             m_data->m_playerEngine->play();
+        }
+        if (startupImport) {
+            m_data->m_startupImportPending = false;
+            tryRestoreLastTrack();
         }
         emit importFinished(playlistHashs, failCount, sucessCount, existCount);
     });
@@ -182,21 +190,10 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
         emit metaAnalysisReady(Utils::metaToVariantMap(meta));
     });
 
-    connect(this, &Presenter::restorePlaybackStatus, this, [ = ]() {
-        // 初始化歌曲
-        if (!m_data->m_dataManager->valueFromSettings("base.play.last_meta").toString().isEmpty()) {
-            m_data->m_playerEngine->setMediaMeta(m_data->m_dataManager->valueFromSettings("base.play.last_meta").toString());
-        }
+    connect(this, &Presenter::restorePlaybackStatus, this, [this]() {
         m_data->m_playerEngine->setFadeInOut(m_data->m_dataManager->valueFromSettings("base.play.fade_in_out").toBool());
         m_data->m_playerEngine->setVolume(m_data->m_dataManager->valueFromSettings("base.play.volume").toInt());
         m_data->m_playerEngine->setMute(m_data->m_dataManager->valueFromSettings("base.play.mute").toBool());
-        if (m_data->m_dataManager->valueFromSettings("base.play.remember_progress").toBool()
-                && !m_data->m_dataManager->valueFromSettings("base.play.last_meta").toString().isEmpty()) {
-            m_data->m_playerEngine->setTime(m_data->m_dataManager->valueFromSettings("base.play.last_position").toInt());
-        }
-        if (m_data->m_dataManager->valueFromSettings("base.play.auto_play").toBool()) {
-            m_data->m_playerEngine->play();
-        }
         if (!m_data->m_dataManager->valueFromSettings("base.play.last_playlist").toString().isEmpty()) {
             setCurrentPlayList(m_data->m_dataManager->valueFromSettings("base.play.last_playlist").toString());
         }
@@ -239,6 +236,8 @@ Presenter::Presenter(const QString &unknownAlbumStr, const QString &unknownArtis
                 }
             }
         }
+        m_data->m_restoreLastTrackPending = true;
+        tryRestoreLastTrack();
     });
     
     qCInfo(dmMusic) << "Presenter initialization completed";
@@ -263,6 +262,43 @@ void Presenter::setMprisPlayer(const QString &serviceName, const QString &deskto
     m_data->m_playerEngine->setMprisPlayer(serviceName, desktopEntry, identity);
 }
 #endif
+
+void Presenter::importStartupFiles(const QStringList &urls)
+{
+    if (urls.isEmpty()) {
+        return;
+    }
+    m_data->m_startupImportPending = true;
+    m_data->m_dataManager->importMetas(urls, "play", true, true);
+}
+
+void Presenter::tryRestoreLastTrack()
+{
+    // Deferred initialization and the startup import can complete in either order.
+    if (!m_data->m_restoreLastTrackPending || m_data->m_startupImportPending) {
+        return;
+    }
+    m_data->m_restoreLastTrackPending = false;
+
+    auto *player = m_data->m_playerEngine;
+    auto *dataManager = m_data->m_dataManager;
+    if (!player->getMediaMeta().hash.isEmpty()) {
+        return;
+    }
+
+    const QString lastMeta = dataManager->valueFromSettings("base.play.last_meta").toString();
+    if (!lastMeta.isEmpty()) {
+        player->setMediaMeta(lastMeta);
+        if (player->getMediaMeta().hash == lastMeta
+                && dataManager->valueFromSettings("base.play.remember_progress").toBool()) {
+            player->setTime(dataManager->valueFromSettings("base.play.last_position").toInt());
+            emit positionChanged(player->time(), player->getMediaMeta().length);
+        }
+    }
+    if (dataManager->valueFromSettings("base.play.auto_play").toBool()) {
+        player->play();
+    }
+}
 
 void Presenter::prepareStartupAssets()
 {

@@ -639,13 +639,6 @@ ToolFloatingPanel {
         }
     }
 
-    function restorePlaybackStatus() {
-        Presenter.restorePlaybackStatus()
-        if (Presenter.valueFromSettings("base.play.remember_progress")) {
-            positionChange(Presenter.getPosition())
-        }
-    }
-
     Component.onCompleted: {
         Presenter.metaChanged.connect(metaChange)
         Presenter.metaAnalysisReady.connect(metaAnalysisReady)
