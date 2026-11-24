@@ -117,9 +117,11 @@ Rectangle {
                 target: toolButtonItem
                 function onViewChanged(type) {
                     if (type === 0) {
+                        toggleListViewAnimation.stop()
                         gridview.visible = true;
                         toggleGridViewAnimation.start()
                     } else {
+                        toggleGridViewAnimation.stop()
                         listview.visible = true;
                         toggleListViewAnimation.start()
                     }
@@ -312,13 +314,15 @@ Rectangle {
     Connections {
         target: toggleGridViewAnimation
         function onFinished() {
-            listview.visible = false
+            if (toolButtonItem.m_viewType === 0)
+                listview.visible = false
         }
     }
     Connections {
         target: toggleListViewAnimation
         function onFinished() {
-            gridview.visible = false
+            if (toolButtonItem.m_viewType === 1)
+                gridview.visible = false
         }
     }
 }
