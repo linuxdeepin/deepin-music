@@ -19,6 +19,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
+#include <QTemporaryDir>
 #include <QSignalSpy>
 
 #include "datamanager.h"
@@ -1177,7 +1178,7 @@ TEST(DBOperateTest, importExistingHashSkipsAndCountsAsExist)
     EXPECT_EQ(args.at(2).toInt(), 0);  // successCount
 }
 
-// slotImportMetas 非 .so 单文件路径分支（line 67-69）：直接 append 单个文件
+// slotImportMetas 单文件路径分支：支持的文件继续进入解析流程
 TEST(DBOperateTest, importSingleNonExistentFileCountsAsFail)
 {
     DBOperate db({"mp3"});
@@ -1185,6 +1186,28 @@ TEST(DBOperateTest, importSingleNonExistentFileCountsAsFail)
     // 不存在的单文件：creatMediaMeta 返回 length<=0 → importedFailCount++
     db.slotImportMetas({"/nonexistent/single.mp3"}, {}, false, {}, {}, "", false);
     EXPECT_EQ(spy.count(), 1);
+}
+
+// 单文件拖拽也必须过滤播放器不支持的扩展名，不能只依赖目录扫描过滤。
+TEST(DBOperateTest, importSingleUnsupportedFileIsIgnored)
+{
+    DBOperate db({"mp3"});
+    QTemporaryDir tempDir;
+    ASSERT_TRUE(tempDir.isValid());
+
+    const QString unsupportedPath = tempDir.filePath("sample.mka");
+    ASSERT_TRUE(QFile::copy(sampleMp3Path(), unsupportedPath));
+
+    QSignalSpy importSpy(&db, &DBOperate::signalImportFinished);
+    QSignalSpy addSpy(&db, &DBOperate::signalAddOneMeta);
+    db.slotImportMetas({unsupportedPath}, {}, false, {}, {}, "", false);
+
+    ASSERT_EQ(importSpy.count(), 1);
+    EXPECT_EQ(addSpy.count(), 0);
+    const auto args = importSpy.takeFirst();
+    EXPECT_EQ(args.at(1).toInt(), 0);  // failCount
+    EXPECT_EQ(args.at(2).toInt(), 0);  // successCount
+    EXPECT_EQ(args.at(3).toInt(), 0);  // existCount
 }
 
 // slotImportMetas 带 playlistHash 且 metaHashs 命中 exist 分支（line 94-95）

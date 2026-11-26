@@ -861,10 +861,17 @@ void PlayerEngine::playNextMeta(const DMusic::MediaMeta &meta, bool isAuto, bool
                 index = i;
             }
         }
-        // If current track not found in list (possibly removed)
-        // and no next track found, play the first track
-        if (index == -1 && newIndex == -1 && !allMetas.isEmpty())
-            newIndex = 0;
+        // If current track is not found in the list (possibly removed), start
+        // from the first playable track instead of an invalid playlist entry.
+        if (index == -1 && newIndex == -1) {
+            for (int i = 0; i < allMetas.size(); i++) {
+                if ((QFile::exists(allMetas[i].localPath) && m_data->m_player->supportedSuffixList().contains(
+                            QFileInfo(allMetas[i].localPath).suffix().toLower())) || allMetas[i].mmType == DmGlobal::MimeTypeCDA) {
+                    newIndex = i;
+                    break;
+                }
+            }
+        }
         if (newIndex != -1) {
             switchToNewTrackWithFade(allMetas.at(newIndex), playFlag);
         } else if (!isAuto) {

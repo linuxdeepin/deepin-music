@@ -908,6 +908,30 @@ TEST(PlayerEnginePlayNextExpandedTest, playNextAutoOnRepeatNullFindsNextPlayable
     EXPECT_TRUE(true);                          // 不崩溃即通过
 }
 
+// 当前曲目已被删除时，兜底切换也必须跳过列表中的不可播放曲目。
+TEST(PlayerEnginePlayNextExpandedTest, removedCurrentSkipsUnplayableFirstEntry)
+{
+    InjectedEngine env;
+    env.engine->setPlaybackMode(DmGlobal::RepeatNull);
+
+    DMusic::MediaMeta removed;
+    removed.hash = "removed";
+    removed.localPath = "/tmp/removed.mp3";
+    DMusic::MediaMeta unsupported;
+    unsupported.hash = "unsupported";
+    unsupported.localPath = "/tmp/unsupported.mka";
+    DMusic::MediaMeta playable;
+    playable.hash = "playable";
+    playable.localPath = "/dev/null/playable.cda";
+    playable.mmType = DmGlobal::MimeTypeCDA;
+
+    env.engine->addMetasToPlayList({unsupported, playable});
+    env.engine->setMediaMeta(removed);
+    env.engine->playNextMeta(true, false);
+
+    EXPECT_EQ(env.engine->getMediaMeta().hash, "playable");
+}
+
 // playNextMeta(auto) 末曲且 auto → stop
 TEST(PlayerEnginePlayNextExpandedTest, playNextAutoOnLastTrackStops)
 {
