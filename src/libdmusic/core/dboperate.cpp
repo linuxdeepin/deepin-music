@@ -64,6 +64,11 @@ void DBOperate::slotImportMetas(const QStringList &urls, const QSet<QString> &me
             }
             qCDebug(dmMusic) << "Finished scanning directory, found" << filePaths.size() << "files";
         } else {
+            const QString supportedPattern = "*." + fileInfo.suffix().toLower();
+            if (!m_supportedSuffixs.contains(supportedPattern)) {
+                qCDebug(dmMusic) << "Skipping unsupported file:" << filepath;
+                continue;
+            }
             filePaths.append(filepath);
             qCDebug(dmMusic) << "Added single file:" << filepath;
         }
