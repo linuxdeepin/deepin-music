@@ -8,13 +8,14 @@
 #include "playerbase.h"
 
 #include <QMediaPlayer>
-#include <QTime>
+#include <QElapsedTimer>
+#include <QTimer>
 
 class QtPlayer: public PlayerBase
 {
     Q_OBJECT
 public:
-    QtPlayer(QObject *parent = nullptr);
+    QtPlayer(QObject *parent = nullptr, bool interpolateProgress = false);
     virtual ~QtPlayer();
 
 public:
@@ -44,11 +45,19 @@ private:
     void resetPlayInfo();
     void readSinkInputPath();
     void releasePlayer();
+    void updateProgressTimer();
+    qint64 estimatedPosition() const;
+    void publishPosition(qint64 position);
 
 private:
     QMediaPlayer *m_mediaPlayer = nullptr;
     QAudioOutput *m_audioOutput = nullptr;
     qint64 m_currPositionChanged = 0;
+    const bool m_interpolateProgress;
+    QTimer m_progressTimer;
+    QElapsedTimer m_positionClock;
+    qint64 m_positionAnchor = 0;
+    qint64 m_lastPublishedPosition = 0;
     QString m_sinkInputPath;
 };
 

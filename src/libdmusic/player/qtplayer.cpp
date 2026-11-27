@@ -11,8 +11,9 @@
 #include <QDBusObjectPath>
 #include <QDBusInterface>
 
-QtPlayer::QtPlayer(QObject *parent)
+QtPlayer::QtPlayer(QObject *parent, bool interpolateProgress)
     : PlayerBase(parent)
+    , m_interpolateProgress(interpolateProgress)
 {
     qCDebug(dmMusic) << "QtPlayer constructor";
     m_supportedSuffix << "wav"
@@ -20,6 +21,15 @@ QtPlayer::QtPlayer(QObject *parent)
                       << "mp3"
                       << "flac"
                       << "opus";
+    if (m_interpolateProgress) {
+        m_progressTimer.setInterval(100);
+        connect(&m_progressTimer, &QTimer::timeout, this, [this]() {
+            const qint64 position = estimatedPosition();
+            if (position > m_lastPublishedPosition) {
+                publishPosition(position);
+            }
+        });
+    }
 }
 
 QtPlayer::~QtPlayer()
@@ -44,7 +54,11 @@ void QtPlayer::init()
 
     connect(m_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &QtPlayer::onMediaStatusChanged);
     connect(m_mediaPlayer, &QMediaPlayer::positionChanged, this, &QtPlayer::onPositionChanged);
-    connect(m_mediaPlayer, &QMediaPlayer::playbackStateChanged, this, [ = ](QMediaPlayer::PlaybackState newState) {
+    if (m_interpolateProgress) {
+        connect(m_mediaPlayer, &QMediaPlayer::durationChanged, this, &QtPlayer::updateProgressTimer);
+    }
+    connect(m_mediaPlayer, &QMediaPlayer::playbackStateChanged, this, [this](QMediaPlayer::PlaybackState newState) {
+        updateProgressTimer();
         DmGlobal::PlaybackStatus state = DmGlobal::Stopped;
         switch (newState) {
         case QMediaPlayer::PlayingState: {
@@ -71,6 +85,10 @@ void QtPlayer::init()
 void QtPlayer::releasePlayer()
 {
     qCDebug(dmMusic) << "Releasing QMediaPlayer resources";
+    m_progressTimer.stop();
+    m_positionClock.invalidate();
+    m_positionAnchor = 0;
+    m_lastPublishedPosition = 0;
     if (m_audioOutput) {
         qCDebug(dmMusic) << "Deleting QAudioOutput instance";
         delete m_audioOutput;
@@ -162,6 +180,13 @@ void QtPlayer::setTime(qint64 time)
     }
     qCDebug(dmMusic) << "Setting playback position to:" << time;
     m_mediaPlayer->setPosition(time);
+    if (m_interpolateProgress && m_mediaPlayer->isSeekable()) {
+        m_positionAnchor = m_mediaPlayer->position();
+        if (m_positionClock.isValid()) {
+            m_positionClock.restart();
+        }
+        publishPosition(m_positionAnchor);
+    }
 }
 
 qint64 QtPlayer::time()
@@ -172,7 +197,7 @@ qint64 QtPlayer::time()
         qCDebug(dmMusic) << "No media loaded, returning invalid time";
         return -1;
     }
-    qint64 pos = m_mediaPlayer->position();
+    qint64 pos = m_interpolateProgress ? estimatedPosition() : m_mediaPlayer->position();
     qCDebug(dmMusic) << "Current playback position:" << pos;
     return pos;
 }
@@ -181,11 +206,19 @@ void QtPlayer::setMediaMeta(MediaMeta meta)
 {
     qCDebug(dmMusic) << "Set media meta requested";
     init();
-    if (m_activeMeta.hash == meta.hash) return;
+    const QUrl source = QUrl::fromLocalFile(meta.localPath);
+    if (m_activeMeta.hash == meta.hash
+        && (!m_interpolateProgress || m_mediaPlayer->source() == source)) return;
 
+    if (m_interpolateProgress) {
+        m_progressTimer.stop();
+        m_positionClock.invalidate();
+        m_positionAnchor = 0;
+        m_lastPublishedPosition = 0;
+    }
     qCInfo(dmMusic) << "Setting media meta - Title:" << meta.title << "Path:" << meta.localPath;
     m_activeMeta = meta;
-    m_mediaPlayer->setSource(QUrl::fromLocalFile(m_activeMeta.localPath));
+    m_mediaPlayer->setSource(source);
     emit metaChanged();
 }
 
@@ -230,6 +263,7 @@ void QtPlayer::setMute(bool mute)
 void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 {
     qCDebug(dmMusic) << "Media status changed to:" << status;
+    updateProgressTimer();
     if (status == QMediaPlayer::MediaStatus::EndOfMedia) {
         qCInfo(dmMusic) << "Media playback reached end";
         emit end();
@@ -243,6 +277,18 @@ void QtPlayer::onPositionChanged(qint64 position)
 {
     qCDebug(dmMusic) << "Position changed to:" << position;
     init();
+    if (m_interpolateProgress) {
+        m_positionAnchor = position;
+        if (m_positionClock.isValid()) {
+            m_positionClock.restart();
+        } else if (m_mediaPlayer->playbackState() != QMediaPlayer::PlayingState) {
+            m_lastPublishedPosition = position;
+        }
+        if (m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState && m_mediaPlayer->duration() > 0) {
+            resetPlayInfo();
+        }
+        return;
+    }
     if (m_mediaPlayer->duration() <= 0 || m_mediaPlayer->playbackState() != QMediaPlayer::PlayingState) {
         qCDebug(dmMusic) << "Ignoring position change - invalid duration or not playing";
         return;
@@ -254,6 +300,50 @@ void QtPlayer::onPositionChanged(qint64 position)
     emit positionChanged(value);
     resetPlayInfo();
     qCDebug(dmMusic) << "Emitted positionChanged signal";
+}
+
+void QtPlayer::updateProgressTimer()
+{
+    if (!m_interpolateProgress || !m_mediaPlayer) return;
+
+    const auto status = m_mediaPlayer->mediaStatus();
+    const auto state = m_mediaPlayer->playbackState();
+    // The FFmpeg backend can report LoadedMedia while playing after a seek.
+    const bool ready = status == QMediaPlayer::LoadedMedia
+                       || status == QMediaPlayer::BufferingMedia
+                       || status == QMediaPlayer::BufferedMedia;
+    const bool canAdvance = state == QMediaPlayer::PlayingState && m_mediaPlayer->duration() > 0 && ready;
+    if (canAdvance) {
+        // APE frames can span several seconds. Fill in the progress between backend updates.
+        if (!m_progressTimer.isActive()) {
+            m_positionClock.start();
+            m_progressTimer.start();
+        }
+    } else {
+        m_positionAnchor = state == QMediaPlayer::StoppedState
+                           ? m_mediaPlayer->position() : estimatedPosition();
+        m_positionClock.invalidate();
+        m_progressTimer.stop();
+        if (state == QMediaPlayer::StoppedState) {
+            m_lastPublishedPosition = m_positionAnchor;
+        }
+    }
+}
+
+qint64 QtPlayer::estimatedPosition() const
+{
+    const qint64 elapsed = m_positionClock.isValid() ? m_positionClock.elapsed() : 0;
+    return qBound(qint64(0), m_positionAnchor + elapsed, m_mediaPlayer->duration());
+}
+
+void QtPlayer::publishPosition(qint64 position)
+{
+    const qint64 duration = m_mediaPlayer->duration();
+    if (duration <= 0) return;
+    m_lastPublishedPosition = position;
+    const float fraction = static_cast<float>(position) / duration;
+    emit timeChanged(position);
+    emit positionChanged(fraction);
 }
 
 void QtPlayer::resetPlayInfo()

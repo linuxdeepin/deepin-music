@@ -4,17 +4,22 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // vlcplayer.cpp 的单元测试：构造 + 不触发真实播放的查询/配置/资源管理。
-// VlcPlayer 依赖 libvlc 和 SdlPlayer，测试不实际播放音频。
 
 #include <gtest/gtest.h>
 
+#include <QAudioOutput>
 #include <QCoreApplication>
+#include <QFile>
+#include <QSignalSpy>
+#include <QTemporaryDir>
+#include <QTest>
 #include <QString>
 #include <QStringList>
 #include <memory>
 #include <cmath>
 
 #include "vlcplayer.h"
+#include "qtplayer.h"
 #include "playerbase.h"
 #include "global.h"
 
@@ -290,6 +295,118 @@ TEST(VlcPlayerMediaMetaTest, setMediaMetaEmitsSignal)
     meta.mmType = DmGlobal::MimeTypeLocal;
     player.setMediaMeta(meta);
     EXPECT_TRUE(signalEmitted);
+}
+
+TEST(VlcPlayerMediaMetaTest, apeTrackUsesQtPlayerAndForwardsProgress)
+{
+    VlcPlayer player;
+    DMusic::MediaMeta meta;
+    meta.hash = "ape-test-hash";
+    meta.localPath = "/tmp/track.APE";
+    meta.mmType = DmGlobal::MimeTypeLocal;
+
+    player.setMediaMeta(meta);
+    auto *qtPlayer = player.findChild<QtPlayer *>();
+    ASSERT_NE(qtPlayer, nullptr);
+    auto *mediaPlayer = qtPlayer->findChild<QMediaPlayer *>();
+    ASSERT_NE(mediaPlayer, nullptr);
+    EXPECT_EQ(mediaPlayer->source(), QUrl::fromLocalFile(meta.localPath));
+
+    QSignalSpy timeSpy(&player, &PlayerBase::timeChanged);
+    QSignalSpy positionSpy(&player, &PlayerBase::positionChanged);
+    Q_EMIT qtPlayer->timeChanged(1234);
+    Q_EMIT qtPlayer->positionChanged(0.25f);
+    ASSERT_EQ(timeSpy.size(), 1);
+    EXPECT_EQ(timeSpy.takeFirst().at(0).toLongLong(), 1234);
+    ASSERT_EQ(positionSpy.size(), 1);
+    EXPECT_FLOAT_EQ(positionSpy.takeFirst().at(0).toFloat(), 0.25f);
+}
+
+TEST(VlcPlayerMediaMetaTest, switchingBackendsTransfersAudioSettingsAndIgnoresInactiveQtSignals)
+{
+    const QString samplePath = QStringLiteral(TEST_DATA_DIR "/sample.mp3");
+    QTemporaryDir tempDir;
+    ASSERT_TRUE(tempDir.isValid());
+
+    DMusic::MediaMeta mp3;
+    mp3.hash = "mp3";
+    mp3.localPath = samplePath;
+    mp3.mmType = DmGlobal::MimeTypeLocal;
+    DMusic::MediaMeta ape = mp3;
+    ape.hash = "ape";
+    // Reuse the MP3 fixture to exercise extension-based routing independently of APE decoding.
+    ape.localPath = tempDir.filePath(QStringLiteral("track.ape"));
+    ASSERT_TRUE(QFile::copy(samplePath, ape.localPath));
+
+    VlcPlayer player;
+    player.setMediaMeta(mp3);
+    player.setVolume(35);
+    player.setMute(true);
+    player.play();
+    ASSERT_TRUE(QTest::qWaitFor([&player] { return player.state() == DmGlobal::Playing; }, 2000));
+
+    player.setMediaMeta(ape);
+    EXPECT_EQ(player.state(), DmGlobal::Stopped);
+    auto *qt = player.findChild<QMediaPlayer *>();
+    ASSERT_NE(qt, nullptr);
+    auto *audio = qt->audioOutput();
+    ASSERT_NE(audio, nullptr);
+    EXPECT_TRUE(audio->isMuted());
+    EXPECT_FLOAT_EQ(audio->volume(), 0.35f);
+
+    player.setVolume(72);
+    EXPECT_FLOAT_EQ(audio->volume(), 0.72f);
+    player.setMute(false);
+    EXPECT_FALSE(audio->isMuted());
+
+    player.setMediaMeta(mp3);
+    EXPECT_TRUE(qt->source().isEmpty());
+    EXPECT_EQ(player.getVolume(), 72);
+    EXPECT_FALSE(player.getMute());
+
+    QSignalSpy timeSpy(&player, &PlayerBase::timeChanged);
+    Q_EMIT player.findChild<QtPlayer *>()->timeChanged(1234);
+    EXPECT_TRUE(timeSpy.isEmpty());
+}
+
+TEST(VlcPlayerMediaMetaTest, apeProgressAdvancesBetweenBackendEventsAndStopsWhenPaused)
+{
+    QTemporaryDir tempDir;
+    ASSERT_TRUE(tempDir.isValid());
+    DMusic::MediaMeta ape;
+    ape.hash = "ape-progress";
+    ape.localPath = tempDir.filePath(QStringLiteral("progress.ape"));
+    ASSERT_TRUE(QFile::copy(QStringLiteral(TEST_DATA_DIR "/sample.mp3"), ape.localPath));
+
+    VlcPlayer player;
+    player.setMediaMeta(ape);
+    auto *qtPlayer = player.findChild<QtPlayer *>();
+    ASSERT_NE(qtPlayer, nullptr);
+    auto *mediaPlayer = qtPlayer->findChild<QMediaPlayer *>();
+    ASSERT_NE(mediaPlayer, nullptr);
+    // Model APE frames whose native position events are several seconds apart.
+    ASSERT_TRUE(QObject::disconnect(mediaPlayer, &QMediaPlayer::positionChanged, qtPlayer, nullptr));
+    player.setMute(true);
+    QSignalSpy progress(&player, &PlayerBase::timeChanged);
+    player.play();
+    ASSERT_TRUE(QTest::qWaitFor([&progress] { return progress.size() >= 3; }, 2000));
+    EXPECT_GT(progress.last().at(0).toLongLong(), progress.first().at(0).toLongLong());
+
+    player.pause();
+    ASSERT_TRUE(QTest::qWaitFor([&player] { return player.state() == DmGlobal::Paused; }, 1000));
+    const auto eventsWhilePaused = progress.size();
+    const auto pausedPosition = player.time();
+    QTest::qWait(220);
+    EXPECT_EQ(progress.size(), eventsWhilePaused);
+    EXPECT_EQ(player.time(), pausedPosition);
+
+    ASSERT_TRUE(mediaPlayer->isSeekable());
+    player.setTime(1500);
+    ASSERT_GT(progress.size(), eventsWhilePaused);
+    EXPECT_EQ(progress.last().at(0).toLongLong(), 1500);
+    player.play();
+    ASSERT_TRUE(QTest::qWaitFor([&progress] { return progress.last().at(0).toLongLong() > 1500; }, 1000));
+    player.stop();
 }
 
 // ============================================================================
