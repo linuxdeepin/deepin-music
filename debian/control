@@ -27,6 +27,8 @@ Build-Depends:
  libdtk6declarative-dev,
  qt6-5compat-dev,
  libsdl2-dev,
+ libgtest-dev,
+ libgmock-dev,
  libsdl1.2debian
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
