@@ -11,6 +11,8 @@
 #include <QElapsedTimer>
 #include <QTimer>
 
+class QThread;
+
 class QtPlayer: public PlayerBase
 {
     Q_OBJECT
@@ -48,6 +50,11 @@ private:
     void updateProgressTimer();
     qint64 estimatedPosition() const;
     void publishPosition(qint64 position);
+    void seekTo(qint64 time);
+    void prepareApeSeekFile();
+    void queuePendingApeSeek();
+    void failApeSeek();
+    void cancelApeSeek();
 
 private:
     QMediaPlayer *m_mediaPlayer = nullptr;
@@ -59,6 +66,12 @@ private:
     qint64 m_positionAnchor = 0;
     qint64 m_lastPublishedPosition = 0;
     QString m_sinkInputPath;
+    QThread *m_apeDecodeThread = nullptr;
+    QString m_apeSeekFile;
+    qint64 m_pendingApeSeek = -1;
+    QMediaPlayer::PlaybackState m_apeRequestedState = QMediaPlayer::StoppedState;
+    bool m_apeSeekEndPending = false;
+    bool m_apeSeekFileFailed = false;
 };
 
 #endif // QTPLAYER_H

@@ -4,12 +4,39 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "qtplayer.h"
+#include "apeseekfile.h"
 #include "utils.h"
 #include "util/log.h"
 
 #include <QAudioOutput>
 #include <QDBusObjectPath>
 #include <QDBusInterface>
+#include <QDir>
+#include <QDateTime>
+#include <QFileInfo>
+#include <QStandardPaths>
+#include <QThread>
+#include <memory>
+#include <utility>
+
+static QString apeSeekCacheFile(const QFileInfo &source)
+{
+    if (!source.isFile() || !source.lastModified().isValid()) {
+        return {};
+    }
+    QString cachePath = DmGlobal::cachePath();
+    if (cachePath.isEmpty()) {
+        cachePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    }
+    if (cachePath.isEmpty()) {
+        return {};
+    }
+    const auto name = QStringLiteral("seekfile/%1-%2-%3.wav")
+                          .arg(Utils::filePathHash(source.absoluteFilePath()))
+                          .arg(source.size())
+                          .arg(source.lastModified().toMSecsSinceEpoch());
+    return QDir(cachePath).absoluteFilePath(name);
+}
 
 QtPlayer::QtPlayer(QObject *parent, bool interpolateProgress)
     : PlayerBase(parent)
@@ -24,6 +51,9 @@ QtPlayer::QtPlayer(QObject *parent, bool interpolateProgress)
     if (m_interpolateProgress) {
         m_progressTimer.setInterval(100);
         connect(&m_progressTimer, &QTimer::timeout, this, [this]() {
+            if (m_pendingApeSeek >= 0) {
+                return;
+            }
             const qint64 position = estimatedPosition();
             if (position > m_lastPublishedPosition) {
                 publishPosition(position);
@@ -56,6 +86,7 @@ void QtPlayer::init()
     connect(m_mediaPlayer, &QMediaPlayer::positionChanged, this, &QtPlayer::onPositionChanged);
     if (m_interpolateProgress) {
         connect(m_mediaPlayer, &QMediaPlayer::durationChanged, this, &QtPlayer::updateProgressTimer);
+        connect(m_mediaPlayer, &QMediaPlayer::seekableChanged, this, &QtPlayer::queuePendingApeSeek);
     }
     connect(m_mediaPlayer, &QMediaPlayer::playbackStateChanged, this, [this](QMediaPlayer::PlaybackState newState) {
         updateProgressTimer();
@@ -85,6 +116,8 @@ void QtPlayer::init()
 void QtPlayer::releasePlayer()
 {
     qCDebug(dmMusic) << "Releasing QMediaPlayer resources";
+    cancelApeSeek();
+    m_apeRequestedState = QMediaPlayer::StoppedState;
     m_progressTimer.stop();
     m_positionClock.invalidate();
     m_positionAnchor = 0;
@@ -99,6 +132,8 @@ void QtPlayer::releasePlayer()
         delete m_mediaPlayer;
         m_mediaPlayer = nullptr;
     }
+    m_apeSeekFile.clear();
+    m_apeSeekFileFailed = false;
 }
 
 
@@ -138,6 +173,12 @@ void QtPlayer::play()
 {
     qCDebug(dmMusic) << "Play requested";
     init();
+    if (m_interpolateProgress) {
+        m_apeRequestedState = QMediaPlayer::PlayingState;
+        if (m_pendingApeSeek >= 0 && (!m_apeSeekFile.isEmpty() || m_apeSeekEndPending)) {
+            return;
+        }
+    }
     qCDebug(dmMusic) << "Starting playback";
     m_mediaPlayer->play();
 }
@@ -145,7 +186,11 @@ void QtPlayer::play()
 void QtPlayer::pause()
 {
     qCDebug(dmMusic) << "Pause requested";
-    if (m_mediaPlayer != nullptr && m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState) {
+    if (m_interpolateProgress) {
+        m_apeRequestedState = QMediaPlayer::PausedState;
+    }
+    if (m_mediaPlayer != nullptr && (m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState
+                                     || (m_interpolateProgress && m_mediaPlayer->mediaStatus() == QMediaPlayer::LoadingMedia))) {
         qCDebug(dmMusic) << "Pausing playback";
         m_mediaPlayer->pause();
     }
@@ -154,9 +199,12 @@ void QtPlayer::pause()
 void QtPlayer::stop()
 {
     qCDebug(dmMusic) << "Stop requested";
+    cancelApeSeek();
+    m_apeRequestedState = QMediaPlayer::StoppedState;
     // 播放和状态状态都可以停止播放
     if (m_mediaPlayer != nullptr && (m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState
-                                     || m_mediaPlayer->playbackState() == QMediaPlayer::PausedState)) {
+                                     || m_mediaPlayer->playbackState() == QMediaPlayer::PausedState
+                                     || (m_interpolateProgress && m_mediaPlayer->mediaStatus() == QMediaPlayer::LoadingMedia))) {
         qCDebug(dmMusic) << "Stopping playback";
         m_mediaPlayer->stop();
     }
@@ -178,6 +226,31 @@ void QtPlayer::setTime(qint64 time)
         qCDebug(dmMusic) << "Cannot set time - no media loaded";
         return;
     }
+    const bool waitingForCache = !m_apeSeekFile.isEmpty() && m_mediaPlayer->mediaStatus() == QMediaPlayer::LoadingMedia;
+    if (m_interpolateProgress && !m_activeMeta.localPath.isEmpty()
+        && (m_pendingApeSeek >= 0 || waitingForCache || (m_apeSeekFile.isEmpty() && time > 0))) {
+        if (m_apeSeekFileFailed) {
+            return;
+        }
+        const qint64 duration = m_mediaPlayer->duration();
+        const qint64 target = duration > 0 ? qBound(qint64(0), time, duration) : qMax(qint64(0), time);
+        m_pendingApeSeek = target;
+        // The waveform still treats the mouse as pressed inside its release handler.
+        QMetaObject::invokeMethod(this, [this, target] {
+            if (m_pendingApeSeek == target) {
+                publishPosition(target);
+            }
+        }, Qt::QueuedConnection);
+        if (m_apeSeekFile.isEmpty() && !m_apeDecodeThread) {
+            prepareApeSeekFile();
+        }
+        return;
+    }
+    seekTo(time);
+}
+
+void QtPlayer::seekTo(qint64 time)
+{
     qCDebug(dmMusic) << "Setting playback position to:" << time;
     m_mediaPlayer->setPosition(time);
     if (m_interpolateProgress && m_mediaPlayer->isSeekable()) {
@@ -189,9 +262,70 @@ void QtPlayer::setTime(qint64 time)
     }
 }
 
+void QtPlayer::prepareApeSeekFile()
+{
+    // Qt's FFmpeg renderer can wait several seconds for a timestamp after seeking in APE.
+    // Decode sequentially on the first seek and reuse the seekable PCM source for this track.
+    const QFileInfo source(m_activeMeta.localPath);
+    const auto path = apeSeekCacheFile(source);
+    if (path.isEmpty() || !QDir().mkpath(QFileInfo(path).absolutePath())) {
+        failApeSeek();
+        return;
+    }
+    auto decoded = std::make_shared<bool>(false);
+    auto *thread = QThread::create([source, path, decoded] {
+        *decoded = isApeSeekFileReady(path) || writeApeSeekFile(source, path);
+    });
+    thread->setParent(this);
+    m_apeDecodeThread = thread;
+    connect(thread, &QThread::finished, this, [this, thread, path, decoded] {
+        if (m_apeDecodeThread != thread) {
+            return;
+        }
+        m_apeDecodeThread = nullptr;
+        if (!*decoded) {
+            failApeSeek();
+            return;
+        }
+        m_apeSeekFile = path;
+        m_sinkInputPath.clear();
+        m_mediaPlayer->setSource(QUrl::fromLocalFile(path));
+    });
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+    thread->start();
+}
+
+void QtPlayer::failApeSeek()
+{
+    qCWarning(dmMusic) << "Could not prepare APE seek audio for" << m_activeMeta.localPath;
+    m_apeSeekFileFailed = true;
+    const bool ended = m_apeSeekEndPending;
+    cancelApeSeek();
+    if (ended) {
+        m_apeRequestedState = QMediaPlayer::StoppedState;
+        emit end();
+    } else {
+        // Keep the current source playing and restore its position after a failed seek.
+        publishPosition(estimatedPosition());
+    }
+}
+
+void QtPlayer::cancelApeSeek()
+{
+    if (m_apeDecodeThread) {
+        m_apeDecodeThread->requestInterruption();
+        m_apeDecodeThread = nullptr;
+    }
+    m_pendingApeSeek = -1;
+    m_apeSeekEndPending = false;
+}
+
 qint64 QtPlayer::time()
 {
     qCDebug(dmMusic) << "Get current playback position";
+    if (m_pendingApeSeek >= 0) {
+        return m_pendingApeSeek;
+    }
     init();
     if (m_mediaPlayer->mediaStatus() == QMediaPlayer::NoMedia) {
         qCDebug(dmMusic) << "No media loaded, returning invalid time";
@@ -206,11 +340,21 @@ void QtPlayer::setMediaMeta(MediaMeta meta)
 {
     qCDebug(dmMusic) << "Set media meta requested";
     init();
-    const QUrl source = QUrl::fromLocalFile(meta.localPath);
+    QString cachedFile;
+    if (m_interpolateProgress && !meta.localPath.isEmpty()) {
+        const auto path = apeSeekCacheFile(QFileInfo(meta.localPath));
+        if (isApeSeekFileReady(path)) {
+            cachedFile = path;
+        }
+    }
+    const auto source = QUrl::fromLocalFile(cachedFile.isEmpty() ? meta.localPath : cachedFile);
     if (m_activeMeta.hash == meta.hash
-        && (!m_interpolateProgress || m_mediaPlayer->source() == source)) return;
+        && (!m_interpolateProgress || (m_activeMeta.localPath == meta.localPath
+                                       && m_mediaPlayer->source() == source))) return;
 
     if (m_interpolateProgress) {
+        cancelApeSeek();
+        m_apeRequestedState = QMediaPlayer::StoppedState;
         m_progressTimer.stop();
         m_positionClock.invalidate();
         m_positionAnchor = 0;
@@ -218,6 +362,8 @@ void QtPlayer::setMediaMeta(MediaMeta meta)
     }
     qCInfo(dmMusic) << "Setting media meta - Title:" << meta.title << "Path:" << meta.localPath;
     m_activeMeta = meta;
+    m_apeSeekFile = cachedFile;
+    m_apeSeekFileFailed = false;
     m_mediaPlayer->setSource(source);
     emit metaChanged();
 }
@@ -264,13 +410,52 @@ void QtPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 {
     qCDebug(dmMusic) << "Media status changed to:" << status;
     updateProgressTimer();
+    queuePendingApeSeek();
     if (status == QMediaPlayer::MediaStatus::EndOfMedia) {
+        if (m_pendingApeSeek >= 0 && m_apeSeekFile.isEmpty()) {
+            // The old source can reach EOF while the seek file is still being prepared.
+            m_apeSeekEndPending = true;
+            return;
+        }
+        m_apeRequestedState = QMediaPlayer::StoppedState;
         qCInfo(dmMusic) << "Media playback reached end";
         emit end();
     } else if (status == QMediaPlayer::MediaStatus::InvalidMedia) {
+        cancelApeSeek();
+        m_apeRequestedState = QMediaPlayer::StoppedState;
         qCWarning(dmMusic) << "Invalid media detected for:" << m_activeMeta.localPath;
         emit end();
     }
+}
+
+void QtPlayer::queuePendingApeSeek()
+{
+    if (m_apeSeekFile.isEmpty() || m_pendingApeSeek < 0) {
+        return;
+    }
+    // Qt can emit seekableChanged before it finishes setting the media status.
+    QMetaObject::invokeMethod(this, [this, source = m_apeSeekFile] {
+        if (m_apeSeekFile != source || m_pendingApeSeek < 0 || !m_mediaPlayer->isSeekable()) {
+            return;
+        }
+        const auto status = m_mediaPlayer->mediaStatus();
+        if (status != QMediaPlayer::LoadedMedia && status != QMediaPlayer::BufferingMedia
+            && status != QMediaPlayer::BufferedMedia) {
+            return;
+        }
+        const auto position = std::exchange(m_pendingApeSeek, -1);
+        m_apeSeekEndPending = false;
+        const auto state = m_apeRequestedState;
+        seekTo(position);
+        if (m_apeSeekFile != source) {
+            return;
+        }
+        if (state == QMediaPlayer::PlayingState) {
+            m_mediaPlayer->play();
+        } else if (state == QMediaPlayer::PausedState) {
+            m_mediaPlayer->pause();
+        }
+    }, Qt::QueuedConnection);
 }
 
 void QtPlayer::onPositionChanged(qint64 position)
@@ -339,11 +524,11 @@ qint64 QtPlayer::estimatedPosition() const
 void QtPlayer::publishPosition(qint64 position)
 {
     const qint64 duration = m_mediaPlayer->duration();
-    if (duration <= 0) return;
+    if (duration <= 0 && m_pendingApeSeek < 0) return;
     m_lastPublishedPosition = position;
-    const float fraction = static_cast<float>(position) / duration;
+    // PlayerEngine already republishes the absolute time. A second event based on
+    // metadata duration can overwrite it with a different position.
     emit timeChanged(position);
-    emit positionChanged(fraction);
 }
 
 void QtPlayer::resetPlayInfo()

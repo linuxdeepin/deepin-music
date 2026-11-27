@@ -65,7 +65,7 @@ if(LINUX)
 endif()
 pkg_check_modules(TAGLIB REQUIRED IMPORTED_TARGET taglib)
 pkg_check_modules(DTK REQUIRED IMPORTED_TARGET dtk6core)
-pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavcodec libavformat)
+pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavcodec libavformat libavutil)
 # pkg_check_modules(udisks2 REQUIRED IMPORTED_TARGET udisks2-qt5)
 
 set(TARGET_LIBS PkgConfig::TAGLIB PkgConfig::DTK)
