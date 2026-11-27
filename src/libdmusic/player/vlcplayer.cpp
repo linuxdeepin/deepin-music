@@ -3,12 +3,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "vlcplayer.h"
+#include "qtplayer.h"
 #include "util/log.h"
 
 #include <vlc/vlc.h>
 
 #include <QDBusObjectPath>
 #include <QDBusInterface>
+#include <QFileInfo>
 #include <malloc.h>
 
 #include "vlc/Error.h"
@@ -23,6 +25,19 @@ VlcPlayer::VlcPlayer(QObject *parent)
     : PlayerBase(parent)
 {
     qCDebug(dmMusic) << "VlcPlayer constructor";
+    m_qtPlayer = new QtPlayer(this, true);
+    connect(m_qtPlayer, &PlayerBase::timeChanged, this, [this](qint64 position) {
+        if (m_isApe) emit timeChanged(position);
+    });
+    connect(m_qtPlayer, &PlayerBase::positionChanged, this, [this](float position) {
+        if (m_isApe) emit positionChanged(position);
+    });
+    connect(m_qtPlayer, &PlayerBase::stateChanged, this, [this](DmGlobal::PlaybackStatus state) {
+        if (m_isApe) emit stateChanged(state);
+    });
+    connect(m_qtPlayer, &PlayerBase::end, this, [this]() {
+        if (m_isApe) emit end();
+    });
     m_supportedSuffix  << "aac"
                        << "amr"
                        << "wav"
@@ -60,24 +75,28 @@ void VlcPlayer::init()
         m_qvplayer->equalizer()->setPreamplification(12);
         m_qvmedia = new VlcMedia();
 
-        connect(m_qvplayer, &VlcMediaPlayer::timeChanged, this, &VlcPlayer::timeChanged);
-        connect(m_qvplayer, &VlcMediaPlayer::positionChanged, this, &VlcPlayer::positionChanged);
+        connect(m_qvplayer, &VlcMediaPlayer::timeChanged, this, [this](qint64 position) {
+            if (!m_isApe) emit timeChanged(position);
+        });
+        connect(m_qvplayer, &VlcMediaPlayer::positionChanged, this, [this](float position) {
+            if (!m_isApe) emit positionChanged(position);
+        });
         connect(m_qvmedia, &VlcMedia::stateChanged,
         this, [ = ](Vlc::State state) {
             switch (state) {
             case Vlc::Playing: {
                 qCInfo(dmMusic) << "VLC state changed to Playing";
-                emit stateChanged(DmGlobal::Playing);
+                if (!m_isApe) emit stateChanged(DmGlobal::Playing);
                 break;
             }
             case Vlc::Paused: {
                 qCInfo(dmMusic) << "VLC state changed to Paused";
-                emit stateChanged(DmGlobal::Paused);
+                if (!m_isApe) emit stateChanged(DmGlobal::Paused);
                 break;
             }
             case Vlc::Stopped: {
                 qCInfo(dmMusic) << "VLC state changed to Stopped";
-                emit stateChanged(DmGlobal::Stopped);
+                if (!m_isApe) emit stateChanged(DmGlobal::Stopped);
                 break;
             }
             default:
@@ -87,7 +106,7 @@ void VlcPlayer::init()
 
         connect(m_qvplayer, &VlcMediaPlayer::end, this, [ = ]() {
             qCDebug(dmMusic) << "Current track playback ended";
-            emit end();
+            if (!m_isApe) emit end();
         });
         //connect(m_qvplayer, &SdlPlayer::audioDataReady, this, &PlayerBase::audioDataReady);
         initCdaThread();
@@ -97,6 +116,7 @@ void VlcPlayer::init()
 void VlcPlayer::releasePlayer()
 {
     qCDebug(dmMusic) << "Releasing VLC player resources";
+    m_qtPlayer->release();
     //释放cd线程
     if (m_pCdaThread) {
         qCDebug(dmMusic) << "Closing CDA thread";
@@ -159,6 +179,7 @@ void VlcPlayer::startCdaThread()
 void VlcPlayer::play()
 {
     qCDebug(dmMusic) << "Starting playback";
+    if (m_isApe) return m_qtPlayer->play();
     init();
     if (m_qvplayer) {
         m_qvplayer->play();
@@ -167,6 +188,7 @@ void VlcPlayer::play()
 
 void VlcPlayer::pause()
 {
+    if (m_isApe) return m_qtPlayer->pause();
     if (m_qvplayer) {
         qCDebug(dmMusic) << "Pausing playback";
         m_qvplayer->pause();
@@ -175,6 +197,7 @@ void VlcPlayer::pause()
 
 DmGlobal::PlaybackStatus VlcPlayer::state()
 {
+    if (m_isApe) return m_qtPlayer->state();
     if (m_qvplayer) {
         Vlc::State  state = m_qvplayer->state();
         switch (state) {
@@ -202,6 +225,7 @@ DmGlobal::PlaybackStatus VlcPlayer::state()
 
 void VlcPlayer::stop()
 {
+    if (m_isApe) return m_qtPlayer->stop();
     if (m_qvplayer) {
         qCDebug(dmMusic) << "Stopping playback";
         m_qvplayer->stop();
@@ -210,6 +234,7 @@ void VlcPlayer::stop()
 
 int VlcPlayer::length()
 {
+    if (m_isApe) return m_qtPlayer->length();
     init();
     if (!m_qvplayer) return 0;
     int len = m_qvplayer->length();
@@ -219,6 +244,7 @@ int VlcPlayer::length()
 
 void VlcPlayer::setTime(qint64 time)
 {
+    if (m_isApe) return m_qtPlayer->setTime(time);
     init();
     if (!m_qvplayer) return;
     qCDebug(dmMusic) << "Setting playback position to:" << time << "ms";
@@ -227,6 +253,7 @@ void VlcPlayer::setTime(qint64 time)
 
 qint64 VlcPlayer::time()
 {
+    if (m_isApe) return m_qtPlayer->time();
     init();
     if (!m_qvplayer) return 0;
     qint64 pos = m_qvplayer->time();
@@ -237,13 +264,48 @@ qint64 VlcPlayer::time()
 void VlcPlayer::setMediaMeta(MediaMeta meta)
 {
     qCInfo(dmMusic) << "Setting media meta - Title:" << meta.title << "Path:" << meta.localPath;
-    init();
-    if (!m_qvplayer) return;
+    const bool isApe = QFileInfo(meta.localPath).suffix().compare(QStringLiteral("ape"), Qt::CaseInsensitive) == 0;
+    if (!isApe) {
+        init();
+        if (!m_qvplayer) return;
+    }
+
+    const bool backendChanged = (m_isApe != isApe);
+    const bool notifyStopped = backendChanged && state() != DmGlobal::Stopped;
+    const bool muted = backendChanged && getMute();
+    if (backendChanged) {
+        // Ignore events from the outgoing backend before stopping it.
+        m_isApe = isApe;
+        if (isApe) {
+            if (m_qvplayer) {
+                m_qvplayer->stop();
+            }
+            m_qtPlayer->setVolume(m_volume);
+            m_qtPlayer->setMute(muted);
+        } else {
+            m_volume = m_qtPlayer->getVolume();
+            m_qtPlayer->stop();
+            m_qtPlayer->setMediaMeta(MediaMeta());
+        }
+    }
+
     m_activeMeta = meta;
-    m_qvmedia->initMedia(meta.localPath, meta.mmType == DmGlobal::MimeTypeCDA ? false : true, m_qvinstance, meta.track);
-    m_qvplayer->open(m_qvmedia);
-    m_qvplayer->setCurMeta(meta);
+    if (isApe) {
+        m_qtPlayer->setMediaMeta(meta);
+    } else {
+        m_qvmedia->initMedia(meta.localPath, meta.mmType == DmGlobal::MimeTypeCDA ? false : true, m_qvinstance, meta.track);
+        m_qvplayer->open(m_qvmedia);
+        m_qvplayer->setCurMeta(meta);
+        if (backendChanged) {
+            m_qvplayer->setVolume(m_volume);
+            m_qvplayer->setMute(muted);
+        }
+    }
+    if (notifyStopped) {
+        emit stateChanged(DmGlobal::Stopped);
+    }
     emit metaChanged();
+    if (isApe) return;
 #ifdef Q_OS_LINUX
     malloc_trim(0);
 #endif
@@ -304,6 +366,7 @@ float VlcPlayer::preamplification()
 
 void VlcPlayer::setVolume(int volume)
 {
+    if (m_isApe) return m_qtPlayer->setVolume(volume);
     init();
     qCDebug(dmMusic) << "Setting volume to:" << volume;
     m_volume = volume;
@@ -314,12 +377,14 @@ void VlcPlayer::setVolume(int volume)
 
 int VlcPlayer::getVolume()
 {
+    if (m_isApe) return m_qtPlayer->getVolume();
     init();
     return m_volume;
 }
 
 void VlcPlayer::setMute(bool value)
 {
+    if (m_isApe) return m_qtPlayer->setMute(value);
     init();
     qCDebug(dmMusic) << "Setting mute state to:" << value;
     if (m_qvplayer) {
@@ -377,6 +442,7 @@ QList<MediaMeta> VlcPlayer::getCdaMetaInfo()
 
 bool VlcPlayer::getMute()
 {
+    if (m_isApe) return m_qtPlayer->getMute();
     if (!m_qvplayer) {
         qCWarning(dmMusic) << "VLC player not initialized, returning default mute state";
         return false;

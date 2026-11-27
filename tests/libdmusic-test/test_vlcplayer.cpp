@@ -4,19 +4,35 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // vlcplayer.cpp 的单元测试：构造 + 不触发真实播放的查询/配置/资源管理。
-// VlcPlayer 依赖 libvlc 和 SdlPlayer，测试不实际播放音频。
 
 #include <gtest/gtest.h>
 
+#include <QAudioOutput>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+#include <QAudioBuffer>
+#include <QAudioBufferOutput>
+#endif
 #include <QCoreApplication>
+#include <QDateTime>
+#include <QDir>
+#include <QFileInfo>
+#include <QStandardPaths>
+#include <QFile>
+#include <QSignalSpy>
+#include <QTemporaryDir>
+#include <QTest>
+#include <QThread>
 #include <QString>
 #include <QStringList>
 #include <memory>
 #include <cmath>
 
 #include "vlcplayer.h"
+#include "apeseekfile.h"
+#include "qtplayer.h"
 #include "playerbase.h"
 #include "global.h"
+#include "utils.h"
 
 // ============================================================================
 // 构造/析构：不崩溃
@@ -290,6 +306,350 @@ TEST(VlcPlayerMediaMetaTest, setMediaMetaEmitsSignal)
     meta.mmType = DmGlobal::MimeTypeLocal;
     player.setMediaMeta(meta);
     EXPECT_TRUE(signalEmitted);
+}
+
+TEST(VlcPlayerMediaMetaTest, apeTrackUsesQtPlayerAndForwardsProgress)
+{
+    VlcPlayer player;
+    DMusic::MediaMeta meta;
+    meta.hash = "ape-test-hash";
+    meta.localPath = "/tmp/track.APE";
+    meta.mmType = DmGlobal::MimeTypeLocal;
+
+    player.setMediaMeta(meta);
+    auto *qtPlayer = player.findChild<QtPlayer *>();
+    ASSERT_NE(qtPlayer, nullptr);
+    auto *mediaPlayer = qtPlayer->findChild<QMediaPlayer *>();
+    ASSERT_NE(mediaPlayer, nullptr);
+    EXPECT_EQ(mediaPlayer->source(), QUrl::fromLocalFile(meta.localPath));
+
+    QSignalSpy timeSpy(&player, &PlayerBase::timeChanged);
+    QSignalSpy positionSpy(&player, &PlayerBase::positionChanged);
+    Q_EMIT qtPlayer->timeChanged(1234);
+    Q_EMIT qtPlayer->positionChanged(0.25f);
+    ASSERT_EQ(timeSpy.size(), 1);
+    EXPECT_EQ(timeSpy.takeFirst().at(0).toLongLong(), 1234);
+    ASSERT_EQ(positionSpy.size(), 1);
+    EXPECT_FLOAT_EQ(positionSpy.takeFirst().at(0).toFloat(), 0.25f);
+}
+
+TEST(VlcPlayerMediaMetaTest, switchingBackendsTransfersAudioSettingsAndIgnoresInactiveQtSignals)
+{
+    const QString samplePath = QStringLiteral(TEST_DATA_DIR "/sample.mp3");
+    QTemporaryDir tempDir;
+    ASSERT_TRUE(tempDir.isValid());
+
+    DMusic::MediaMeta mp3;
+    mp3.hash = "mp3";
+    mp3.localPath = samplePath;
+    mp3.mmType = DmGlobal::MimeTypeLocal;
+    DMusic::MediaMeta ape = mp3;
+    ape.hash = "ape";
+    // Reuse the MP3 fixture to exercise extension-based routing independently of APE decoding.
+    ape.localPath = tempDir.filePath(QStringLiteral("track.ape"));
+    ASSERT_TRUE(QFile::copy(samplePath, ape.localPath));
+
+    VlcPlayer player;
+    player.setMediaMeta(mp3);
+    player.setVolume(35);
+    player.setMute(true);
+    player.play();
+    ASSERT_TRUE(QTest::qWaitFor([&player] { return player.state() == DmGlobal::Playing; }, 2000));
+
+    player.setMediaMeta(ape);
+    EXPECT_EQ(player.state(), DmGlobal::Stopped);
+    auto *qt = player.findChild<QMediaPlayer *>();
+    ASSERT_NE(qt, nullptr);
+    auto *audio = qt->audioOutput();
+    ASSERT_NE(audio, nullptr);
+    EXPECT_TRUE(audio->isMuted());
+    EXPECT_FLOAT_EQ(audio->volume(), 0.35f);
+
+    player.setVolume(72);
+    EXPECT_FLOAT_EQ(audio->volume(), 0.72f);
+    player.setMute(false);
+    EXPECT_FALSE(audio->isMuted());
+
+    player.setMediaMeta(mp3);
+    EXPECT_TRUE(qt->source().isEmpty());
+    EXPECT_EQ(player.getVolume(), 72);
+    EXPECT_FALSE(player.getMute());
+
+    QSignalSpy timeSpy(&player, &PlayerBase::timeChanged);
+    Q_EMIT player.findChild<QtPlayer *>()->timeChanged(1234);
+    EXPECT_TRUE(timeSpy.isEmpty());
+}
+
+TEST(VlcPlayerMediaMetaTest, apeProgressAdvancesBetweenBackendEventsAndStopsWhenPaused)
+{
+    DMusic::MediaMeta ape;
+    ape.hash = "ape-progress";
+    QTemporaryDir sourceDir;
+    ASSERT_TRUE(sourceDir.isValid());
+    ape.localPath = sourceDir.filePath(QStringLiteral("progress.ape"));
+    ASSERT_TRUE(QFile::copy(QStringLiteral(TEST_DATA_DIR "/ape-seek.ape"), ape.localPath));
+
+    VlcPlayer player;
+    player.setMediaMeta(ape);
+    auto *qtPlayer = player.findChild<QtPlayer *>();
+    ASSERT_NE(qtPlayer, nullptr);
+    auto *mediaPlayer = qtPlayer->findChild<QMediaPlayer *>();
+    ASSERT_NE(mediaPlayer, nullptr);
+    // Model APE frames whose native position events are several seconds apart.
+    ASSERT_TRUE(QObject::disconnect(mediaPlayer, &QMediaPlayer::positionChanged, qtPlayer, nullptr));
+    player.setMute(true);
+    QSignalSpy progress(&player, &PlayerBase::timeChanged);
+    player.play();
+    ASSERT_TRUE(QTest::qWaitFor([&progress] { return progress.size() >= 3; }, 2000));
+    EXPECT_GT(progress.last().at(0).toLongLong(), progress.first().at(0).toLongLong());
+
+    player.pause();
+    ASSERT_TRUE(QTest::qWaitFor([&player] { return player.state() == DmGlobal::Paused; }, 1000));
+    const auto eventsWhilePaused = progress.size();
+    const auto pausedPosition = player.time();
+    QTest::qWait(220);
+    EXPECT_EQ(progress.size(), eventsWhilePaused);
+    EXPECT_EQ(player.time(), pausedPosition);
+
+    ASSERT_TRUE(mediaPlayer->isSeekable());
+    player.setTime(1500);
+    ASSERT_TRUE(QTest::qWaitFor([&] {
+        return mediaPlayer->source().toLocalFile().endsWith(QStringLiteral(".wav"))
+            && mediaPlayer->position() == 1500;
+    }, 2000));
+    ASSERT_GT(progress.size(), eventsWhilePaused);
+    EXPECT_EQ(progress.last().at(0).toLongLong(), 1500);
+    EXPECT_EQ(player.state(), DmGlobal::Paused);
+    player.play();
+    ASSERT_TRUE(QTest::qWaitFor([&progress] { return progress.last().at(0).toLongLong() > 1500; }, 1000));
+    player.stop();
+}
+
+TEST(VlcPlayerMediaMetaTest, apeSeekResumesDecodedAudioAtRequestedPosition)
+{
+    // Synthetic mono PCM encoded as APE: seven seconds with a 440 Hz tone at 4–5 s.
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    QAudioBufferOutput decodedAudio;
+    bool receivedAudioAtTarget = false;
+#endif
+    VlcPlayer player;
+    DMusic::MediaMeta ape;
+    ape.hash = "ape-seek";
+    QTemporaryDir sourceDir;
+    ASSERT_TRUE(sourceDir.isValid());
+    ape.localPath = sourceDir.filePath(QStringLiteral("seek.ape"));
+    ASSERT_TRUE(QFile::copy(QStringLiteral(TEST_DATA_DIR "/ape-seek.ape"), ape.localPath));
+    player.setMediaMeta(ape);
+    auto *media = player.findChild<QMediaPlayer *>();
+    ASSERT_NE(media, nullptr);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    QObject::connect(&decodedAudio, &QAudioBufferOutput::audioBufferReceived, &decodedAudio,
+                     [&](const QAudioBuffer &buffer) {
+        if (media->source().toLocalFile().endsWith(QStringLiteral(".wav"))
+            && buffer.startTime() >= 4000000 && buffer.startTime() < 4500000
+            && buffer.format().sampleFormat() == QAudioFormat::Int16) {
+            const auto *samples = buffer.constData<qint16>();
+            for (int i = 0; i < buffer.sampleCount(); ++i) {
+                if (samples[i] != 0) {
+                    receivedAudioAtTarget = true;
+                    break;
+                }
+            }
+        }
+    });
+    media->setAudioBufferOutput(&decodedAudio);
+#endif
+    player.setMute(true);
+    player.play();
+    ASSERT_TRUE(QTest::qWaitFor([&] { return media->isSeekable() && player.state() == DmGlobal::Playing; }, 3000));
+    QSignalSpy progress(&player, &PlayerBase::timeChanged);
+    player.setTime(3500);
+    player.setTime(4000);
+    EXPECT_EQ(player.time(), 4000);
+    ASSERT_TRUE(QTest::qWaitFor([&] {
+        return media->source().toLocalFile().endsWith(QStringLiteral(".wav"))
+            && media->position() > 4000;
+    }, 2000));
+    ASSERT_FALSE(progress.isEmpty());
+    EXPECT_EQ(progress.first().at(0).toLongLong(), 4000);
+    for (const auto &event : progress) {
+        EXPECT_GE(event.at(0).toLongLong(), 4000);
+    }
+    const auto cachePath = DmGlobal::cachePath().isEmpty()
+                               ? QStandardPaths::writableLocation(QStandardPaths::CacheLocation)
+                               : DmGlobal::cachePath();
+    const QFileInfo seekFile(media->source().toLocalFile());
+    EXPECT_EQ(seekFile.absolutePath(), QDir(cachePath).absoluteFilePath(QStringLiteral("seekfile")));
+    EXPECT_TRUE(seekFile.fileName().startsWith(Utils::filePathHash(ape.localPath) + '-'));
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    EXPECT_TRUE(receivedAudioAtTarget);
+#endif
+    const auto seekSource = media->source();
+    player.pause();
+    ASSERT_EQ(player.state(), DmGlobal::Paused);
+    player.setTime(2000);
+    EXPECT_EQ(player.state(), DmGlobal::Paused);
+    EXPECT_EQ(media->position(), 2000);
+    EXPECT_EQ(media->source(), seekSource);
+    player.release();
+    ASSERT_TRUE(QFile::exists(seekFile.absoluteFilePath()));
+
+    VlcPlayer reopened;
+    reopened.setMediaMeta(ape);
+    auto *reusedMedia = reopened.findChild<QMediaPlayer *>();
+    ASSERT_NE(reusedMedia, nullptr);
+    EXPECT_EQ(reusedMedia->source(), seekSource);
+    reopened.setMute(true);
+    reopened.play();
+    reopened.setTime(4000);
+    ASSERT_TRUE(QTest::qWaitFor([&] { return reusedMedia->position() > 4000; }, 2000));
+    EXPECT_EQ(reusedMedia->source(), seekSource);
+    reopened.release();
+
+    QFile source(ape.localPath);
+    ASSERT_TRUE(source.open(QIODevice::ReadWrite));
+    ASSERT_TRUE(source.setFileTime(QFileInfo(source).lastModified().addSecs(10), QFileDevice::FileModificationTime));
+    source.close();
+    reopened.setMediaMeta(ape);
+    auto *updatedMedia = reopened.findChild<QMediaPlayer *>();
+    ASSERT_NE(updatedMedia, nullptr);
+    EXPECT_EQ(updatedMedia->source(), QUrl::fromLocalFile(ape.localPath));
+}
+
+TEST(VlcPlayerMediaMetaTest, seekingWhileOriginalApeLoadsPreservesPlayRequest)
+{
+    QTemporaryDir sourceDir;
+    ASSERT_TRUE(sourceDir.isValid());
+    DMusic::MediaMeta ape;
+    ape.hash = "ape-seek-loading";
+    ape.localPath = sourceDir.filePath(QStringLiteral("loading.ape"));
+    ASSERT_TRUE(QFile::copy(QStringLiteral(TEST_DATA_DIR "/ape-seek.ape"), ape.localPath));
+
+    VlcPlayer player;
+    player.setMediaMeta(ape);
+    auto *media = player.findChild<QMediaPlayer *>();
+    ASSERT_NE(media, nullptr);
+    ASSERT_EQ(media->mediaStatus(), QMediaPlayer::LoadingMedia);
+    player.setMute(true);
+    player.play();
+    player.setTime(4000);
+    ASSERT_TRUE(QTest::qWaitFor([&] {
+        return media->source().toLocalFile().endsWith(QStringLiteral(".wav"))
+               && media->position() > 4000 && player.state() == DmGlobal::Playing;
+    }, 2500));
+}
+
+TEST(VlcPlayerMediaMetaTest, firstApeSeekAtEndOfOriginalSourceResumesPlayback)
+{
+    QTemporaryDir sourceDir;
+    ASSERT_TRUE(sourceDir.isValid());
+    DMusic::MediaMeta ape;
+    ape.hash = "ape-seek-at-end";
+    ape.localPath = sourceDir.filePath(QStringLiteral("at-end.ape"));
+    ASSERT_TRUE(QFile::copy(QStringLiteral(TEST_DATA_DIR "/ape-seek.ape"), ape.localPath));
+
+    VlcPlayer player;
+    player.setMediaMeta(ape);
+    auto *media = player.findChild<QMediaPlayer *>();
+    ASSERT_NE(media, nullptr);
+    bool seekRequested = false;
+    QObject::connect(media, &QMediaPlayer::positionChanged, &player, [&](qint64 position) {
+        if (!seekRequested && media->duration() > 0 && position >= media->duration()) {
+            seekRequested = true;
+            player.setTime(4000);
+        }
+    });
+    QSignalSpy ended(&player, &PlayerBase::end);
+    player.setMute(true);
+    player.play();
+    ASSERT_TRUE(QTest::qWaitFor([&] {
+        return media->source().toLocalFile().endsWith(QStringLiteral(".wav"))
+               && media->position() > 4000 && player.state() == DmGlobal::Playing;
+    }, 11000));
+    EXPECT_TRUE(seekRequested);
+    EXPECT_TRUE(ended.isEmpty());
+}
+
+#ifdef Q_OS_LINUX
+TEST(ApeSeekFileTest, evictsOldestCacheEntriesBeforePublishingNewFile)
+{
+    QTemporaryDir cacheDir;
+    ASSERT_TRUE(cacheDir.isValid());
+    const auto oldestPath = cacheDir.filePath(QStringLiteral("11111111111111111111111111111111-1-1.wav"));
+    const auto newerPath = cacheDir.filePath(QStringLiteral("22222222222222222222222222222222-2-2.wav"));
+    const auto unrelatedPath = cacheDir.filePath(QStringLiteral("unrelated.wav"));
+    const auto destination = cacheDir.filePath(QStringLiteral("33333333333333333333333333333333-3-3.wav"));
+    constexpr qint64 gibibyte = 1024LL * 1024 * 1024;
+    const auto createFile = [](const QString &filePath, qint64 size, const QDateTime &modified) {
+        QFile file(filePath);
+        return file.open(QIODevice::WriteOnly) && file.resize(size)
+               && file.setFileTime(modified, QFileDevice::FileModificationTime);
+    };
+    // QFile::resize creates sparse files on Linux, so testing the budget needs little disk space.
+    const auto now = QDateTime::currentDateTimeUtc();
+    ASSERT_TRUE(createFile(oldestPath, 3 * gibibyte, now.addDays(-2)));
+    ASSERT_TRUE(createFile(newerPath, gibibyte, now.addDays(-1)));
+    ASSERT_TRUE(createFile(unrelatedPath, 1, now.addDays(-3)));
+    ASSERT_TRUE(writeApeSeekFile(QFileInfo(QStringLiteral(TEST_DATA_DIR "/ape-seek.ape")), destination));
+    EXPECT_TRUE(isApeSeekFileReady(destination));
+    EXPECT_FALSE(QFile::exists(oldestPath));
+    EXPECT_TRUE(QFile::exists(newerPath));
+    EXPECT_TRUE(QFile::exists(unrelatedPath));
+}
+#endif
+
+TEST(VlcPlayerMediaMetaTest, failedApeSeekPreparationKeepsOriginalPosition)
+{
+    QTemporaryDir tempDir;
+    ASSERT_TRUE(tempDir.isValid());
+    DMusic::MediaMeta meta;
+    meta.hash = "ape-seek-preparation-failure";
+    meta.localPath = tempDir.filePath(QStringLiteral("invalid-ape.ape"));
+    // Qt can play this file, while the APE decoder rejects its content.
+    ASSERT_TRUE(QFile::copy(QStringLiteral(TEST_DATA_DIR "/sample.mp3"), meta.localPath));
+
+    VlcPlayer player;
+    player.setMediaMeta(meta);
+    auto *qtPlayer = player.findChild<QtPlayer *>();
+    ASSERT_NE(qtPlayer, nullptr);
+    auto *media = qtPlayer->findChild<QMediaPlayer *>();
+    ASSERT_NE(media, nullptr);
+    ASSERT_TRUE(QTest::qWaitFor([&] { return media->isSeekable(); }, 3000));
+
+    player.setTime(1500);
+    ASSERT_NE(qtPlayer->findChild<QThread *>(), nullptr);
+    ASSERT_TRUE(QTest::qWaitFor([&] { return qtPlayer->findChild<QThread *>() == nullptr; }, 2000));
+    EXPECT_EQ(media->position(), 0);
+    player.setTime(2000);
+    EXPECT_EQ(media->position(), 0);
+    EXPECT_EQ(media->source(), QUrl::fromLocalFile(meta.localPath));
+}
+
+TEST(VlcPlayerMediaMetaTest, switchingTracksCancelsPendingApeSeek)
+{
+    VlcPlayer player;
+    DMusic::MediaMeta ape;
+    ape.hash = "ape-seek-cancel";
+    QTemporaryDir sourceDir;
+    ASSERT_TRUE(sourceDir.isValid());
+    ape.localPath = sourceDir.filePath(QStringLiteral("cancel.ape"));
+    ASSERT_TRUE(QFile::copy(QStringLiteral(TEST_DATA_DIR "/ape-seek.ape"), ape.localPath));
+    player.setMediaMeta(ape);
+    auto *qtPlayer = player.findChild<QtPlayer *>();
+    ASSERT_NE(qtPlayer, nullptr);
+    auto *media = qtPlayer->findChild<QMediaPlayer *>();
+    ASSERT_NE(media, nullptr);
+    ASSERT_TRUE(QTest::qWaitFor([&] { return media->isSeekable(); }, 3000));
+
+    player.setTime(4000);
+    ASSERT_NE(qtPlayer->findChild<QThread *>(), nullptr);
+    DMusic::MediaMeta next;
+    next.hash = "mp3-after-ape";
+    next.localPath = QStringLiteral(TEST_DATA_DIR "/sample.mp3");
+    player.setMediaMeta(next);
+    ASSERT_TRUE(QTest::qWaitFor([&] { return qtPlayer->findChild<QThread *>() == nullptr; }, 2000));
+    EXPECT_EQ(player.getMediaMeta().hash, next.hash);
+    EXPECT_TRUE(media->source().isEmpty());
 }
 
 // ============================================================================
